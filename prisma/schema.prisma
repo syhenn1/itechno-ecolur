@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Pooled connection (pgbouncer) — used by the app at runtime, safe for Vercel's serverless functions.
+  url = env("DATABASE_URL")
+  // Direct connection — used only for migrations, which pgbouncer's transaction pooling can't run.
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id         String      @id @default(uuid())
+  name       String
+  phone      String      @unique
+  role       Role        @default(CITIZEN)
+  rtRw       String?
+  createdAt  DateTime    @default(now())
+  energyLogs EnergyLog[]
+  reports    Report[]
+  badges     Badge[]
+  // Present only when this User also has an Officer profile (role should be OFFICER).
+  officer    Officer?
+
+  @@index([role])
+}
+
+enum Role {
+  CITIZEN
+  OFFICER
+  ADMIN
+}
+
+model EnergyLog {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  period         String // format: "2026-08"
+  consumptionKwh Float
+  costEstimate   Float
+  co2Estimate    Float
+  createdAt      DateTime @default(now())
+
+  // One entry per user per month — resubmitting the same period updates it instead of duplicating.
+  @@unique([userId, period])
+  @@index([userId, period])
+}
+
+model Report {
+  id          String            @id @default(uuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id])
+  category    String
+  description String
+  photoUrl    String?
+  lat         Float
+  lng         Float
+  status      ReportStatus      @default(REPORTED)
+  createdAt   DateTime          @default(now())
+  statusLogs  ReportStatusLog[]
+
+  @@index([status])
+  @@index([userId])
+}
+
+enum ReportStatus {
+  REPORTED
+  VERIFIED
+  IN_PROGRESS
+  RESOLVED
+}
+
+// Append-only log — NEVER update an old record, always INSERT a new row.
+// Report.status is kept in sync with the latest row here for fast queries,
+// but the full history always lives in ReportStatusLog.
+model ReportStatusLog {
+  id        String       @id @default(uuid())
+  reportId  String
+  report    Report       @relation(fields: [reportId], references: [id])
+  officerId String?
+  officer   Officer?     @relation(fields: [officerId], references: [id])
+  status    ReportStatus
+  notes     String?
+  updatedAt DateTime     @default(now())
+
+  @@index([reportId])
+}
+
+model Officer {
+  id     String  @id @default(uuid())
+  // Links this Officer profile to the User account used to log in (phone OTP, role = OFFICER).
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
+
+  name       String
+  department String
+  area       String
+  statusLogs ReportStatusLog[]
+}
+
+model Badge {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  badgeType String
+  earnedAt  DateTime @default(now())
+
+  @@index([userId])
+}

@@ -1,0 +1,62 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/input";
+
+const NEXT_STATUS: Record<string, { value: string; label: string }[]> = {
+  REPORTED: [{ value: "VERIFIED", label: "Verifikasi" }],
+  VERIFIED: [{ value: "IN_PROGRESS", label: "Proses" }],
+  IN_PROGRESS: [{ value: "RESOLVED", label: "Selesaikan" }],
+  RESOLVED: [],
+};
+
+export function StatusUpdateForm({ reportId, currentStatus }: { reportId: string; currentStatus: string }) {
+  const router = useRouter();
+  const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const options = NEXT_STATUS[currentStatus] ?? [];
+  if (options.length === 0) return null;
+
+  async function handleUpdate(status: string) {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/reports/${reportId}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, notes: notes || undefined }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Gagal memperbarui status");
+      setNotes("");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
+      <Textarea
+        rows={2}
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        placeholder="Catatan tindak lanjut (opsional)"
+      />
+      {error && <p className="text-sm text-red-600">{error}</p>}
+      <div className="flex gap-2">
+        {options.map((opt) => (
+          <Button key={opt.value} type="button" size="sm" disabled={loading} onClick={() => handleUpdate(opt.value)}>
+            {opt.label}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+}

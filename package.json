@@ -1,0 +1,48 @@
+{
+  "name": "ecolur",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "@prisma/client": "^6.0.0",
+    "@google/generative-ai": "latest",
+    "@supabase/supabase-js": "latest",
+    "zod": "latest",
+    "jose": "latest",
+    "leaflet": "latest",
+    "react-leaflet": "latest",
+    "recharts": "latest",
+    "lucide-react": "latest",
+    "clsx": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@types/leaflet": "latest",
+    "tailwindcss": "latest",
+    "@tailwindcss/postcss": "latest",
+    "postcss": "latest",
+    "prisma": "^6.0.0",
+    "tsx": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest"
+  }
+}
