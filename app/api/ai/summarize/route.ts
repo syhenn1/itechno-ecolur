@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/api-handler";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getReportSummary } from "@/lib/ai";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-export async function POST(request: Request) {
+export const POST = withErrorHandling(async (request: Request) => {
   const session = await getSession();
   if (!session || session.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -25,4 +26,4 @@ export async function POST(request: Request) {
 
   const summary = await getReportSummary(reports);
   return NextResponse.json({ summary });
-}
+});

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/api-handler";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { energyLogSchema } from "@/lib/validations";
 import { estimateCost, estimateCo2 } from "@/lib/energy-calc";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-export async function GET() {
+export const GET = withErrorHandling(async () => {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -14,9 +15,9 @@ export async function GET() {
     orderBy: { period: "asc" },
   });
   return NextResponse.json({ logs });
-}
+});
 
-export async function POST(request: Request) {
+export const POST = withErrorHandling(async (request: Request) => {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -50,4 +51,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ log }, { status: 201 });
-}
+});

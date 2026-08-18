@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/api-handler";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getEnergyRecommendation } from "@/lib/ai";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-export async function POST() {
+export const POST = withErrorHandling(async () => {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -20,4 +21,4 @@ export async function POST() {
 
   const recommendation = await getEnergyRecommendation(logs.reverse());
   return NextResponse.json({ recommendation });
-}
+});

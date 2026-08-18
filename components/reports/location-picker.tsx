@@ -5,16 +5,16 @@ import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Leaflet's default marker icons resolve to broken paths under most JS bundlers — re-point them
-// at the package's own bundled images (Next.js turns these imports into hashed static URLs).
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
+// Leaflet's default marker icons resolve to broken paths under most JS bundlers. Importing the
+// PNGs directly from node_modules is the commonly-suggested fix, but it's unreliable across
+// bundlers (broke under Turbopack here — the imported value didn't resolve to a usable URL).
+// Pointing at the package's own files on a CDN, pinned to the installed version, sidesteps the
+// bundler-asset-import question entirely.
+const LEAFLET_VERSION = "1.9.4"; // must match the installed "leaflet" version in package.json
 const defaultIcon = L.icon({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: markerIcon2x.src,
-  shadowUrl: markerShadow.src,
+  iconUrl: `https://unpkg.com/leaflet@${LEAFLET_VERSION}/dist/images/marker-icon.png`,
+  iconRetinaUrl: `https://unpkg.com/leaflet@${LEAFLET_VERSION}/dist/images/marker-icon-2x.png`,
+  shadowUrl: `https://unpkg.com/leaflet@${LEAFLET_VERSION}/dist/images/marker-shadow.png`,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });

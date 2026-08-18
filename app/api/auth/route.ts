@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/api-handler";
 import { authRequestSchema } from "@/lib/validations";
 import {
   createOtpChallenge,
@@ -10,7 +11,7 @@ import {
 } from "@/lib/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
-export async function POST(request: Request) {
+export const POST = withErrorHandling(async (request: Request) => {
   const ip = getClientIp(request);
   if (!checkRateLimit(`auth:${ip}`, 10, 60_000)) {
     return NextResponse.json({ error: "Terlalu banyak percobaan. Coba lagi sebentar lagi." }, { status: 429 });
@@ -62,4 +63,4 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ ok: true, role: user.role });
-}
+});

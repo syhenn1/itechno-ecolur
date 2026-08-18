@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/api-handler";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { reportCreateSchema } from "@/lib/validations";
@@ -6,7 +7,7 @@ import { uploadReportPhoto } from "@/lib/supabase";
 import { classifyReportCategory } from "@/lib/ai";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-export async function GET(request: Request) {
+export const GET = withErrorHandling(async (request: Request) => {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -20,9 +21,9 @@ export async function GET(request: Request) {
     take: 100,
   });
   return NextResponse.json({ reports });
-}
+});
 
-export async function POST(request: Request) {
+export const POST = withErrorHandling(async (request: Request) => {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -81,4 +82,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ report }, { status: 201 });
-}
+});

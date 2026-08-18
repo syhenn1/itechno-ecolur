@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/api-handler";
 import { getSession, getOfficerProfile } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { reportStatusUpdateSchema } from "@/lib/validations";
 
-export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export const POST = withErrorHandling(async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
   const session = await getSession();
   if (!session || (session.role !== "OFFICER" && session.role !== "ADMIN")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -34,4 +35,4 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   ]);
 
   return NextResponse.json({ report: updatedReport });
-}
+});
