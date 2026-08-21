@@ -5,7 +5,7 @@ import { getSession, type Role } from "@/lib/session";
 // Route-group parentheses — (citizen), (officer), (admin) — don't appear in the actual URL,
 // so matching is on the real paths underneath them.
 const ROLE_PREFIXES: Record<Role, string[]> = {
-  CITIZEN: ["/energy", "/report", "/my-reports"],
+  CITIZEN: ["/energy", "/report", "/my-reports", "/badges"],
   OFFICER: ["/incoming-reports"],
   ADMIN: ["/dashboard"],
 };
@@ -34,5 +34,12 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/energy/:path*", "/report/:path*", "/my-reports/:path*", "/incoming-reports/:path*", "/dashboard/:path*"],
+  matcher: [
+    "/energy/:path*",
+    "/report/:path*",
+    "/my-reports/:path*",
+    "/badges/:path*",
+    "/incoming-reports/:path*",
+    "/dashboard/:path*",
+  ],
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -27,7 +28,10 @@ export function AiSummaryPanel() {
         body: JSON.stringify({ category: category === "all" ? undefined : category }),
       });
       const data = await res.json();
-      setSummary(res.ok ? data.summary : (data.error ?? "Gagal membuat ringkasan"));
+      if (!res.ok) throw new Error(data.error ?? "Gagal membuat ringkasan");
+      setSummary(data.summary);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -39,7 +43,7 @@ export function AiSummaryPanel() {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
+          className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 transition-colors"
         >
           {CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>
@@ -47,12 +51,16 @@ export function AiSummaryPanel() {
             </option>
           ))}
         </select>
-        <Button type="button" onClick={handleGenerate} disabled={loading}>
+        <Button type="button" onClick={handleGenerate} loading={loading}>
           <Sparkles className="h-4 w-4" aria-hidden="true" />
-          {loading ? "Membuat ringkasan..." : "Buat Ringkasan AI"}
+          Buat Ringkasan AI
         </Button>
       </div>
-      {summary && <p className="rounded-lg bg-slate-50 p-4 text-sm leading-relaxed text-slate-700">{summary}</p>}
+      {summary && (
+        <p className="animate-fade-in-up rounded-lg bg-slate-50 p-4 text-sm leading-relaxed text-slate-700">
+          {summary}
+        </p>
+      )}
     </div>
   );
 }

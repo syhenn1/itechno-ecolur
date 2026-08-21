@@ -2,8 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
+import { showGamificationToasts } from "@/lib/gamification-client";
 
 type Step = "phone" | "otp";
 
@@ -18,12 +20,10 @@ export function OtpForm() {
   const [code, setCode] = useState("");
   const [challengeToken, setChallengeToken] = useState("");
   const [devCode, setDevCode] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleRequestOtp(event: FormEvent) {
     event.preventDefault();
-    setError(null);
     setLoading(true);
     try {
       const res = await fetch("/api/auth", {
@@ -36,8 +36,11 @@ export function OtpForm() {
       setChallengeToken(data.challengeToken);
       setDevCode(data.devCode ?? null);
       setStep("otp");
+      toast.success("Kode OTP terkirim", {
+        description: data.devCode ? `Mode pengembangan — kode: ${data.devCode}` : "Cek WhatsApp/SMS Anda.",
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -45,7 +48,6 @@ export function OtpForm() {
 
   async function handleVerifyOtp(event: FormEvent) {
     event.preventDefault();
-    setError(null);
     setLoading(true);
     try {
       const res = await fetch("/api/auth", {
@@ -55,10 +57,12 @@ export function OtpForm() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Kode OTP salah atau kedaluwarsa");
+      toast.success("Berhasil masuk");
+      showGamificationToasts(data.gamification);
       router.push(next);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -81,14 +85,13 @@ export function OtpForm() {
           />
           {devCode && <p className="mt-1.5 text-xs text-slate-500">Mode pengembangan — kode OTP: {devCode}</p>}
         </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <Button type="submit" className="w-full" disabled={loading || code.length !== 6}>
-          {loading ? "Memverifikasi..." : "Verifikasi"}
+        <Button type="submit" className="w-full" loading={loading} disabled={code.length !== 6}>
+          Verifikasi
         </Button>
         <button
           type="button"
           onClick={() => setStep("phone")}
-          className="w-full text-center text-sm text-slate-500 hover:text-slate-700"
+          className="w-full text-center text-sm text-slate-500 transition-all hover:text-slate-700 active:scale-95"
         >
           Ganti nomor HP
         </button>
@@ -115,9 +118,8 @@ export function OtpForm() {
         <Label htmlFor="name">Nama (untuk akun baru)</Label>
         <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama lengkap" />
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <Button type="submit" className="w-full" disabled={loading || !phone}>
-        {loading ? "Mengirim..." : "Kirim Kode OTP"}
+      <Button type="submit" className="w-full" loading={loading} disabled={!phone}>
+        Kirim Kode OTP
       </Button>
     </form>
   );

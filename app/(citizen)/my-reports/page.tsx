@@ -16,19 +16,23 @@ export default async function MyReportsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-8">
-      <div>
+      <div className="animate-fade-in-up">
         <h1 className="text-2xl font-semibold text-slate-900">Laporan Saya</h1>
         <p className="text-sm text-slate-600">Pantau status laporan yang sudah Anda kirim.</p>
       </div>
 
       {reports.length === 0 ? (
-        <Card className="text-center text-sm text-slate-500">
+        <Card className="animate-fade-in-up text-center text-sm text-slate-500" style={{ animationDelay: "80ms" }}>
           Belum ada laporan. Buat laporan pertama Anda di menu Lapor.
         </Card>
       ) : (
         <div className="space-y-4">
-          {reports.map((report) => (
-            <Card key={report.id}>
+          {reports.map((report, index) => (
+            <Card
+              key={report.id}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${Math.min(index * 60, 400)}ms` }}
+            >
               <CardHeader>
                 <div>
                   <CardTitle className="capitalize">{report.category.replace(/_/g, " ")}</CardTitle>

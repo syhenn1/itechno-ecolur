@@ -2,8 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
+import { showGamificationToasts } from "@/lib/gamification-client";
 
 function currentPeriod() {
   const now = new Date();
@@ -14,12 +16,10 @@ export function EnergyForm() {
   const router = useRouter();
   const [period, setPeriod] = useState(currentPeriod());
   const [consumptionKwh, setConsumptionKwh] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    setError(null);
     setLoading(true);
     try {
       const res = await fetch("/api/energy-logs", {
@@ -30,9 +30,11 @@ export function EnergyForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal menyimpan data");
       setConsumptionKwh("");
+      toast.success(`Konsumsi periode ${period} tersimpan`);
+      showGamificationToasts(data.gamification);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -58,10 +60,9 @@ export function EnergyForm() {
           required
         />
       </div>
-      <Button type="submit" disabled={loading || !consumptionKwh}>
-        {loading ? "Menyimpan..." : "Simpan"}
+      <Button type="submit" loading={loading} disabled={!consumptionKwh}>
+        Simpan
       </Button>
-      {error && <p className="text-sm text-red-600 sm:basis-full">{error}</p>}
     </form>
   );
 }

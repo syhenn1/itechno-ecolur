@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 import { VersionBadge } from "@/components/layout/version-badge";
 
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         <VersionBadge />
+        <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
   );

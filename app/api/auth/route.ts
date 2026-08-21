@@ -10,6 +10,7 @@ import {
   getOfficerProfile,
 } from "@/lib/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { awardXp } from "@/lib/gamification";
 
 export const POST = withErrorHandling(async (request: Request) => {
   const ip = getClientIp(request);
@@ -62,5 +63,8 @@ export const POST = withErrorHandling(async (request: Request) => {
     }
   }
 
-  return NextResponse.json({ ok: true, role: user.role });
+  // Gamification is a citizen-facing engagement feature — officer/admin accounts don't earn XP.
+  const gamification = user.role === "CITIZEN" ? await awardXp(user.id, "daily_login") : null;
+
+  return NextResponse.json({ ok: true, role: user.role, gamification });
 });

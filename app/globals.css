@@ -1,6 +1,134 @@
 @import "tailwindcss";
 
+@theme {
+  --color-eco-forest: #28430a;
+  --color-eco-leaf: #507b00;
+  --color-eco-lime: #95c22b;
+  --color-eco-chartreuse: #a7d930;
+  --color-eco-earth: #7b4425;
+
+  /* Harmonize emerald to our custom Eco palette */
+  --color-emerald-50: #f7fbf0;
+  --color-emerald-100: #eef7de;
+  --color-emerald-200: #d6ecc0;
+  --color-emerald-300: #b4de97;
+  --color-emerald-400: #a7d930;
+  --color-emerald-500: #95c22b;
+  --color-emerald-600: #507b00;
+  --color-emerald-700: #28430a;
+  --color-emerald-800: #203608;
+  --color-emerald-900: #192906;
+}
+
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: #f6f9f0;
+  color: #1a2412;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(167, 217, 48, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(80, 123, 0, 0.06) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Custom Eco Rich Styling & Gradients */
+.bg-eco-gradient {
+  background: linear-gradient(135deg, #28430a 0%, #507b00 50%, #95c22b 100%);
+}
+
+.bg-eco-vibrant {
+  background: linear-gradient(135deg, #507b00 0%, #95c22b 50%, #a7d930 100%);
+}
+
+.bg-eco-earth {
+  background: linear-gradient(135deg, #7b4425 0%, #94522d 60%, #b8673a 100%);
+}
+
+.bg-eco-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f9fcf5 100%);
+}
+
+.eco-glow-leaf {
+  box-shadow: 0 4px 20px -2px rgba(80, 123, 0, 0.35);
+}
+
+.eco-glow-lime {
+  box-shadow: 0 4px 20px -2px rgba(149, 194, 43, 0.45);
+}
+
+.eco-glow-gold {
+  box-shadow: 0 4px 20px -2px rgba(234, 179, 8, 0.4);
+}
+
+.eco-glow-ruby {
+  box-shadow: 0 4px 20px -2px rgba(225, 29, 72, 0.4);
+}
+
+.eco-glow-diamond {
+  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.45);
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.35s ease-out both;
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 0.45;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 600ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-ripple,
+  .animate-bounce-slow,
+  .animate-pulse-glow {
+    animation: none !important;
+  }
 }

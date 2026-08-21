@@ -3,9 +3,11 @@
 import { useState, type FormEvent } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label, Textarea } from "@/components/ui/input";
+import { showGamificationToasts } from "@/lib/gamification-client";
 
 const LocationPicker = dynamic(
   () => import("@/components/reports/location-picker").then((m) => m.LocationPicker),
@@ -34,15 +36,13 @@ export function ReportForm() {
   const [description, setDescription] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    setError(null);
 
     if (!location) {
-      setError("Tandai lokasi kejadian di peta terlebih dahulu.");
+      toast.error("Tandai lokasi kejadian di peta terlebih dahulu.");
       return;
     }
 
@@ -59,10 +59,12 @@ export function ReportForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal mengirim laporan");
 
+      toast.success("Laporan terkirim", { description: "Anda bisa memantau statusnya di Laporan Saya." });
+      showGamificationToasts(data.gamification);
       router.push("/my-reports");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
@@ -76,7 +78,7 @@ export function ReportForm() {
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
         >
           {CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>
@@ -103,7 +105,7 @@ export function ReportForm() {
         <Label htmlFor="photo">Foto (opsional)</Label>
         <label
           htmlFor="photo"
-          className="flex h-10 w-fit cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 hover:bg-slate-50"
+          className="flex h-10 w-fit cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 transition-all hover:bg-slate-50 active:scale-95"
         >
           <Camera className="h-4 w-4" aria-hidden="true" />
           {photo ? photo.name : "Pilih foto"}
@@ -119,13 +121,14 @@ export function ReportForm() {
 
       <div>
         <Label>Lokasi</Label>
-        <p className="mb-1.5 text-xs text-slate-500">Klik pada peta untuk menandai lokasi kejadian.</p>
+        <p className="mb-1.5 text-xs text-slate-500">
+          Klik pada peta untuk menandai lokasi kejadian — dibatasi di area Bojong Kulur (kotak putus-putus).
+        </p>
         <LocationPicker value={location} onChange={(lat, lng) => setLocation({ lat, lng })} />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <Button type="submit" disabled={loading} className="w-full">
-        {loading ? "Mengirim..." : "Kirim Laporan"}
+      <Button type="submit" loading={loading} className="w-full">
+        Kirim Laporan
       </Button>
     </form>
   );

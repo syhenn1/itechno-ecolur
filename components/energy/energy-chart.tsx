@@ -7,9 +7,8 @@ interface EnergyPoint {
   consumptionKwh: number;
 }
 
-// Single series (one citizen's own history) — reuses the app's brand accent rather than the
-// categorical palette, since there's no adjacent series to distinguish it from.
-const SERIES_COLOR = "#059669";
+const SERIES_COLOR = "#507b00";
+const ACCENT_COLOR = "#95c22b";
 
 interface TooltipProps {
   active?: boolean;
@@ -20,9 +19,11 @@ interface TooltipProps {
 function ChartTooltip({ active, payload, label }: TooltipProps) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-md">
-      <div className="font-medium text-slate-900">{label}</div>
-      <div className="text-slate-600">{payload[0].value.toLocaleString("id-ID")} kWh</div>
+    <div className="rounded-2xl border border-emerald-200 bg-white px-3.5 py-2.5 text-xs shadow-md">
+      <div className="font-bold text-slate-900">{label}</div>
+      <div className="text-emerald-800 font-extrabold mt-0.5 font-mono">
+        {payload[0].value.toLocaleString("id-ID")} kWh
+      </div>
     </div>
   );
 }
@@ -37,15 +38,16 @@ export function EnergyChart({ data }: { data: EnergyPoint[] }) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
-      <AreaChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+    <ResponsiveContainer width="100%" height={240}>
+      <AreaChart data={data} margin={{ top: 12, right: 12, left: -16, bottom: 0 }}>
         <defs>
           <linearGradient id="energyFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={SERIES_COLOR} stopOpacity={0.1} />
+            <stop offset="0%" stopColor={ACCENT_COLOR} stopOpacity={0.4} />
+            <stop offset="50%" stopColor={SERIES_COLOR} stopOpacity={0.15} />
             <stop offset="100%" stopColor={SERIES_COLOR} stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid vertical={false} stroke="#e2e8f0" />
+        <CartesianGrid vertical={false} stroke="#e2e8f0" strokeDasharray="3 3" />
         <XAxis dataKey="period" tick={{ fontSize: 12, fill: "#64748b" }} axisLine={{ stroke: "#cbd5e1" }} tickLine={false} />
         <YAxis tick={{ fontSize: 12, fill: "#64748b" }} axisLine={false} tickLine={false} width={40} />
         <Tooltip content={<ChartTooltip />} />
@@ -53,11 +55,11 @@ export function EnergyChart({ data }: { data: EnergyPoint[] }) {
           type="monotone"
           dataKey="consumptionKwh"
           stroke={SERIES_COLOR}
-          strokeWidth={2}
+          strokeWidth={3}
           strokeLinecap="round"
           fill="url(#energyFill)"
-          dot={{ r: 4, fill: SERIES_COLOR, stroke: "#fff", strokeWidth: 2 }}
-          activeDot={{ r: 5, fill: SERIES_COLOR, stroke: "#fff", strokeWidth: 2 }}
+          dot={{ r: 4.5, fill: ACCENT_COLOR, stroke: "#28430a", strokeWidth: 2 }}
+          activeDot={{ r: 6.5, fill: "#a7d930", stroke: "#28430a", strokeWidth: 2 }}
         />
       </AreaChart>
     </ResponsiveContainer>

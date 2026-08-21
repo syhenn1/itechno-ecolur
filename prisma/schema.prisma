@@ -23,6 +23,13 @@ model User {
   // Present only when this User also has an Officer profile (role should be OFFICER).
   officer    Officer?
 
+  // Gamification (lib/gamification.ts). `xp` is the source of truth; `level` is derived from it
+  // and cached here on every award so list/dashboard queries don't need to recompute it.
+  xp          Int           @default(0)
+  level       Int           @default(1)
+  xpEvents    XpEvent[]
+  prizeClaims PrizeClaim[]
+
   @@index([role])
 }
 
@@ -106,5 +113,34 @@ model Badge {
   badgeType String
   earnedAt  DateTime @default(now())
 
+  @@index([userId])
+}
+
+// Append-only XP ledger — every award is a row, never mutated. This is what lets us check
+// "has this user already gotten today's login XP" (and similar dedup rules) without a separate
+// cooldown table, and doubles as an activity history if that's ever surfaced in the UI.
+model XpEvent {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String // "daily_login" | "energy_log" | "report_submit" | "report_resolved"
+  amount    Int
+  createdAt DateTime @default(now())
+
+  @@index([userId, type, createdAt])
+}
+
+// One row per (user, level) once a user reaches a level that carries a prize — created
+// automatically at award time (see lib/gamification.ts LEVELS). `claimedAt` null means eligible
+// but not yet redeemed; the app can track this, it can't dispense a physical bicycle — an
+// officer/admin marks it claimed once the prize is actually handed over.
+model PrizeClaim {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  level     Int
+  claimedAt DateTime?
+
+  @@unique([userId, level])
   @@index([userId])
 }

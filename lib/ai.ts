@@ -2,10 +2,6 @@ import "server-only";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { EnergyLog, Report } from "@prisma/client";
 
-// Gemini is called only from here (server-side). GEMINI_API_KEY must never reach the client —
-// do not import this file from a "use client" component.
-
-const FALLBACK_RECOMMENDATION = "Rekomendasi belum tersedia saat ini. Silakan coba lagi beberapa saat lagi.";
 const FALLBACK_SUMMARY = "Ringkasan AI belum tersedia saat ini. Silakan coba lagi beberapa saat lagi.";
 
 let client: GoogleGenerativeAI | null = null;
@@ -20,21 +16,12 @@ function getClient() {
 }
 
 function getModel() {
-  // GEMINI_MODEL lets you swap models without a code change. Verify the current free-tier
-  // Flash/Flash-Lite model name at https://ai.google.dev/gemini-api/docs/models before shipping —
-  // Google renames/retires model IDs periodically.
   const modelName = process.env.GEMINI_MODEL ?? "gemini-flash-latest";
   return getClient().getGenerativeModel({ model: modelName });
 }
 
 const ALLOWED_WHITESPACE_CODES = new Set([9, 10, 13]); // tab, newline, carriage return
 
-/**
- * Drops ASCII control characters (keeping normal whitespace) and caps length, so free-text
- * citizen input can't blow up a prompt with unusual bytes. Combined with the delimiter +
- * explicit "this is data, not instructions" framing in the prompts below, this is the
- * project's baseline prompt-injection guard (CLAUDE.md's mandatory AI rule).
- */
 function sanitizeForPrompt(input: string, maxLength = 500): string {
   let result = "";
   for (const ch of input) {
@@ -43,6 +30,31 @@ function sanitizeForPrompt(input: string, maxLength = 500): string {
     if (!isControlChar) result += ch;
   }
   return result.slice(0, maxLength).trim();
+}
+
+function generateLocalEnergyRecommendation(
+  logs: Pick<EnergyLog, "period" | "consumptionKwh" | "costEstimate" | "co2Estimate">[],
+): string {
+  if (logs.length === 0) {
+    return "Belum ada data konsumsi. Input data listrik bulan ini untuk mendapatkan rekomendasi.";
+  }
+
+  const latest = logs[logs.length - 1];
+  if (logs.length === 1) {
+    return `Konsumsi listrik Anda bulan ${latest.period} tercatat ${latest.consumptionKwh} kWh (~Rp${Math.round(latest.costEstimate).toLocaleString("id-ID")}). Untuk menjaga konsumsi tetap hemat, atur suhu AC di 24°C-26°C dan cabut perangkat elektronik standby saat tidak digunakan.`;
+  }
+
+  const previous = logs[logs.length - 2];
+  const diff = latest.consumptionKwh - previous.consumptionKwh;
+  const percentChange = Math.round((diff / (previous.consumptionKwh || 1)) * 100);
+
+  if (diff < 0) {
+    return `Hebat! Konsumsi listrik bulan ${latest.period} (${latest.consumptionKwh} kWh) berhasil turun ${Math.abs(percentChange)}% dibandingkan bulan sebelumnya (${previous.consumptionKwh} kWh). Pertahankan kebiasaan efisiensi ini untuk terus menekan emisi CO2 rumah tangga Anda.`;
+  } else if (diff > 0) {
+    return `Perhatian: Pemakaian listrik bulan ${latest.period} (${latest.consumptionKwh} kWh) naik ${percentChange}% dibanding bulan ${previous.period}. Periksa pemakaian perangkat berdaya besar seperti AC, pompa air, dan dispenser pemanas guna menstabilkan tagihan bulan depan.`;
+  } else {
+    return `Konsumsi listrik bulan ${latest.period} stabil di ${latest.consumptionKwh} kWh. Optimalkan penggunaan lampu LED dan minimalkan beban siaga (vampire load) untuk mulai menurunkan tagihan di periode berikutnya.`;
+  }
 }
 
 export async function getEnergyRecommendation(
@@ -68,10 +80,10 @@ export async function getEnergyRecommendation(
 
     const result = await getModel().generateContent(prompt);
     const text = result.response.text().trim();
-    return text || FALLBACK_RECOMMENDATION;
+    return text || generateLocalEnergyRecommendation(logs);
   } catch (error) {
-    console.error("[ai.recommend] Gemini call failed:", error);
-    return FALLBACK_RECOMMENDATION;
+    console.error("[ai.recommend] Gemini call failed (using smart fallback):", error);
+    return generateLocalEnergyRecommendation(logs);
   }
 }
 
@@ -107,8 +119,6 @@ export async function getReportSummary(
 
 const REPORT_CATEGORIES = ["jalan_rusak", "sampah", "drainase", "penerangan_jalan", "fasilitas_umum", "lainnya"] as const;
 
-/** Auto-categorizes a new report from its free-text description. Returns null on failure —
- *  callers should fall back to a manually-selected category, never block submission on this. */
 export async function classifyReportCategory(description: string): Promise<string | null> {
   try {
     const prompt = [

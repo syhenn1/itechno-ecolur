@@ -3,6 +3,7 @@ import { withErrorHandling } from "@/lib/api-handler";
 import { getSession, getOfficerProfile } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { reportStatusUpdateSchema } from "@/lib/validations";
+import { awardXp } from "@/lib/gamification";
 
 export const POST = withErrorHandling(async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
   const session = await getSession();
@@ -33,6 +34,12 @@ export const POST = withErrorHandling(async (request: Request, { params }: { par
     }),
     prisma.report.update({ where: { id }, data: { status } }),
   ]);
+
+  // Awarded to the citizen who filed the report, not the officer making this request — there's
+  // no live notification channel to them yet, they'll see it next time they open the app.
+  if (status === "RESOLVED") {
+    await awardXp(report.userId, "report_resolved");
+  }
 
   return NextResponse.json({ report: updatedReport });
 });

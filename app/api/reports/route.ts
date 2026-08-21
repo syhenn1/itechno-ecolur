@@ -6,6 +6,7 @@ import { reportCreateSchema } from "@/lib/validations";
 import { uploadReportPhoto } from "@/lib/supabase";
 import { classifyReportCategory } from "@/lib/ai";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { awardXp } from "@/lib/gamification";
 
 export const GET = withErrorHandling(async (request: Request) => {
   const session = await getSession();
@@ -81,5 +82,7 @@ export const POST = withErrorHandling(async (request: Request) => {
     include: { statusLogs: true },
   });
 
-  return NextResponse.json({ report }, { status: 201 });
+  const gamification = await awardXp(session.userId, "report_submit");
+
+  return NextResponse.json({ report, gamification }, { status: 201 });
 });

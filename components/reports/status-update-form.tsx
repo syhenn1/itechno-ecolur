@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
+import { statusLabel } from "@/lib/utils";
 
 const NEXT_STATUS: Record<string, { value: string; label: string }[]> = {
   REPORTED: [{ value: "VERIFIED", label: "Verifikasi" }],
@@ -15,15 +17,13 @@ const NEXT_STATUS: Record<string, { value: string; label: string }[]> = {
 export function StatusUpdateForm({ reportId, currentStatus }: { reportId: string; currentStatus: string }) {
   const router = useRouter();
   const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [pendingStatus, setPendingStatus] = useState<string | null>(null);
 
   const options = NEXT_STATUS[currentStatus] ?? [];
   if (options.length === 0) return null;
 
   async function handleUpdate(status: string) {
-    setLoading(true);
-    setError(null);
+    setPendingStatus(status);
     try {
       const res = await fetch(`/api/reports/${reportId}/status`, {
         method: "POST",
@@ -33,11 +33,12 @@ export function StatusUpdateForm({ reportId, currentStatus }: { reportId: string
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal memperbarui status");
       setNotes("");
+      toast.success(`Status diubah ke "${statusLabel(status)}"`);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
-      setLoading(false);
+      setPendingStatus(null);
     }
   }
 
@@ -49,10 +50,16 @@ export function StatusUpdateForm({ reportId, currentStatus }: { reportId: string
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Catatan tindak lanjut (opsional)"
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex gap-2">
         {options.map((opt) => (
-          <Button key={opt.value} type="button" size="sm" disabled={loading} onClick={() => handleUpdate(opt.value)}>
+          <Button
+            key={opt.value}
+            type="button"
+            size="sm"
+            loading={pendingStatus === opt.value}
+            disabled={pendingStatus !== null && pendingStatus !== opt.value}
+            onClick={() => handleUpdate(opt.value)}
+          >
             {opt.label}
           </Button>
         ))}

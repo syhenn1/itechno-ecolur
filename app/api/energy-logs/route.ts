@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { energyLogSchema } from "@/lib/validations";
 import { estimateCost, estimateCo2 } from "@/lib/energy-calc";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { awardXp } from "@/lib/gamification";
 
 export const GET = withErrorHandling(async () => {
   const session = await getSession();
@@ -34,6 +35,14 @@ export const POST = withErrorHandling(async (request: Request) => {
   // Client only ever sends raw kWh — cost/CO2 are always derived server-side (see lib/energy-calc.ts)
   // so a citizen can't submit a fabricated cost or emissions figure.
   const { period, consumptionKwh } = parsed.data;
+
+  // Checked before the upsert so XP is only awarded for a genuinely new period, not for
+  // re-editing an already-logged month (otherwise that'd be an easy XP farm).
+  const existingLog = await prisma.energyLog.findUnique({
+    where: { userId_period: { userId: session.userId, period } },
+    select: { id: true },
+  });
+
   const log = await prisma.energyLog.upsert({
     where: { userId_period: { userId: session.userId, period } },
     update: {
@@ -50,5 +59,7 @@ export const POST = withErrorHandling(async (request: Request) => {
     },
   });
 
-  return NextResponse.json({ log }, { status: 201 });
+  const gamification = existingLog ? null : await awardXp(session.userId, "energy_log");
+
+  return NextResponse.json({ log, gamification }, { status: 201 });
 });
