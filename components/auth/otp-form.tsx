@@ -91,7 +91,6 @@ export function OtpForm() {
       toast.success("Berhasil masuk!");
       showGamificationToasts(data.gamification);
       router.push(next);
-      router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
