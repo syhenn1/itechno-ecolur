@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, Copy, X, Sparkles, QrCode, ShieldCheck, Download } from "lucide-react";
+import { createPortal } from "react-dom";
+import { Check, Copy, X, Sparkles, QrCode, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
+
+import { triggerButtonExplosion } from "@/lib/confetti";
 
 export interface VoucherData {
   code: string;
@@ -25,32 +28,30 @@ interface ClaimVoucherModalProps {
 
 export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) {
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!voucher) return;
+    setMounted(true);
+  }, []);
 
-    // Trigger simple celebratory screen effect
-    const timer = setTimeout(() => {
-      // Audio or visual cue
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [voucher]);
+  if (!voucher || !mounted) return null;
 
-  if (!voucher) return null;
-
-  const handleCopyCode = () => {
+  const handleCopyCode = (e: React.MouseEvent<HTMLButtonElement>) => {
+    triggerButtonExplosion(e);
     navigator.clipboard.writeText(voucher.code);
     setCopied(true);
-    toast.success("Kode kupon berhasil disalin ke clipboard!");
+    toast.success("Kode kupon berhasil disalin!");
     setTimeout(() => setCopied(false), 2500);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in-up">
-      <div className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl border border-emerald-200">
-        {/* Confetti Header */}
+  const modalContent = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in-up">
+      <div 
+        className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl border border-emerald-200 animate-fade-in-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header Banner */}
         <div className="relative bg-gradient-to-r from-eco-forest via-eco-leaf to-eco-lime p-6 text-center text-white overflow-hidden">
-          {/* Background particle sparkles */}
           <div className="absolute -top-6 -left-6 h-24 w-24 rounded-full bg-white/20 blur-xl" />
           <div className="absolute -bottom-6 -right-6 h-28 w-28 rounded-full bg-yellow-300/30 blur-xl" />
 
@@ -58,7 +59,7 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
             type="button"
             onClick={onClose}
             aria-label="Tutup"
-            className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
+            className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -81,16 +82,16 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
         </div>
 
         {/* Voucher Ticket Body */}
-        <div className="p-6 space-y-5 bg-gradient-to-b from-white to-emerald-50/30">
+        <div className="p-6 space-y-4 bg-gradient-to-b from-white to-emerald-50/30">
           {/* Voucher Card Container */}
           <div className="rounded-2xl border-2 border-dashed border-emerald-300 bg-white p-4 shadow-sm relative overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/icons/Lambang_Kabupaten_Bogor.svg.webp"
-                  alt="Kab. Bogor"
-                  className="h-6 w-6 object-contain"
+                  src="/icons/ecolur-logo.png"
+                  alt="EcoLur"
+                  className="h-8 w-8 rounded-full object-cover ring-1 ring-emerald-500/20"
                 />
                 <div>
                   <div className="text-[11px] font-bold text-emerald-900 uppercase">E-Voucher Resmi EcoLur</div>
@@ -127,7 +128,7 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
               <button
                 type="button"
                 onClick={handleCopyCode}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 active:scale-95 transition-all"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 active:scale-95 transition-all cursor-pointer"
               >
                 {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                 <span>{copied ? "Tersalin!" : "Salin Kode"}</span>
@@ -156,7 +157,7 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
           {/* Redemption Guide */}
           <div className="flex items-start gap-2.5 rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-xs text-emerald-950">
             <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-700 mt-0.5" />
-            <div className="leading-relaxed">
+            <div className="leading-relaxed text-[11px]">
               <strong>Cara Klaim / Penukaran:</strong> Untuk hadiah pulsa/voucher digital akan otomatis diproses, atau tunjukkan kode kupon di atas kepada petugas pelayanan di <strong>Kantor Desa Bojong Kulur</strong> pada hari kerja.
             </div>
           </div>
@@ -169,7 +170,7 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
                 toast.success("Kupon tersimpan di akun Anda!");
                 onClose();
               }}
-              className="w-full sm:w-auto rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-emerald-700 active:scale-95 transition-all text-center"
+              className="w-full sm:w-auto rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-emerald-700 active:scale-95 transition-all text-center cursor-pointer"
             >
               Selesai &amp; Tutup
             </button>
@@ -178,4 +179,6 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }

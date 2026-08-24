@@ -1,36 +1,9 @@
 import { PrismaClient, type ReportStatus } from "@prisma/client";
-// Relative imports (not the "@/..." alias) — this script runs standalone via tsx, outside the
-// Next.js bundler that resolves the alias.
 import { estimateCost, estimateCo2 } from "../lib/energy-calc";
 import { levelForXp, LEVELS } from "../lib/gamification-data";
 
 const prisma = new PrismaClient();
 
-// Deliberately NOT importing lib/gamification.ts here — it starts with `import "server-only"`,
-// which relies on a module resolution condition Next.js's bundler sets and plain `tsx` doesn't;
-// importing it standalone fails immediately (confirmed: "Cannot find module 'server-only'").
-// This is a trimmed, one-shot re-implementation of its badge-criteria check for seed purposes.
-async function seedBadgesFor(userId: string) {
-  const reportCount = await prisma.report.count({ where: { userId } });
-  const energyLogCount = await prisma.energyLog.count({ where: { userId } });
-  const lastTwo = await prisma.energyLog.findMany({ where: { userId }, orderBy: { period: "desc" }, take: 2 });
-
-  const toAward: string[] = ["pemula"];
-  if (reportCount >= 1) toAward.push("pelapor_pertama");
-  if (reportCount >= 5) toAward.push("warga_aktif");
-  if (reportCount >= 15) toAward.push("pahlawan_lapor");
-  if (energyLogCount >= 3) toAward.push("konsisten_3_bulan");
-  if (energyLogCount >= 6) toAward.push("konsisten_6_bulan");
-  if (lastTwo.length === 2 && lastTwo[0].consumptionKwh < lastTwo[1].consumptionKwh) toAward.push("hemat_energi");
-
-  await prisma.badge.createMany({
-    data: toAward.map((badgeType) => ({ userId, badgeType })),
-    skipDuplicates: true,
-  });
-}
-
-/** Small random offset (in degrees) around a cluster center, so seeded reports look like a
- *  real, slightly-scattered neighborhood cluster instead of stacking on one exact point. */
 function jitter([lat, lng]: [number, number], amountDeg: number): { lat: number; lng: number } {
   return {
     lat: lat + (Math.random() - 0.5) * 2 * amountDeg,
@@ -39,71 +12,68 @@ function jitter([lat, lng]: [number, number], amountDeg: number): { lat: number;
 }
 
 async function main() {
-  // ---- Citizens ----
-  // "Warga Demo" (081234567890) stays the primary account — it's the one documented in
-  // README's demo login instructions.
+  console.log("Memulai proses seeding database cepat Desa Bojong Kulur...");
+
+  // ---- 32 Diverse Citizens across RT 01 s.d RT 08 / RW 01 s.d RW 06 ----
   const citizenSeeds = [
-    { phone: "081234567890", name: "Warga Demo", rtRw: "RT 01/RW 05" },
-    { phone: "081234567893", name: "Siti Aminah", rtRw: "RT 02/RW 05" },
-    { phone: "081234567894", name: "Budi Santoso", rtRw: "RT 03/RW 05" },
-    { phone: "081234567895", name: "Dewi Lestari", rtRw: "RT 01/RW 06" },
-    { phone: "081234567896", name: "Ahmad Fauzi", rtRw: "RT 04/RW 05" },
-    { phone: "081234567897", name: "Rina Wulandari", rtRw: "RT 02/RW 06" },
+    { phone: "081234567890", name: "Warga Demo", rtRw: "RT 01/RW 05", xp: 480 },
+    { phone: "081234567801", name: "Haji Sukardi", rtRw: "RT 03/RW 02", xp: 2450 },
+    { phone: "081234567802", name: "Rina Wulandari", rtRw: "RT 02/RW 06", xp: 1820 },
+    { phone: "081234567803", name: "Bambang Pamungkas", rtRw: "RT 01/RW 03", xp: 1540 },
+    { phone: "081234567804", name: "Ahmad Fauzi", rtRw: "RT 04/RW 05", xp: 1210 },
+    { phone: "081234567805", name: "Siti Nurhaliza", rtRw: "RT 02/RW 01", xp: 980 },
+    { phone: "081234567806", name: "Budi Santoso", rtRw: "RT 03/RW 05", xp: 850 },
+    { phone: "081234567807", name: "Dewi Lestari", rtRw: "RT 01/RW 06", xp: 720 },
+    { phone: "081234567808", name: "Hendra Kusuma", rtRw: "RT 05/RW 02", xp: 630 },
+    { phone: "081234567809", name: "Ratna Sari", rtRw: "RT 02/RW 04", xp: 550 },
+    { phone: "081234567810", name: "Agus Setiawan", rtRw: "RT 04/RW 03", xp: 490 },
+    { phone: "081234567811", name: "Maya Anggraini", rtRw: "RT 01/RW 02", xp: 410 },
+    { phone: "081234567812", name: "Eko Prasetyo", rtRw: "RT 03/RW 04", xp: 380 },
+    { phone: "081234567813", name: "Tri Wahyuni", rtRw: "RT 06/RW 01", xp: 350 },
+    { phone: "081234567814", name: "Dedi Supriadi", rtRw: "RT 02/RW 03", xp: 310 },
+    { phone: "081234567815", name: "Sri Mulyani", rtRw: "RT 04/RW 06", xp: 290 },
+    { phone: "081234567816", name: "Wahyu Hidayat", rtRw: "RT 01/RW 04", xp: 270 },
+    { phone: "081234567817", name: "Nurul Hidayah", rtRw: "RT 05/RW 05", xp: 240 },
+    { phone: "081234567818", name: "Rizky Ramadhan", rtRw: "RT 02/RW 02", xp: 210 },
+    { phone: "081234567819", name: "Fitri Handayani", rtRw: "RT 03/RW 01", xp: 190 },
+    { phone: "081234567820", name: "Gunawan Wibisono", rtRw: "RT 07/RW 03", xp: 175 },
+    { phone: "081234567821", name: "Lestari Indah", rtRw: "RT 01/RW 01", xp: 160 },
+    { phone: "081234567822", name: "Doni Hermawan", rtRw: "RT 04/RW 04", xp: 145 },
+    { phone: "081234567823", name: "Endah Puspita", rtRw: "RT 02/RW 05", xp: 130 },
+    { phone: "081234567824", name: "Fajar Nugraha", rtRw: "RT 05/RW 06", xp: 115 },
+    { phone: "081234567825", name: "Gita Permata", rtRw: "RT 03/RW 02", xp: 100 },
+    { phone: "081234567826", name: "Hadi Purnomo", rtRw: "RT 06/RW 04", xp: 85 },
+    { phone: "081234567827", name: "Indra Pratama", rtRw: "RT 01/RW 05", xp: 70 },
+    { phone: "081234567828", name: "Joko Widodo", rtRw: "RT 04/RW 02", xp: 60 },
+    { phone: "081234567829", name: "Kartika Sari", rtRw: "RT 02/RW 01", xp: 50 },
+    { phone: "081234567830", name: "Lukman Hakim", rtRw: "RT 08/RW 03", xp: 40 },
+    { phone: "081234567831", name: "Mega Utami", rtRw: "RT 03/RW 06", xp: 30 },
   ];
 
+  // Parallel Upsert Citizens
   const citizens = await Promise.all(
     citizenSeeds.map((c) =>
       prisma.user.upsert({
         where: { phone: c.phone },
-        update: {},
-        create: { phone: c.phone, name: c.name, role: "CITIZEN", rtRw: c.rtRw },
-      }),
-    ),
-  );
-  // citizens[0] ("Warga Demo", 081234567890) stays the primary account — it's the one
-  // documented in README's demo login instructions.
-
-  // ---- Gamification: XP/level ----
-  // Hand-picked rather than replayed through awardXp() — replaying real login/action history
-  // isn't worth it for seed data. // Balanced across the 5 levels (Bronze, Silver, Gold, Ruby, Diamond)
-  const citizenXp = [220, 80, 480, 30, 920, 1600];
-  for (let i = 0; i < citizens.length; i++) {
-    const xp = citizenXp[i];
-    await prisma.user.update({ where: { id: citizens[i].id }, data: { xp, level: levelForXp(xp) } });
-  }
-
-  // ---- Energy logs ----
-  // Different consumption trends per citizen so the AI recommendation and admin averages have
-  // something varied to work with, instead of one flat number repeated everywhere.
-  const months = ["2026-04", "2026-05", "2026-06", "2026-07", "2026-08"];
-  const consumptionTrends: number[][] = [
-    [210, 195, 180, 172, 150], // primaryCitizen — steadily improving
-    [140, 145, 150, 158, 165], // Siti — creeping up
-    [300, 295, 305, 290, 298], // Budi — flat, high baseline
-    [90, 88, 95, 91, 89], // Dewi — flat, low baseline
-    [175, 190, 210, 230, 250], // Ahmad — climbing fast
-    [220, 200, 175, 160, 140], // Rina — improving fast
-  ];
-
-  for (let i = 0; i < citizens.length; i++) {
-    const trend = consumptionTrends[i];
-    for (let m = 0; m < months.length; m++) {
-      const consumptionKwh = trend[m];
-      await prisma.energyLog.upsert({
-        where: { userId_period: { userId: citizens[i].id, period: months[m] } },
-        update: {},
-        create: {
-          userId: citizens[i].id,
-          period: months[m],
-          consumptionKwh,
-          costEstimate: estimateCost(consumptionKwh),
-          co2Estimate: estimateCo2(consumptionKwh),
+        update: {
+          name: c.name,
+          rtRw: c.rtRw,
+          xp: c.xp,
+          level: levelForXp(c.xp),
         },
-      });
-    }
-  }
+        create: {
+          phone: c.phone,
+          name: c.name,
+          role: "CITIZEN",
+          rtRw: c.rtRw,
+          xp: c.xp,
+          level: levelForXp(c.xp),
+        },
+      })
+    )
+  );
 
-  // ---- Officer + Admin ----
+  // Parallel Upsert Officer + Admin
   const officerUser = await prisma.user.upsert({
     where: { phone: "081234567891" },
     update: {},
@@ -115,7 +85,7 @@ async function main() {
     create: {
       userId: officerUser.id,
       name: officerUser.name,
-      department: "Dinas Pekerjaan Umum",
+      department: "Dinas Pekerjaan Umum & Lingkungan",
       area: "Bojong Kulur",
     },
   });
@@ -126,21 +96,44 @@ async function main() {
     create: { phone: "081234567892", name: "Admin Demo", role: "ADMIN" },
   });
 
-  // ---- Reports ----
-  // Only seed reports once — re-running `prisma db seed` shouldn't keep piling on duplicates.
-  const existingReports = await prisma.report.count();
-  if (existingReports > 0) {
-    console.log(`Seed selesai (${existingReports} laporan sudah ada, tidak menambah lagi).`);
-    return;
+  // Batch Energy Logs
+  const months = ["2026-04", "2026-05", "2026-06", "2026-07", "2026-08"];
+  const energyLogsData: Array<{
+    userId: string;
+    period: string;
+    consumptionKwh: number;
+    costEstimate: number;
+    co2Estimate: number;
+  }> = [];
+
+  for (let i = 0; i < citizens.length; i++) {
+    const baseKwh = 120 + (i % 8) * 25;
+    for (let m = 0; m < months.length; m++) {
+      const consumptionKwh = Math.max(60, Math.round(baseKwh - m * 8 + ((i + m) % 5) * 3));
+      energyLogsData.push({
+        userId: citizens[i].id,
+        period: months[m],
+        consumptionKwh,
+        costEstimate: estimateCost(consumptionKwh),
+        co2Estimate: estimateCo2(consumptionKwh),
+      });
+    }
   }
 
-  // Three deliberate hotspots (so the admin heatmap shows real concentration) plus scattered
-  // one-off reports elsewhere in the pilot area. All centers/jitter stay inside the same
-  // Bojong Kulur bounding box the citizen map is restricted to.
-  // Three deliberate hotspots in Desa Bojong Kulur, Gunung Putri, Bogor
+  // Delete & Re-insert bulk energy logs
+  await prisma.energyLog.deleteMany({});
+  await prisma.energyLog.createMany({
+    data: energyLogsData,
+    skipDuplicates: true,
+  });
+
+  // Delete & Re-insert Reports & Status Logs
+  await prisma.reportStatusLog.deleteMany({});
+  await prisma.report.deleteMany({});
+
   const HOTSPOT_INTERSECTION: [number, number] = [-6.366, 106.972]; // Villa Nusa Indah intersection
   const HOTSPOT_MARKET: [number, number] = [-6.372, 106.976]; // Pasar Bojong Kulur
-  const HOTSPOT_LOWLAND: [number, number] = [-6.360, 106.968]; // Bantaran Kali Cileungsi / Cikeas
+  const HOTSPOT_LOWLAND: [number, number] = [-6.360, 106.968]; // Bantaran Kali Cileungsi
 
   interface ReportSeed {
     category: string;
@@ -152,37 +145,37 @@ async function main() {
   }
 
   const reportSeeds: ReportSeed[] = [
-    // Hotspot: jalan rusak near the main intersection
-    { category: "jalan_rusak", description: "Lubang besar di tengah jalan, sudah beberapa motor terjatuh saat malam hari.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.002, status: "REPORTED" },
-    { category: "jalan_rusak", description: "Aspal retak dan bergelombang di dekat persimpangan, licin kalau hujan.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.002, status: "REPORTED" },
-    { category: "jalan_rusak", description: "Lubang di bahu jalan semakin melebar, dekat dengan jalur pejalan kaki.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.002, status: "VERIFIED", officerNote: "Sudah dicek, kondisi cukup parah, dijadwalkan untuk perbaikan." },
-    { category: "jalan_rusak", description: "Jalan berlubang membuat kemacetan karena kendaraan harus menghindar bergantian.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.0025, status: "VERIFIED", officerNote: "Valid, sudah masuk antrean perbaikan RT/RW." },
-    { category: "jalan_rusak", description: "Beberapa titik jalan ambles setelah musim hujan kemarin.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.0018, status: "IN_PROGRESS", officerNote: "Material sudah didatangkan, pengerjaan mulai minggu ini." },
-    { category: "jalan_rusak", description: "Lubang jalan di depan gang sudah diperbaiki sebagian bulan lalu.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.0015, status: "RESOLVED", officerNote: "Perbaikan selesai, sudah ditambal permanen." },
+    // Hotspot 1: Jalan Rusak
+    { category: "jalan_rusak", description: "Lubang besar di jalan utama RW 05, membahayakan pengendara motor saat malam.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.002, status: "REPORTED" },
+    { category: "jalan_rusak", description: "Aspal retak dan bergelombang di dekat persimpangan pasar, licin saat hujan.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.002, status: "REPORTED" },
+    { category: "jalan_rusak", description: "Bahu jalan amblas sedalam 30cm dekat jembatan penghubung RT 02.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.002, status: "VERIFIED", officerNote: "Sudah disurvei tim lapangan, material aspal hotmix dijadwalkan." },
+    { category: "jalan_rusak", description: "Jalan berlubang membuat antrean kemacetan panjang di jam sibuk warga.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.0025, status: "VERIFIED", officerNote: "Valid, masuk prioritas pemeliharaan jalan desa." },
+    { category: "jalan_rusak", description: "Paving block trotoar terangkat akar pohon besar, mengganggu pejalan kaki.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.0018, status: "IN_PROGRESS", officerNote: "Sedang dilakukan penataan akar dan perapian paving." },
+    { category: "jalan_rusak", description: "Lubang jalan depan kantor posyandu sudah ditambal dengan baik.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.0015, status: "RESOLVED", officerNote: "Pekerjaan penambalan selesai 100% dan sudah dapat dilalui." },
+    { category: "jalan_rusak", description: "Genangan air merusak lapisan aspal di gang mawar RT 04.", center: HOTSPOT_INTERSECTION, jitterDeg: 0.002, status: "RESOLVED", officerNote: "Aspal baru dan resapan air telah diperbaiki." },
 
-    // Hotspot: sampah near the market
-    { category: "sampah", description: "Tumpukan sampah pasar tidak diangkut lebih dari seminggu, mulai berbau menyengat.", center: HOTSPOT_MARKET, jitterDeg: 0.0015, status: "REPORTED" },
-    { category: "sampah", description: "Sampah organik dari pedagang menumpuk di pinggir jalan dekat pasar.", center: HOTSPOT_MARKET, jitterDeg: 0.0015, status: "REPORTED" },
-    { category: "sampah", description: "Tempat sampah komunal penuh dan meluber ke jalan, mengundang lalat.", center: HOTSPOT_MARKET, jitterDeg: 0.002, status: "VERIFIED", officerNote: "Sudah dicek, akan dikoordinasikan dengan petugas kebersihan." },
-    { category: "sampah", description: "Sampah plastik berserakan terbawa angin dari area pasar ke selokan.", center: HOTSPOT_MARKET, jitterDeg: 0.0022, status: "VERIFIED", officerNote: "Valid, jadwal angkut akan ditambah." },
-    { category: "sampah", description: "Pembakaran sampah liar di belakang pasar mengganggu warga sekitar.", center: HOTSPOT_MARKET, jitterDeg: 0.0018, status: "IN_PROGRESS", officerNote: "Sudah ditegur, dipasang larangan bakar sampah." },
-    { category: "sampah", description: "Area sekitar pasar sekarang lebih bersih setelah jadwal angkut ditambah.", center: HOTSPOT_MARKET, jitterDeg: 0.0012, status: "RESOLVED", officerNote: "Jadwal angkut sampah 3x seminggu sudah berjalan." },
+    // Hotspot 2: Sampah & Kebersihan
+    { category: "sampah", description: "Tumpukan sampah plastik liar di lahan kosong belakang pertokoan.", center: HOTSPOT_MARKET, jitterDeg: 0.0015, status: "REPORTED" },
+    { category: "sampah", description: "Tempat pembuangan sampah sementara meluap hingga ke badan jalan.", center: HOTSPOT_MARKET, jitterDeg: 0.0015, status: "REPORTED" },
+    { category: "sampah", description: "Warga membuang puing bangunan di pinggir jalan alternatif RW 03.", center: HOTSPOT_MARKET, jitterDeg: 0.002, status: "VERIFIED", officerNote: "Sudah dipasang garis pembatas dan jadwal truk pengangkut." },
+    { category: "sampah", description: "Sampah pasar organik menumpuk dan menimbulkan bau tidak sedap.", center: HOTSPOT_MARKET, jitterDeg: 0.0022, status: "IN_PROGRESS", officerNote: "Armada truk sampah DLH sedang mengangkut ke TPA." },
+    { category: "sampah", description: "Area pembuangan sampah liar sudah dibersihkan dan dipasang spanduk larangan.", center: HOTSPOT_MARKET, jitterDeg: 0.0018, status: "RESOLVED", officerNote: "Pembersihan total selesai bersama warga kerja bakti." },
+    { category: "sampah", description: "Saluran selokan pasar yang tersumbat plastik sudah dikeruk bersih.", center: HOTSPOT_MARKET, jitterDeg: 0.0012, status: "RESOLVED", officerNote: "Drainase lancar kembali, sampah diangkut tuntas." },
 
-    // Hotspot: drainase in the lowland area
-    { category: "drainase", description: "Selokan tersumbat sampah, air meluap ke jalan setiap hujan deras.", center: HOTSPOT_LOWLAND, jitterDeg: 0.002, status: "REPORTED" },
-    { category: "drainase", description: "Got mampet bikin genangan air di depan rumah warga.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0022, status: "REPORTED" },
-    { category: "drainase", description: "Saluran air rusak dan retak, tanah di sekitarnya mulai ambles.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0018, status: "REPORTED" },
-    { category: "drainase", description: "Banjir kecil di area rendah setiap kali hujan lebih dari satu jam.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0025, status: "VERIFIED", officerNote: "Terkonfirmasi, drainase perlu dikeruk total." },
-    { category: "drainase", description: "Endapan lumpur tebal menyumbat aliran air ke saluran utama.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0015, status: "IN_PROGRESS", officerNote: "Pengerukan drainase sedang berjalan, estimasi selesai 2 minggu." },
+    // Hotspot 3: Drainase & Saluran Air
+    { category: "drainase", description: "Saluran air tersumbat endapan lumpur tebal, memicu luapan air saat hujan deras.", center: HOTSPOT_LOWLAND, jitterDeg: 0.002, status: "REPORTED" },
+    { category: "drainase", description: "Tutup gorong-gorong beton pecah tergilas truk pengangkut material.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0022, status: "VERIFIED", officerNote: "Tutup gorong-gorong baru sedang dicetak." },
+    { category: "drainase", description: "Tanggul saluran primer retak dan berpotensi jebol jika debit air naik.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0018, status: "IN_PROGRESS", officerNote: "Pemasangan bronjong kawat penahan tanggul sedang berlangsung." },
+    { category: "drainase", description: "Pengerukan lumpur got sepanjang 200 meter di RW 06 telah tuntas.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0025, status: "RESOLVED", officerNote: "Aliran air normal menuju saluran pembuangan utama." },
+    { category: "drainase", description: "Pintu air otomatis bantaran kali telah diminyaki dan berfungsi normal.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0015, status: "RESOLVED", officerNote: "Uji coba buka-tutup pintu air sukses." },
 
-    // Scattered — penerangan jalan, fasilitas umum, lainnya
-    { category: "penerangan_jalan", description: "Lampu jalan mati total sejak seminggu lalu, area jadi gelap dan rawan.", center: [-6.367, 106.979], jitterDeg: 0.001, status: "REPORTED" },
-    { category: "penerangan_jalan", description: "Lampu jalan menyala redup dan berkedip-kedip, kemungkinan perlu diganti.", center: [-6.375, 106.971], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Sudah dicek petugas PJU, menunggu suku cadang." },
-    { category: "penerangan_jalan", description: "Tiang lampu jalan miring akibat tertabrak kendaraan, berpotensi roboh.", center: [-6.363, 106.982], jitterDeg: 0.001, status: "REPORTED" },
-    { category: "fasilitas_umum", description: "Ayunan di taman RW rusak dan berkarat, berbahaya untuk anak-anak.", center: [-6.369, 106.963], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Valid, akan dikoordinasikan dengan karang taruna untuk perbaikan." },
-    { category: "fasilitas_umum", description: "Pos ronda RT rusak atapnya, bocor saat hujan.", center: [-6.378, 106.977], jitterDeg: 0.001, status: "REPORTED" },
-    { category: "fasilitas_umum", description: "Jembatan penyeberangan kecil mulai lapuk, papan kayunya sudah beberapa yang patah.", center: [-6.356, 106.971], jitterDeg: 0.001, status: "RESOLVED", officerNote: "Papan kayu sudah diganti dengan yang baru." },
-    { category: "lainnya", description: "Pohon besar di pinggir jalan mulai miring, khawatir tumbang saat angin kencang.", center: [-6.374, 106.981], jitterDeg: 0.001, status: "REPORTED" },
+    // Scattered: Penerangan Jalan & Fasilitas Umum
+    { category: "penerangan_jalan", description: "Lampu penerangan jalan utama mati total sepanjang 100 meter di RW 01.", center: [-6.367, 106.979], jitterDeg: 0.001, status: "REPORTED" },
+    { category: "penerangan_jalan", description: "Kabel lampu PJU terkelupas dan menjuntai dekat pohon rindang.", center: [-6.375, 106.971], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Kabel diamankan petugas PLN & desa." },
+    { category: "penerangan_jalan", description: "Penggantian 5 unit lampu LED hemat energi di jalan RW 04 selesai.", center: [-6.363, 106.982], jitterDeg: 0.001, status: "RESOLVED", officerNote: "Lampu menyala terang dan efisien." },
+    { category: "fasilitas_umum", description: "Pagar taman bermain balita di posyandu RT 03 patah.", center: [-6.369, 106.963], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Telah dikoordinasikan untuk pengelasan ulang." },
+    { category: "fasilitas_umum", description: "Renovasi pos kamling dan pengecatan ulang pos ronda RW 02 telah selesai.", center: [-6.378, 106.977], jitterDeg: 0.001, status: "RESOLVED", officerNote: "Pos ronda siap digunakan kembali untuk siskamling." },
+    { category: "lainnya", description: "Ranting pohon peneduh jalan dipangkas karena menutupi rambu lalu lintas.", center: [-6.374, 106.981], jitterDeg: 0.001, status: "RESOLVED", officerNote: "Pemangkasan selesai, jarak pandang aman." },
   ];
 
   for (const seed of reportSeeds) {
@@ -211,42 +204,52 @@ async function main() {
     });
   }
 
-  // ---- Badges ----
-  // Runs the same criteria as lib/gamification.ts's checkAndAwardBadges (see seedBadgesFor above
-  // for why it's re-implemented here instead of imported) against the energy logs/reports just
-  // seeded, per citizen.
+  // Bulk Badges
+  const badgesData: Array<{ userId: string; badgeType: string }> = [];
   for (const citizen of citizens) {
-    await seedBadgesFor(citizen.id);
+    badgesData.push({ userId: citizen.id, badgeType: "pemula" });
+    if (citizen.xp >= 150) badgesData.push({ userId: citizen.id, badgeType: "pelapor_pertama" });
+    if (citizen.xp >= 400) badgesData.push({ userId: citizen.id, badgeType: "warga_aktif" });
+    if (citizen.xp >= 700) badgesData.push({ userId: citizen.id, badgeType: "konsisten_3_bulan" });
+    if (citizen.xp >= 1200) badgesData.push({ userId: citizen.id, badgeType: "hemat_energi" });
+    if (citizen.xp >= 1800) badgesData.push({ userId: citizen.id, badgeType: "pahlawan_lapor" });
   }
+  await prisma.badge.deleteMany({});
+  await prisma.badge.createMany({
+    data: badgesData,
+    skipDuplicates: true,
+  });
 
-  // ---- Prize claims ----
-  // One row per (citizen, prize level) they've already reached — mark a couple as already
-  // claimed so the badges page and the admin "Klaim Hadiah Menunggu" list both have something
-  // real to show on a fresh seed, instead of every claim starting pending.
-  const alreadyClaimedLevels: Record<number, number[]> = {
-    0: [2], // primaryCitizen: Level 2 pulsa already given, Level 3 Kopdes voucher still pending
-    5: [2, 3], // Rina: Level 2 & 3 already given, Level 4 & 5 still pending
-  };
-
-  for (let i = 0; i < citizens.length; i++) {
-    const level = levelForXp(citizenXp[i]);
+  // Bulk Prize Claims
+  const claimsData: Array<{ userId: string; level: number; claimedAt: Date | null }> = [];
+  for (const citizen of citizens) {
+    const level = levelForXp(citizen.xp);
     const reachedPrizeLevels = LEVELS.filter((l) => l.prize && l.level <= level);
     for (const l of reachedPrizeLevels) {
-      const claimed = alreadyClaimedLevels[i]?.includes(l.level) ?? false;
-      await prisma.prizeClaim.upsert({
-        where: { userId_level: { userId: citizens[i].id, level: l.level } },
-        update: {},
-        create: { userId: citizens[i].id, level: l.level, claimedAt: claimed ? new Date() : null },
+      const isClaimed = l.level < level;
+      claimsData.push({
+        userId: citizen.id,
+        level: l.level,
+        claimedAt: isClaimed ? new Date() : null,
       });
     }
   }
+  await prisma.prizeClaim.deleteMany({});
+  await prisma.prizeClaim.createMany({
+    data: claimsData,
+    skipDuplicates: true,
+  });
 
-  console.log("Seed selesai:");
-  console.log(`  ${citizens.length} warga, ${reportSeeds.length} laporan, ${months.length} bulan data energi/warga`);
-  console.log("  Akun demo (OTP dev mode selalu 000000):");
-  console.log("    Warga  : 081234567890");
-  console.log("    Petugas: 081234567891");
-  console.log("    Admin  : 081234567892");
+  console.log("Seeding database berhasil (Parallel & High Speed):");
+  console.log(`  ✓ ${citizens.length} Warga Terdaftar (RT 01 s.d RT 08 Bojong Kulur)`);
+  console.log(`  ✓ ${energyLogsData.length} Log Energi Bulanan`);
+  console.log(`  ✓ ${reportSeeds.length} Laporan Infrastruktur & Kebersihan`);
+  console.log(`  ✓ ${badgesData.length} Lencana Penghargaan Warga`);
+  console.log(`  ✓ ${claimsData.length} Tiket Klaim Hadiah`);
+  console.log("  ✓ Akun Demo Aktif (OTP 000000):");
+  console.log("    - Warga   : 081234567890 (Warga Demo)");
+  console.log("    - Petugas : 081234567891");
+  console.log("    - Admin   : 081234567892");
 }
 
 main()

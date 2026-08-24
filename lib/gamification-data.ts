@@ -255,7 +255,7 @@ export function getBadgeDef(type: string): BadgeDef | undefined {
   return BADGE_CATALOG.find((b) => b.type === type);
 }
 
-// ---- Leaderboard Mock Data / Interface ----
+// ---- Database Leaderboard Interface ----
 export interface LeaderboardUser {
   id: string;
   rank: number;
@@ -268,66 +268,3 @@ export interface LeaderboardUser {
   isCurrentUser?: boolean;
 }
 
-export const MOCK_LEADERBOARD: LeaderboardUser[] = [
-  {
-    id: "user-top-1",
-    rank: 1,
-    name: "Rina Wulandari",
-    rtRw: "RT 02/RW 06",
-    xp: 2600,
-    level: 5,
-    badgeName: "Diamond",
-    badgeIcon: "/icons/badge-diamond.png",
-  },
-  {
-    id: "user-top-2",
-    rank: 2,
-    name: "Ahmad Fauzi",
-    rtRw: "RT 04/RW 05",
-    xp: 920,
-    level: 4,
-    badgeName: "Ruby",
-    badgeIcon: "/icons/badge-ruby.png",
-  },
-  {
-    id: "user-top-3",
-    rank: 3,
-    name: "Budi Santoso",
-    rtRw: "RT 03/RW 05",
-    xp: 480,
-    level: 3,
-    badgeName: "Gold",
-    badgeIcon: "/icons/badge-gold.png",
-  },
-  {
-    id: "user-demo",
-    rank: 4,
-    name: "Warga Demo",
-    rtRw: "RT 01/RW 05",
-    xp: 220,
-    level: 2,
-    badgeName: "Silver",
-    badgeIcon: "/icons/badge-silver.png",
-    isCurrentUser: true,
-  },
-  {
-    id: "user-top-5",
-    rank: 5,
-    name: "Siti Aminah",
-    rtRw: "RT 02/RW 05",
-    xp: 80,
-    level: 1,
-    badgeName: "Bronze",
-    badgeIcon: "/icons/badge-bronze.png",
-  },
-  {
-    id: "user-top-6",
-    rank: 6,
-    name: "Dewi Lestari",
-    rtRw: "RT 01/RW 06",
-    xp: 30,
-    level: 1,
-    badgeName: "Bronze",
-    badgeIcon: "/icons/badge-bronze.png",
-  },
-];

@@ -7,9 +7,9 @@ export default function LoginPage() {
       <div className="mb-8 flex flex-col items-center gap-2 text-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/icons/Lambang_Kabupaten_Bogor.svg.webp"
-          alt="Lambang Kabupaten Bogor"
-          className="h-14 w-14 object-contain drop-shadow-sm mb-1"
+          src="/icons/ecolur-logo.png"
+          alt="Logo EcoLur"
+          className="h-20 w-20 rounded-full object-cover drop-shadow-md mb-2 ring-2 ring-emerald-500/20"
         />
         <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-800">
           Pemerintah Kabupaten Bogor

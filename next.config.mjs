@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: false,
   images: {
     // Report photos are served from Supabase Storage's public bucket URL.
     remotePatterns: [

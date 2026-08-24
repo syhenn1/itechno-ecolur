@@ -20,6 +20,20 @@
   --color-emerald-900: #1a2c07;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+*:focus-visible {
+  outline: none;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 body {
   background-color: #f1f5f9;
   color: #0f172a;
@@ -132,4 +146,8 @@ body {
   .animate-pulse-glow {
     animation: none !important;
   }
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0.5rem);
 }

@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         <VersionBadge />
-        <Toaster position="top-center" richColors closeButton />
+        <Toaster position="top-right" richColors closeButton />
       </body>
     </html>
   );

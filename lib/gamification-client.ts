@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import type { BadgeDef } from "@/lib/gamification-data";
+import { triggerButtonExplosion } from "@/lib/confetti";
 
 export interface ClientGamificationResult {
   awarded: boolean;
@@ -9,13 +10,17 @@ export interface ClientGamificationResult {
 }
 
 /** Call from a form's success handler with whatever `gamification` field the API response
- *  included — shows a level-up toast and one toast per newly-earned badge, if any. */
+ *  included — triggers celebration explosion, shows a level-up toast and one toast per newly-earned badge. */
 export function showGamificationToasts(gamification: ClientGamificationResult | null | undefined) {
   if (!gamification) return;
 
+  if (gamification.awarded || gamification.leveledUp || (gamification.newBadges && gamification.newBadges.length > 0)) {
+    triggerButtonExplosion(null);
+  }
+
   if (gamification.leveledUp && gamification.newLevel) {
-    toast.success(`Naik ke Level ${gamification.newLevel}!`, {
-      description: "Terus aktif untuk naik level dan dapatkan hadiah berikutnya.",
+    toast.success(`Selamat! Anda Naik ke Level ${gamification.newLevel}!`, {
+      description: "Terus aktif beraksi hijau untuk mengklaim hadiah berikutnya.",
     });
   }
 

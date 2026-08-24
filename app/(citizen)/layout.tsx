@@ -3,14 +3,12 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Navbar } from "@/components/layout/navbar";
-
 import { levelForXp } from "@/lib/gamification-data";
 
 const CITIZEN_LINKS = [
   { href: "/energy", label: "Energi" },
-  { href: "/report", label: "Lapor" },
-  { href: "/my-reports", label: "Laporan Saya" },
-  { href: "/badges", label: "Lencana" },
+  { href: "/report", label: "Lapor & Riwayat" },
+  { href: "/badges", label: "Hadiah & Lencana" },
   { href: "/ask-ai", label: "Tanya AI" },
 ];
 
@@ -22,7 +20,7 @@ export default async function CitizenLayout({ children }: { children: ReactNode 
   const currentLevel = user ? levelForXp(user.xp) : 1;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-100/70 pb-28 sm:pb-32 md:pb-8">
       <Navbar name={session.name} roleLabel="Warga" links={CITIZEN_LINKS} level={currentLevel} />
       {children}
     </div>

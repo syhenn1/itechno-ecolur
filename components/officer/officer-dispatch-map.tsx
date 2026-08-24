@@ -166,7 +166,7 @@ export function OfficerDispatchMap({
       </div>
 
       {/* Interactive Map View */}
-      <div className="h-[360px] w-full relative z-0">
+      <div className="h-[460px] w-full relative z-0">
         <MapContainer
           center={OFFICER_BASE_COORDINATES}
           zoom={14}

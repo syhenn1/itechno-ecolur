@@ -1,153 +1,274 @@
 "use client";
 
-import { Trophy, Medal, Award, Crown } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Trophy, Crown, ChevronLeft, ChevronRight, Search, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { MOCK_LEADERBOARD, type LeaderboardUser } from "@/lib/gamification-data";
+import { type LeaderboardUser } from "@/lib/gamification-data";
 
 interface GreenLeaderboardProps {
   users?: LeaderboardUser[];
   currentUserId?: string;
 }
 
-export function GreenLeaderboard({ users = MOCK_LEADERBOARD }: GreenLeaderboardProps) {
+const ITEMS_PER_PAGE = 7; // Top 1,2,3 in Podium + 7 in list = Top 10 Besar on Page 1
+
+export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const top3 = users.slice(0, 3);
-  const remaining = users.slice(3);
+  const remainingAll = users.slice(3);
+
+  // Filtered remaining users
+  const filteredRemaining = useMemo(() => {
+    if (!searchQuery.trim()) return remainingAll;
+    const q = searchQuery.toLowerCase();
+    return remainingAll.filter(
+      (u) => u.name.toLowerCase().includes(q) || u.rtRw.toLowerCase().includes(q)
+    );
+  }, [remainingAll, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRemaining.length / ITEMS_PER_PAGE));
+  const effectivePage = Math.min(currentPage, totalPages);
+
+  const paginatedUsers = useMemo(() => {
+    const start = (effectivePage - 1) * ITEMS_PER_PAGE;
+    return filteredRemaining.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredRemaining, effectivePage]);
+
+  const startRank = 4 + (effectivePage - 1) * ITEMS_PER_PAGE;
+  const endRank = Math.min(startRank + paginatedUsers.length - 1, users.length);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-700 shadow-xs">
-            <Trophy className="h-4 w-4" />
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 shadow-xs shrink-0">
+            <Trophy className="h-5 w-5" />
           </span>
           <div>
             <h3 className="text-base font-extrabold text-slate-900">Papan Peringkat Warga Hijau</h3>
-            <p className="text-xs text-slate-500">Warga paling aktif dalam efisiensi energi &amp; laporan lingkungan di Bojong Kulur.</p>
+            <p className="text-xs text-slate-500">Warga paling aktif dalam efisiensi energi &amp; laporan lingkungan di Desa Bojong Kulur.</p>
           </div>
         </div>
-        <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+        <span className="self-start sm:self-center text-xs font-extrabold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 whitespace-nowrap shrink-0">
           Musim 2026
         </span>
       </div>
 
-      {/* Top 3 Podium Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-        {/* Rank 2 */}
+      {/* Stepped Stairs Competition Podium (Top 3) */}
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 items-end pt-4 pb-2">
+        {/* Step 2: Runner Up (Left - Medium Stair) */}
         {top3[1] && (
-          <div className="order-2 sm:order-1 rounded-3xl border border-slate-300 bg-gradient-to-b from-slate-50 via-white to-slate-50 p-4 text-center shadow-xs flex flex-col items-center justify-between">
-            <div className="flex flex-col items-center">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-200 text-xs font-extrabold text-slate-700 mb-2">
-                #2
-              </span>
-              <div className="relative mb-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={top3[1].badgeIcon}
-                  alt={top3[1].badgeName}
-                  className="h-12 w-12 object-contain drop-shadow-sm"
-                />
-              </div>
-              <h4 className="text-sm font-bold text-slate-900 truncate max-w-full">{top3[1].name}</h4>
-              <span className="text-[10px] text-slate-500">{top3[1].rtRw}</span>
+          <div className="flex flex-col items-center text-center min-w-0">
+            <div className="flex flex-col items-center w-full pb-3 min-w-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={top3[1].badgeIcon}
+                alt={top3[1].badgeName}
+                className="h-12 w-12 sm:h-14 sm:w-14 object-contain drop-shadow-sm mb-1.5"
+              />
+              <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 truncate w-full px-1" title={top3[1].name}>
+                {top3[1].name}
+              </h4>
+              <span className="text-xs sm:text-sm font-black text-slate-800 font-mono">{top3[1].xp} XP</span>
+              <span className="text-[10px] text-slate-500 truncate">{top3[1].rtRw}</span>
             </div>
-            <div className="mt-3 w-full pt-2 border-t border-slate-200/80">
-              <span className="text-xs font-extrabold text-slate-800 font-mono">{top3[1].xp} XP</span>
-              <span className="block text-[10px] text-slate-400 font-medium">Rank {top3[1].badgeName}</span>
+
+            {/* Stepped Pedestal Block #2 */}
+            <div className="w-full rounded-t-3xl bg-gradient-to-b from-slate-300 via-slate-200 to-slate-300/90 border-t-4 border-slate-400 p-3 shadow-inner flex flex-col items-center justify-center h-20 sm:h-24">
+              <span className="text-2xl sm:text-3xl font-black text-slate-700 font-mono">2</span>
+              <span className="text-[9px] font-black uppercase tracking-wider text-slate-600">Runner Up</span>
             </div>
           </div>
         )}
 
-        {/* Rank 1 (Champion) */}
+        {/* Step 1: Champion (Center - Tallest Golden Stair 👑) */}
         {top3[0] && (
-          <div className="order-1 sm:order-2 rounded-3xl border-2 border-amber-400 bg-gradient-to-b from-amber-50/80 via-white to-amber-50/40 p-5 text-center shadow-md eco-glow-gold flex flex-col items-center justify-between relative -mt-2">
-            <div className="absolute -top-3 rounded-full bg-amber-500 px-3 py-0.5 text-[10px] font-black uppercase text-white shadow-xs flex items-center gap-1">
-              <Crown className="h-3 w-3" /> Peringkat 1
-            </div>
-            <div className="flex flex-col items-center mt-1">
-              <div className="relative mb-2">
+          <div className="flex flex-col items-center text-center min-w-0 relative">
+            <div className="flex flex-col items-center w-full pb-3 min-w-0">
+              <div className="relative mb-1.5">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-white shadow-xs">
+                  <Crown className="h-3.5 w-3.5" />
+                </span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={top3[0].badgeIcon}
                   alt={top3[0].badgeName}
-                  className="h-16 w-16 object-contain drop-shadow-md animate-bounce-slow"
+                  className="h-16 w-16 sm:h-20 sm:w-20 object-contain drop-shadow-md animate-bounce-slow"
                 />
               </div>
-              <h4 className="text-base font-extrabold text-slate-900 truncate max-w-full">{top3[0].name}</h4>
-              <span className="text-xs text-slate-500">{top3[0].rtRw}</span>
+              <h4 className="text-sm sm:text-base font-black text-slate-900 truncate w-full px-1" title={top3[0].name}>
+                {top3[0].name}
+              </h4>
+              <span className="text-sm sm:text-base font-black text-amber-900 font-mono">{top3[0].xp} XP</span>
+              <span className="text-xs font-bold text-amber-700 truncate">{top3[0].rtRw}</span>
             </div>
-            <div className="mt-3 w-full pt-2 border-t border-amber-200">
-              <span className="text-sm font-black text-amber-900 font-mono">{top3[0].xp} XP</span>
-              <span className="block text-xs font-bold text-amber-700">{top3[0].badgeName} Champion</span>
+
+            {/* Stepped Pedestal Block #1 */}
+            <div className="w-full rounded-t-3xl bg-gradient-to-b from-amber-400 via-yellow-400 to-amber-500 border-t-4 border-yellow-200 p-4 shadow-lg eco-glow-gold flex flex-col items-center justify-center h-28 sm:h-36 relative">
+              <span className="text-3xl sm:text-4xl font-black text-amber-950 font-mono">1</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">Champion</span>
             </div>
           </div>
         )}
 
-        {/* Rank 3 */}
+        {/* Step 3: 3rd Place (Right - Lowest Stair) */}
         {top3[2] && (
-          <div className="order-3 rounded-3xl border border-amber-200/80 bg-gradient-to-b from-amber-50/30 via-white to-slate-50 p-4 text-center shadow-xs flex flex-col items-center justify-between">
-            <div className="flex flex-col items-center">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-xs font-extrabold text-amber-800 mb-2">
-                #3
-              </span>
-              <div className="relative mb-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={top3[2].badgeIcon}
-                  alt={top3[2].badgeName}
-                  className="h-12 w-12 object-contain drop-shadow-sm"
-                />
-              </div>
-              <h4 className="text-sm font-bold text-slate-900 truncate max-w-full">{top3[2].name}</h4>
-              <span className="text-[10px] text-slate-500">{top3[2].rtRw}</span>
-            </div>
-            <div className="mt-3 w-full pt-2 border-t border-slate-200/80">
-              <span className="text-xs font-extrabold text-slate-800 font-mono">{top3[2].xp} XP</span>
-              <span className="block text-[10px] text-slate-400 font-medium">Rank {top3[2].badgeName}</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Ranks 4+ List */}
-      <div className="rounded-3xl border border-slate-200 bg-white p-3 shadow-xs space-y-1">
-        {remaining.map((u) => (
-          <div
-            key={u.id}
-            className={cn(
-              "flex items-center justify-between p-3 rounded-2xl transition-all",
-              u.isCurrentUser
-                ? "bg-emerald-50/90 border border-emerald-300 ring-2 ring-emerald-500/20"
-                : "hover:bg-slate-50"
-            )}
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-slate-100 text-xs font-bold text-slate-700">
-                #{u.rank}
-              </span>
+          <div className="flex flex-col items-center text-center min-w-0">
+            <div className="flex flex-col items-center w-full pb-3 min-w-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={u.badgeIcon}
-                alt={u.badgeName}
-                className="h-8 w-8 object-contain"
+                src={top3[2].badgeIcon}
+                alt={top3[2].badgeName}
+                className="h-11 w-11 sm:h-13 sm:w-13 object-contain drop-shadow-sm mb-1.5"
               />
-              <div>
-                <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                  <span>{u.name}</span>
-                  {u.isCurrentUser && (
-                    <span className="rounded-full bg-emerald-600 px-2 py-0.2 text-[9px] font-bold text-white">
-                      Anda
-                    </span>
-                  )}
-                </div>
-                <div className="text-[10px] text-slate-500">{u.rtRw} &middot; Level {u.level} ({u.badgeName})</div>
-              </div>
+              <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 truncate w-full px-1" title={top3[2].name}>
+                {top3[2].name}
+              </h4>
+              <span className="text-xs sm:text-sm font-black text-amber-800 font-mono">{top3[2].xp} XP</span>
+              <span className="text-[10px] text-slate-500 truncate">{top3[2].rtRw}</span>
             </div>
-            <div className="text-right">
-              <span className="text-xs font-extrabold text-slate-900 font-mono">{u.xp} XP</span>
+
+            {/* Stepped Pedestal Block #3 */}
+            <div className="w-full rounded-t-3xl bg-gradient-to-b from-amber-200 via-amber-100 to-amber-200/90 border-t-4 border-amber-300 p-3 shadow-inner flex flex-col items-center justify-center h-14 sm:h-16">
+              <span className="text-xl sm:text-2xl font-black text-amber-800 font-mono">3</span>
+              <span className="text-[9px] font-black uppercase tracking-wider text-amber-700">3rd Place</span>
             </div>
           </div>
-        ))}
+        )}
       </div>
+
+      {/* Ranks 4 s.d. 10+ Section Header & Filter */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-slate-100">
+        <div>
+          <h4 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+            <Sparkles className="h-4 w-4 text-emerald-600" />
+            <span>Peringkat 4 s.d. 10 Besar &amp; Seluruh Warga</span>
+          </h4>
+          <p className="text-xs text-slate-500">
+            Menampilkan peringkat {startRank}–{endRank} dari {users.length} warga terdaftar
+          </p>
+        </div>
+
+        {/* Real-time search filter */}
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Cari nama atau RT/RW..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          />
+        </div>
+      </div>
+
+      {/* Ranks 4+ List Table */}
+      <div className="rounded-3xl border border-slate-200 bg-white p-3 shadow-xs space-y-1.5">
+        {paginatedUsers.length === 0 ? (
+          <div className="py-8 text-center text-xs text-slate-500">
+            Tidak ada warga yang sesuai dengan pencarian &ldquo;{searchQuery}&rdquo;.
+          </div>
+        ) : (
+          paginatedUsers.map((u) => (
+            <div
+              key={u.id}
+              className={cn(
+                "flex items-center justify-between p-3 rounded-2xl transition-all border",
+                u.isCurrentUser
+                  ? "bg-emerald-50/90 border-emerald-300 ring-2 ring-emerald-500/20"
+                  : "bg-slate-50/50 border-slate-200/70 hover:bg-white hover:border-slate-300"
+              )}
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <span
+                  className={cn(
+                    "flex h-7 w-7 items-center justify-center rounded-xl text-xs font-black shrink-0",
+                    u.rank <= 10
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-slate-200 text-slate-600"
+                  )}
+                >
+                  #{u.rank}
+                </span>
+
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={u.badgeIcon}
+                  alt={u.badgeName}
+                  className="h-8 w-8 object-contain shrink-0"
+                />
+
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5 truncate">
+                    <span className="truncate">{u.name}</span>
+                    {u.isCurrentUser && (
+                      <span className="rounded-full bg-emerald-600 px-2 py-0.2 text-[9px] font-bold text-white shrink-0">
+                        Anda
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate">
+                    {u.rtRw} &middot; Level {u.level} ({u.badgeName})
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-right shrink-0 pl-2">
+                <span className="text-xs font-black text-slate-900 font-mono">{u.xp} XP</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between gap-2 pt-2 px-1 text-xs">
+          <button
+            type="button"
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={effectivePage <= 1}
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span>Sebelumnya</span>
+          </button>
+
+          <div className="flex items-center gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <button
+                key={pageNum}
+                type="button"
+                onClick={() => setCurrentPage(pageNum)}
+                className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-xl text-xs font-extrabold transition-all cursor-pointer",
+                  effectivePage === pageNum
+                    ? "bg-emerald-600 text-white shadow-xs"
+                    : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                )}
+              >
+                {pageNum}
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={effectivePage >= totalPages}
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+          >
+            <span>Selanjutnya</span>
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

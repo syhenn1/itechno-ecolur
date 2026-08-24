@@ -7,7 +7,7 @@ export default async function AskAiPage() {
   if (!session) return null;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="animate-fade-in-up">
         <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-3 py-0.5 text-xs font-bold text-emerald-800 mb-2 border border-emerald-200">
           <Sparkles className="h-3.5 w-3.5" /> Asisten Cerdas RAG &middot; Regulasi &amp; Efisiensi

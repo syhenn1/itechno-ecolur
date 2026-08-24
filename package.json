@@ -20,6 +20,8 @@
     "@google/generative-ai": "latest",
     "@prisma/client": "^6.0.0",
     "@supabase/supabase-js": "latest",
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
     "clsx": "latest",
     "jose": "latest",
     "leaflet": "latest",

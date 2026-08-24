@@ -10,7 +10,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   if (!session || session.role !== "ADMIN") redirect("/login");
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 pb-28 sm:pb-32 md:pb-8">
       <Navbar name={session.name} roleLabel="Admin" links={ADMIN_LINKS} />
       {children}
     </div>

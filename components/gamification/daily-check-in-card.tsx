@@ -5,6 +5,8 @@ import { Flame, Sparkles, Check, Gift } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { triggerButtonExplosion } from "@/lib/confetti";
+
 interface DailyCheckInCardProps {
   initialStreak?: number;
 }
@@ -14,8 +16,17 @@ export function DailyCheckInCard({ initialStreak = 3 }: DailyCheckInCardProps) {
   const [checkedInToday, setCheckedInToday] = useState(false);
   const [streak, setStreak] = useState(initialStreak);
 
-  const handleCheckIn = async () => {
+  const handleCheckIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (loading || checkedInToday) return;
+
+    // Capture button coordinate before async boundary
+    const rect = e.currentTarget.getBoundingClientRect();
+    const origin = {
+      x: (rect.left + rect.width / 2) / window.innerWidth,
+      y: (rect.top + rect.height / 2) / window.innerHeight,
+    };
+
+    triggerButtonExplosion(origin);
     setLoading(true);
 
     try {
@@ -94,7 +105,7 @@ export function DailyCheckInCard({ initialStreak = 3 }: DailyCheckInCardProps) {
       </div>
 
       {/* 7-Day Visual Streak Tracker */}
-      <div className="mt-4 grid grid-cols-7 gap-1.5 sm:gap-2 pt-2 border-t border-emerald-100/80">
+      <div className="mt-3 sm:mt-4 grid grid-cols-7 gap-1 sm:gap-2 pt-2 border-t border-emerald-100/80">
         {days.map((dayName, idx) => {
           const isDone = idx < currentDayIndex || (idx === currentDayIndex && checkedInToday);
           const isCurrent = idx === currentDayIndex && !checkedInToday;
@@ -104,25 +115,25 @@ export function DailyCheckInCard({ initialStreak = 3 }: DailyCheckInCardProps) {
             <div
               key={idx}
               className={cn(
-                "flex flex-col items-center justify-center rounded-2xl p-2 text-center transition-all",
+                "flex flex-col items-center justify-center rounded-xl sm:rounded-2xl py-1.5 px-0.5 sm:p-2 text-center transition-all min-w-0",
                 isDone
                   ? "bg-emerald-600 text-white shadow-xs"
                   : isCurrent
-                    ? "bg-amber-100 border-2 border-amber-400 text-amber-900 animate-pulse-glow"
+                    ? "bg-amber-100 border border-amber-400 text-amber-900 animate-pulse-glow"
                     : "bg-white/80 border border-slate-200 text-slate-400"
               )}
             >
-              <span className="text-[10px] font-bold uppercase tracking-tight">{dayName}</span>
-              <div className="my-1 flex h-6 w-6 items-center justify-center">
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-tight truncate block w-full">{dayName}</span>
+              <div className="my-0.5 sm:my-1 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center">
                 {isDone ? (
-                  <Check className="h-3.5 w-3.5 stroke-[3]" />
+                  <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3]" />
                 ) : isBonus ? (
-                  <Gift className="h-3.5 w-3.5 text-amber-600" />
+                  <Gift className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-600" />
                 ) : (
-                  <span className="text-xs font-mono font-bold">15</span>
+                  <span className="text-[10px] sm:text-xs font-mono font-bold">15</span>
                 )}
               </div>
-              <span className="text-[9px] font-semibold">{isBonus ? "+50" : "+15"}</span>
+              <span className="text-[8px] sm:text-[9px] font-bold">{isBonus ? "+50" : "+15"}</span>
             </div>
           );
         })}

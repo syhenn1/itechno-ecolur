@@ -5,14 +5,13 @@ import { useEffect, useRef, useState } from "react";
 interface CountUpProps {
   value: number;
   duration?: number;
-  formatter?: (value: number) => string;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
 }
 
-/** Animates a number counting up to `value` on mount/change. Respects prefers-reduced-motion by
- *  collapsing the animation to a single frame rather than skipping the effect (setting state
- *  synchronously at the top of an effect is its own anti-pattern — this keeps every state
- *  update inside the requestAnimationFrame callback instead). */
-export function CountUp({ value, duration = 800, formatter }: CountUpProps) {
+/** Animates a number counting up to `value` on mount/change. Serialisable props only (safe across RSC boundary). */
+export function CountUp({ value, duration = 800, decimals = 0, prefix = "", suffix = "" }: CountUpProps) {
   const [display, setDisplay] = useState(0);
   const startRef = useRef<number | null>(null);
 
@@ -37,5 +36,9 @@ export function CountUp({ value, duration = 800, formatter }: CountUpProps) {
     return () => cancelAnimationFrame(frame);
   }, [value, duration]);
 
-  return <>{formatter ? formatter(display) : Math.round(display).toLocaleString("id-ID")}</>;
+  const formatted = decimals > 0 
+    ? display.toFixed(decimals) 
+    : Math.round(display).toLocaleString("id-ID");
+
+  return <>{prefix}{formatted}{suffix}</>;
 }

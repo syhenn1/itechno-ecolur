@@ -5,8 +5,7 @@ import { Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Official Kabupaten Bogor emblem badge.
- * Renders the official Kabupaten Bogor insignia (/icons/Lambang_Kabupaten_Bogor.svg.webp)
+ * Official EcoLur emblem badge (/icons/ecolur-logo.svg)
  * with graceful fallback.
  */
 export function GovernmentBadge({ className }: { className?: string }) {
@@ -17,9 +16,9 @@ export function GovernmentBadge({ className }: { className?: string }) {
       {!logoFailed ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src="/icons/Lambang_Kabupaten_Bogor.svg.webp"
-          alt="Lambang Kabupaten Bogor"
-          className="h-5 w-5 object-contain drop-shadow-xs"
+          src="/icons/ecolur-logo.png"
+          alt="Logo EcoLur"
+          className="h-5 w-5 rounded-full object-cover drop-shadow-xs"
           onError={() => setLogoFailed(true)}
         />
       ) : (

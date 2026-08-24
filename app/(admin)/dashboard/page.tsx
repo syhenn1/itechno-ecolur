@@ -31,7 +31,7 @@ export default async function AdminDashboardPage() {
   const avgKwh = avgConsumption._avg.consumptionKwh;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="animate-fade-in-up">
         <GovernmentBadge className="mb-1" />
         <h1 className="text-2xl font-semibold text-slate-900">Dashboard Transparansi</h1>
@@ -60,7 +60,7 @@ export default async function AdminDashboardPage() {
         <Card>
           <div className="text-xs font-medium text-slate-500">Rata-rata Konsumsi</div>
           <div className="mt-1 text-2xl font-semibold text-slate-900">
-            {avgKwh ? <CountUp value={avgKwh} formatter={(n) => `${n.toFixed(1)} kWh`} /> : "-"}
+            {avgKwh ? <CountUp value={avgKwh} decimals={1} suffix=" kWh" /> : "-"}
           </div>
         </Card>
       </div>
