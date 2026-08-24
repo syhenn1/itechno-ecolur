@@ -59,7 +59,7 @@ export default async function HomePage() {
         style={{ animationDelay: "60ms" }}
       >
         <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-        Solusi Digital Berkelanjutan (SDG 7, 9, 11) &middot; ITechno Cup 2026
+        Solusi Digital Berkelanjutan (SDG 7, 9, 11) &middot; Desa Bojong Kulur
       </div>
 
       <div className="animate-fade-in-up space-y-4 max-w-2xl" style={{ animationDelay: "120ms" }}>

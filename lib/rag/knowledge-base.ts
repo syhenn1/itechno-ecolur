@@ -114,7 +114,7 @@ Protokol antisipasi dan penanganan drainase di Bojong Kulur (area pertemuan Sung
     id: "ecolur-gamification-prizes",
     category: "gamification",
     title: "Panduan Level, XP, Lencana, dan Klaim Hadiah di Platform EcoLur",
-    source: "Tim Pengembang EcoLur — ITechno Cup 2026",
+    source: "Pemerintah Desa Bojong Kulur & Tim EcoLur",
     keywords: ["xp", "level", "hadiah", "lencana", "voucher", "klaim", "gamifikasi", "poin"],
     content: `
 Sistem Reward & Gamifikasi EcoLur:

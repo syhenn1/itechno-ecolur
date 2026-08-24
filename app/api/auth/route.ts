@@ -14,7 +14,7 @@ import { awardXp } from "@/lib/gamification";
 
 export const POST = withErrorHandling(async (request: Request) => {
   const ip = getClientIp(request);
-  if (!checkRateLimit(`auth:${ip}`, 10, 60_000)) {
+  if (!checkRateLimit(`auth:${ip}`, 15, 60_000)) {
     return NextResponse.json({ error: "Terlalu banyak percobaan. Coba lagi sebentar lagi." }, { status: 429 });
   }
 
@@ -27,17 +27,7 @@ export const POST = withErrorHandling(async (request: Request) => {
   if (parsed.data.step === "request") {
     const { phone, name } = parsed.data;
 
-    // Only citizens can self-register through this form — Officer/Admin accounts are seeded/
-    // created ahead of time. An unrecognized phone number with no `name` is rejected rather
-    // than silently becoming a new account.
-    const existing = await findUserByPhone(phone);
-    if (!existing && !name) {
-      return NextResponse.json(
-        { error: "Nomor belum terdaftar. Isi nama untuk membuat akun warga baru." },
-        { status: 400 },
-      );
-    }
-
+    // Login only requires phone number. If it's a new citizen phone number, it will be automatically registered.
     const { challengeToken, devCode } = await createOtpChallenge(phone, name);
     return NextResponse.json({ challengeToken, devCode });
   }
@@ -51,7 +41,8 @@ export const POST = withErrorHandling(async (request: Request) => {
 
   let user = await findUserByPhone(phone);
   if (!user) {
-    user = await findOrCreateCitizen(phone, result.name ?? "Warga");
+    const defaultName = result.name || `Warga ${phone.slice(-4)}`;
+    user = await findOrCreateCitizen(phone, defaultName);
   }
 
   await createSession(user);

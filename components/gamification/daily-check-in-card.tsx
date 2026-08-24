@@ -33,7 +33,6 @@ export function DailyCheckInCard({ initialStreak = 3 }: DailyCheckInCardProps) {
         toast.info(data.message);
       } else {
         toast.success(data.message, {
-          icon: "🎉",
           duration: 4000,
         });
       }
@@ -59,8 +58,9 @@ export function DailyCheckInCard({ initialStreak = 3 }: DailyCheckInCardProps) {
               <Flame className="h-4 w-4 fill-orange-500 text-orange-500 animate-bounce-slow" />
             </span>
             <h3 className="text-base font-extrabold text-slate-900">Absensi Hijau Harian</h3>
-            <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-bold text-orange-700">
-              {streak} Hari Streak 🔥
+            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-700">
+              <Flame className="h-3 w-3 fill-orange-500 text-orange-500" />
+              {streak} Hari Beruntun
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">

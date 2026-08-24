@@ -2,7 +2,7 @@
 
 > An integrated digital platform for household/SME energy monitoring and public service reporting, powered by AI-driven recommendations.
 
-Developed for **ITechno Cup 2026 — Web Development Student Competition**
+Developed as a **Web Development Platform for Community Sustainability**
 Sub-theme: *Smart Sustainable Digital Solution for Inclusive Society*
 SDGs implemented: **SDG 7**, **SDG 9**, **SDG 11**
 
@@ -230,5 +230,5 @@ In line with competition rule #7, here is a transparent disclosure of how AI is 
 ---
 
 ## License
-
-This project was built for the ITechno Cup 2026 competition and is original work — not previously published for commercial use nor a winner of any similar prior competition.
+ 
+This project is original work — not previously published for commercial use nor a winner of any similar prior competition.

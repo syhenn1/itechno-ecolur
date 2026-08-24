@@ -181,7 +181,7 @@ export interface EcoQuest {
   title: string;
   description: string;
   xpReward: number;
-  icon: string;
+  iconName: "flame" | "bot" | "zap" | "camera";
   category: "daily" | "weekly" | "special";
   actionHref: string;
   actionLabel: string;
@@ -194,7 +194,7 @@ export const ECO_QUESTS: EcoQuest[] = [
     title: "Absensi Hijau Harian",
     description: "Klaim poin harian dengan login dan aktifkan streak hijau.",
     xpReward: 15,
-    icon: "🔥",
+    iconName: "flame",
     category: "daily",
     actionHref: "/badges",
     actionLabel: "Check-in",
@@ -204,7 +204,7 @@ export const ECO_QUESTS: EcoQuest[] = [
     title: "Konsultasi Edukasi EcoBot",
     description: "Tanyakan 1 pertanyaan seputar regulasi PLN, PLTS atap, atau hemat listrik.",
     xpReward: 10,
-    icon: "🤖",
+    iconName: "bot",
     category: "daily",
     actionHref: "/ask-ai",
     actionLabel: "Tanya EcoBot",
@@ -214,7 +214,7 @@ export const ECO_QUESTS: EcoQuest[] = [
     title: "Pencatatan Listrik Bulanan",
     description: "Input meteran kWh bulan ini untuk memantau emisi karbon.",
     xpReward: 30,
-    icon: "⚡",
+    iconName: "zap",
     category: "weekly",
     actionHref: "/energy",
     actionLabel: "Input kWh",
@@ -224,7 +224,7 @@ export const ECO_QUESTS: EcoQuest[] = [
     title: "Pelindung Lingkungan RT/RW",
     description: "Kirim 1 laporan fasilitas publik (jalan rusak, sampah, got mampet).",
     xpReward: 35,
-    icon: "📸",
+    iconName: "camera",
     category: "weekly",
     actionHref: "/report",
     actionLabel: "Buat Laporan",
@@ -236,19 +236,19 @@ export interface BadgeDef {
   type: string;
   name: string;
   description: string;
-  icon: string;
+  iconName: "sprout" | "megaphone" | "star" | "trophy" | "zap" | "calendar" | "medal" | "heart";
   image?: string;
 }
 
 export const BADGE_CATALOG: BadgeDef[] = [
-  { type: "pemula", name: "Warga Terdaftar", description: "Bergabung dengan komunitas EcoLur", icon: "🌱" },
-  { type: "pelapor_pertama", name: "Pelapor Pertama", description: "Mengirim laporan fasilitas kota pertama", icon: "📢" },
-  { type: "warga_aktif", name: "Warga Aktif", description: "Mengirim 5 laporan infrastruktur", icon: "🌟" },
-  { type: "pahlawan_lapor", name: "Pahlawan Lapor", description: "Mengirim 15 laporan infrastruktur", icon: "🏆" },
-  { type: "hemat_energi", name: "Hemat Energi", description: "Konsumsi kWh menurun dari bulan sebelumnya", icon: "⚡" },
-  { type: "konsisten_3_bulan", name: "Konsisten 3 Bulan", description: "Mencatat konsumsi energi selama 3 bulan", icon: "📅" },
-  { type: "konsisten_6_bulan", name: "Konsisten 6 Bulan", description: "Mencatat konsumsi energi selama 6 bulan", icon: "🎖️" },
-  { type: "warga_setia", name: "Warga Setia", description: "Aktif login di 10 hari berbeda", icon: "💚" },
+  { type: "pemula", name: "Warga Terdaftar", description: "Bergabung dengan komunitas EcoLur", iconName: "sprout" },
+  { type: "pelapor_pertama", name: "Pelapor Pertama", description: "Mengirim laporan fasilitas kota pertama", iconName: "megaphone" },
+  { type: "warga_aktif", name: "Warga Aktif", description: "Mengirim 5 laporan infrastruktur", iconName: "star" },
+  { type: "pahlawan_lapor", name: "Pahlawan Lapor", description: "Mengirim 15 laporan infrastruktur", iconName: "trophy" },
+  { type: "hemat_energi", name: "Hemat Energi", description: "Konsumsi kWh menurun dari bulan sebelumnya", iconName: "zap" },
+  { type: "konsisten_3_bulan", name: "Konsisten 3 Bulan", description: "Mencatat konsumsi energi selama 3 bulan", iconName: "calendar" },
+  { type: "konsisten_6_bulan", name: "Konsisten 6 Bulan", description: "Mencatat konsumsi energi selama 6 bulan", iconName: "medal" },
+  { type: "warga_setia", name: "Warga Setia", description: "Aktif login di 10 hari berbeda", iconName: "heart" },
 ];
 
 export function getBadgeDef(type: string): BadgeDef | undefined {

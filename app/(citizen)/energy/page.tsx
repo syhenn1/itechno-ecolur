@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { EnergyForm } from "@/components/energy/energy-form";
 import { EnergyChart } from "@/components/energy/energy-chart";
 import { RecommendationCard } from "@/components/energy/recommendation-card";
+import { SolarSimulator } from "@/components/energy/solar-simulator";
 import { Zap, Coins, CloudFog, Sparkles, TrendingUp } from "lucide-react";
 
 export default async function EnergyPage() {
@@ -101,6 +102,10 @@ export default async function EnergyPage() {
         </CardHeader>
         <EnergyChart data={logs.map((l) => ({ period: l.period, consumptionKwh: l.consumptionKwh }))} />
       </Card>
+
+      <div className="animate-fade-in-up" style={{ animationDelay: "280ms" }}>
+        <SolarSimulator />
+      </div>
 
       {logs.length > 0 && (
         <Card className="animate-fade-in-up border-slate-200 bg-white shadow-xs rounded-3xl" style={{ animationDelay: "300ms" }}>

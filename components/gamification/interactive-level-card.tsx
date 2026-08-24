@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Gift, Lock, Sparkles, QrCode, ArrowRight } from "lucide-react";
+import { Check, Gift, Lock, Sparkles, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { type LevelDef } from "@/lib/gamification-data";
@@ -51,9 +51,7 @@ export function InteractiveLevelCard({
 
       setIsClaimed(true);
       setActiveVoucher(data.voucher);
-      toast.success(`Selamat! Hadiah ${levelDef.prize} berhasil Anda klaim!`, {
-        icon: "🎁",
-      });
+      toast.success(`Selamat! Hadiah ${levelDef.prize} berhasil Anda klaim!`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan koneksi.");
     } finally {

@@ -1,15 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Target, Sparkles } from "lucide-react";
-import { ECO_QUESTS } from "@/lib/gamification-data";
+import { ArrowRight, Target, Sparkles, Flame, Bot, Zap, Camera } from "lucide-react";
+import { ECO_QUESTS, type EcoQuest } from "@/lib/gamification-data";
+
+function renderQuestIcon(iconName: EcoQuest["iconName"]) {
+  const iconClass = "h-5 w-5 text-emerald-800";
+  switch (iconName) {
+    case "flame":
+      return <Flame className="h-5 w-5 text-orange-600" />;
+    case "bot":
+      return <Bot className="h-5 w-5 text-emerald-700" />;
+    case "zap":
+      return <Zap className="h-5 w-5 text-amber-600" />;
+    case "camera":
+      return <Camera className="h-5 w-5 text-sky-700" />;
+    default:
+      return <Target className={iconClass} />;
+  }
+}
 
 export function EcoQuestsCard() {
   return (
     <div className="rounded-3xl border border-emerald-200 bg-white p-5 shadow-xs">
       <div className="flex items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
             <Target className="h-4 w-4" />
           </span>
           <div>
@@ -29,8 +45,8 @@ export function EcoQuestsCard() {
             className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white to-slate-50/50 p-4 transition-all hover:border-emerald-300 hover:shadow-sm"
           >
             <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-xl border border-emerald-100">
-                {quest.icon}
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 border border-emerald-200/80 shadow-2xs">
+                {renderQuestIcon(quest.iconName)}
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1">

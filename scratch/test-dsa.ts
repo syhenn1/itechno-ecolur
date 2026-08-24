@@ -8,10 +8,10 @@ import { triageReports } from "../lib/spatial/officer-dispatch";
 
 function assert(condition: boolean, message: string) {
   if (!condition) {
-    console.error(`❌ ASSERTION FAILED: ${message}`);
+    console.error(`[FAIL] ASSERTION FAILED: ${message}`);
     process.exit(1);
   } else {
-    console.log(`✅ ${message}`);
+    console.log(`[PASS] ${message}`);
   }
 }
 
@@ -104,7 +104,7 @@ async function runTests() {
   const smartTriaged = triageReports(dummyReports, "SMART_PRIORITY");
   assert(smartTriaged[0].id === "rep-2", "Smart triage should prioritize dangerous jalan_rusak over routine sampah");
 
-  console.log("\n🎉 ALL DSA & RAG TESTS PASSED SUCCESSFULLY!");
+  console.log("\n[SUCCESS] ALL DSA & RAG TESTS PASSED SUCCESSFULLY!");
 }
 
 runTests().catch((e) => {
