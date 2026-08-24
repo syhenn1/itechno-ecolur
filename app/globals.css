@@ -8,25 +8,26 @@
   --color-eco-earth: #7b4425;
 
   /* Harmonize emerald to our custom Eco palette */
-  --color-emerald-50: #f7fbf0;
-  --color-emerald-100: #eef7de;
-  --color-emerald-200: #d6ecc0;
-  --color-emerald-300: #b4de97;
-  --color-emerald-400: #a7d930;
-  --color-emerald-500: #95c22b;
+  --color-emerald-50: #f4f8ec;
+  --color-emerald-100: #e7f2d4;
+  --color-emerald-200: #cfe4ad;
+  --color-emerald-300: #b0d47e;
+  --color-emerald-400: #95c22b;
+  --color-emerald-500: #76a81b;
   --color-emerald-600: #507b00;
-  --color-emerald-700: #28430a;
-  --color-emerald-800: #203608;
-  --color-emerald-900: #192906;
+  --color-emerald-700: #3c5e03;
+  --color-emerald-800: #28430a;
+  --color-emerald-900: #1a2c07;
 }
 
 body {
-  background-color: #f6f9f0;
-  color: #1a2412;
+  background-color: #f1f5f9;
+  color: #0f172a;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(167, 217, 48, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(80, 123, 0, 0.06) 0%, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(80, 123, 0, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(149, 194, 43, 0.05) 0px, transparent 50%);
   background-attachment: fixed;
+  min-height: 100vh;
 }
 
 /* Custom Eco Rich Styling & Gradients */
@@ -43,27 +44,27 @@ body {
 }
 
 .bg-eco-card {
-  background: linear-gradient(180deg, #ffffff 0%, #f9fcf5 100%);
+  background: #ffffff;
 }
 
 .eco-glow-leaf {
-  box-shadow: 0 4px 20px -2px rgba(80, 123, 0, 0.35);
+  box-shadow: 0 4px 20px -2px rgba(80, 123, 0, 0.25);
 }
 
 .eco-glow-lime {
-  box-shadow: 0 4px 20px -2px rgba(149, 194, 43, 0.45);
+  box-shadow: 0 4px 20px -2px rgba(149, 194, 43, 0.35);
 }
 
 .eco-glow-gold {
-  box-shadow: 0 4px 20px -2px rgba(234, 179, 8, 0.4);
+  box-shadow: 0 4px 20px -2px rgba(234, 179, 8, 0.3);
 }
 
 .eco-glow-ruby {
-  box-shadow: 0 4px 20px -2px rgba(225, 29, 72, 0.4);
+  box-shadow: 0 4px 20px -2px rgba(225, 29, 72, 0.3);
 }
 
 .eco-glow-diamond {
-  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.45);
+  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.35);
 }
 
 @keyframes fade-in-up {
@@ -96,12 +97,12 @@ body {
 
 @keyframes pulse-glow {
   0%, 100% {
-    opacity: 0.9;
+    opacity: 0.95;
     transform: scale(1);
   }
   50% {
     opacity: 1;
-    transform: scale(1.03);
+    transform: scale(1.02);
   }
 }
 

@@ -137,9 +137,10 @@ async function main() {
   // Three deliberate hotspots (so the admin heatmap shows real concentration) plus scattered
   // one-off reports elsewhere in the pilot area. All centers/jitter stay inside the same
   // Bojong Kulur bounding box the citizen map is restricted to.
-  const HOTSPOT_INTERSECTION: [number, number] = [-6.435, 106.895]; // recurring pothole cluster
-  const HOTSPOT_MARKET: [number, number] = [-6.445, 106.905]; // trash near the market area
-  const HOTSPOT_LOWLAND: [number, number] = [-6.45, 106.888]; // drainage-prone lowland
+  // Three deliberate hotspots in Desa Bojong Kulur, Gunung Putri, Bogor
+  const HOTSPOT_INTERSECTION: [number, number] = [-6.366, 106.972]; // Villa Nusa Indah intersection
+  const HOTSPOT_MARKET: [number, number] = [-6.372, 106.976]; // Pasar Bojong Kulur
+  const HOTSPOT_LOWLAND: [number, number] = [-6.360, 106.968]; // Bantaran Kali Cileungsi / Cikeas
 
   interface ReportSeed {
     category: string;
@@ -175,13 +176,13 @@ async function main() {
     { category: "drainase", description: "Endapan lumpur tebal menyumbat aliran air ke saluran utama.", center: HOTSPOT_LOWLAND, jitterDeg: 0.0015, status: "IN_PROGRESS", officerNote: "Pengerukan drainase sedang berjalan, estimasi selesai 2 minggu." },
 
     // Scattered — penerangan jalan, fasilitas umum, lainnya
-    { category: "penerangan_jalan", description: "Lampu jalan mati total sejak seminggu lalu, area jadi gelap dan rawan.", center: [-6.4325, 106.9075], jitterDeg: 0.001, status: "REPORTED" },
-    { category: "penerangan_jalan", description: "Lampu jalan menyala redup dan berkedip-kedip, kemungkinan perlu diganti.", center: [-6.448, 106.898], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Sudah dicek petugas PJU, menunggu suku cadang." },
-    { category: "penerangan_jalan", description: "Tiang lampu jalan miring akibat tertabrak kendaraan, berpotensi roboh.", center: [-6.4415, 106.9135], jitterDeg: 0.001, status: "REPORTED" },
-    { category: "fasilitas_umum", description: "Ayunan di taman RW rusak dan berkarat, berbahaya untuk anak-anak.", center: [-6.4365, 106.883], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Valid, akan dikoordinasikan dengan karang taruna untuk perbaikan." },
-    { category: "fasilitas_umum", description: "Pos ronda RT rusak atapnya, bocor saat hujan.", center: [-6.4545, 106.9025], jitterDeg: 0.001, status: "REPORTED" },
-    { category: "fasilitas_umum", description: "Jembatan penyeberangan kecil mulai lapuk, papan kayunya sudah beberapa yang patah.", center: [-6.428, 106.892], jitterDeg: 0.001, status: "RESOLVED", officerNote: "Papan kayu sudah diganti dengan yang baru." },
-    { category: "lainnya", description: "Pohon besar di pinggir jalan mulai miring, khawatir tumbang saat angin kencang.", center: [-6.4475, 106.915], jitterDeg: 0.001, status: "REPORTED" },
+    { category: "penerangan_jalan", description: "Lampu jalan mati total sejak seminggu lalu, area jadi gelap dan rawan.", center: [-6.367, 106.979], jitterDeg: 0.001, status: "REPORTED" },
+    { category: "penerangan_jalan", description: "Lampu jalan menyala redup dan berkedip-kedip, kemungkinan perlu diganti.", center: [-6.375, 106.971], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Sudah dicek petugas PJU, menunggu suku cadang." },
+    { category: "penerangan_jalan", description: "Tiang lampu jalan miring akibat tertabrak kendaraan, berpotensi roboh.", center: [-6.363, 106.982], jitterDeg: 0.001, status: "REPORTED" },
+    { category: "fasilitas_umum", description: "Ayunan di taman RW rusak dan berkarat, berbahaya untuk anak-anak.", center: [-6.369, 106.963], jitterDeg: 0.001, status: "VERIFIED", officerNote: "Valid, akan dikoordinasikan dengan karang taruna untuk perbaikan." },
+    { category: "fasilitas_umum", description: "Pos ronda RT rusak atapnya, bocor saat hujan.", center: [-6.378, 106.977], jitterDeg: 0.001, status: "REPORTED" },
+    { category: "fasilitas_umum", description: "Jembatan penyeberangan kecil mulai lapuk, papan kayunya sudah beberapa yang patah.", center: [-6.356, 106.971], jitterDeg: 0.001, status: "RESOLVED", officerNote: "Papan kayu sudah diganti dengan yang baru." },
+    { category: "lainnya", description: "Pohon besar di pinggir jalan mulai miring, khawatir tumbang saat angin kencang.", center: [-6.374, 106.981], jitterDeg: 0.001, status: "REPORTED" },
   ];
 
   for (const seed of reportSeeds) {

@@ -45,7 +45,7 @@ export default async function BadgesPage() {
   });
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 py-8">
       <div className="animate-fade-in-up">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           Pusat Hadiah &amp; Gamifikasi Warga

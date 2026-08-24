@@ -2,15 +2,15 @@ import { QuadTree, haversineDistance, type SpatialPoint, type BoundingBox } from
 import { PriorityQueue } from "../dsa/priority-queue";
 import type { ReportStatus } from "@prisma/client";
 
-// Reference base coordinates for Bojong Kulur Officer Dispatch Post (Kantor Desa)
-export const OFFICER_BASE_COORDINATES: [number, number] = [-6.44, 106.9];
+// Reference base coordinates for Bojong Kulur Officer Dispatch Post (Kantor Desa Bojong Kulur, Gunung Putri, Bogor)
+export const OFFICER_BASE_COORDINATES: [number, number] = [-6.3687, 106.9745];
 
-// Bounding box covering Bojong Kulur and surroundings
+// Accurate bounding box covering Desa Bojong Kulur and surroundings (Gunung Putri, Kab. Bogor)
 export const BOJONG_KULUR_BOUNDING_BOX: BoundingBox = {
-  minLat: -6.48,
-  maxLat: -6.40,
-  minLng: 106.85,
-  maxLng: 106.95,
+  minLat: -6.39,
+  maxLat: -6.345,
+  minLng: 106.955,
+  maxLng: 106.995,
 };
 
 export const CATEGORY_URGENCY_WEIGHTS: Record<string, number> = {

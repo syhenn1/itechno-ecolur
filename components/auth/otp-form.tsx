@@ -90,7 +90,14 @@ export function OtpForm() {
       if (!res.ok) throw new Error(data.error ?? "Kode OTP salah atau kedaluwarsa");
       toast.success("Berhasil masuk!");
       showGamificationToasts(data.gamification);
-      router.push(next);
+
+      const roleHome = data.role === "ADMIN" 
+        ? "/dashboard" 
+        : data.role === "OFFICER" 
+          ? "/incoming-reports" 
+          : "/energy";
+      const targetUrl = next && next !== "/" && next !== "/login" ? next : roleHome;
+      window.location.href = targetUrl;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {

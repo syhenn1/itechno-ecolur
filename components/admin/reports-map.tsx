@@ -43,14 +43,14 @@ interface MapReport {
   lng: number;
 }
 
-// Approximate center of Bojong Kulur, Gunung Putri, Kabupaten Bogor — the pilot area.
-const DEFAULT_CENTER: [number, number] = [-6.44, 106.9];
+// Accurate center of Desa Bojong Kulur, Gunung Putri, Kabupaten Bogor
+const DEFAULT_CENTER: [number, number] = [-6.3687, 106.9745];
 
 const BOJONG_BOUNDS: BoundingBox = {
-  minLat: -6.48,
-  maxLat: -6.40,
-  minLng: 106.85,
-  maxLng: 106.95,
+  minLat: -6.39,
+  maxLat: -6.345,
+  minLng: 106.955,
+  maxLng: 106.995,
 };
 
 type ViewMode = "pins" | "heatmap" | "spatial";

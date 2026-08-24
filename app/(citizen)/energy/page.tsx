@@ -7,7 +7,7 @@ import { EnergyForm } from "@/components/energy/energy-form";
 import { EnergyChart } from "@/components/energy/energy-chart";
 import { RecommendationCard } from "@/components/energy/recommendation-card";
 import { SolarSimulator } from "@/components/energy/solar-simulator";
-import { Zap, Coins, CloudFog, Sparkles, TrendingUp } from "lucide-react";
+import { Zap, Coins, CloudFog, Sparkles, TrendingUp, History } from "lucide-react";
 
 export default async function EnergyPage() {
   const session = await getSession();
@@ -22,7 +22,7 @@ export default async function EnergyPage() {
   const latest = logs.at(-1);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 py-8">
       <div className="animate-fade-in-up">
         <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-3 py-0.5 text-xs font-bold text-emerald-800 mb-2 border border-emerald-200">
           <Sparkles className="h-3.5 w-3.5" /> Modul Efisiensi Energi &middot; SDG 7
@@ -35,22 +35,8 @@ export default async function EnergyPage() {
         </p>
       </div>
 
-      <Card className="animate-fade-in-up border-emerald-200 bg-white shadow-xs rounded-3xl" style={{ animationDelay: "60ms" }}>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Zap className="h-4 w-4 text-emerald-600" />
-            Input Konsumsi Bulan Ini
-          </CardTitle>
-        </CardHeader>
-        <EnergyForm />
-      </Card>
-
-      <div className="animate-fade-in-up" style={{ animationDelay: "120ms" }}>
-        <RecommendationCard initialRecommendation={recommendation} />
-      </div>
-
-      {/* Vibrant Stat Metric Cards */}
-      <div className="grid animate-fade-in-up gap-4 sm:grid-cols-3" style={{ animationDelay: "180ms" }}>
+      {/* 3 Metric Summary Cards */}
+      <div className="grid animate-fade-in-up gap-4 sm:grid-cols-3" style={{ animationDelay: "60ms" }}>
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-white via-emerald-50/40 to-lime-50/20 p-5 shadow-xs transition-all hover:shadow-md">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Konsumsi Terakhir</span>
@@ -93,49 +79,75 @@ export default async function EnergyPage() {
         </div>
       </div>
 
-      <Card className="animate-fade-in-up border-emerald-200 bg-white shadow-xs rounded-3xl" style={{ animationDelay: "240ms" }}>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-emerald-600" />
-            Grafik Tren Pemakaian Listrik
-          </CardTitle>
-        </CardHeader>
-        <EnergyChart data={logs.map((l) => ({ period: l.period, consumptionKwh: l.consumptionKwh }))} />
-      </Card>
+      {/* Main 2-Column Grid */}
+      <div className="grid gap-6 lg:grid-cols-12 items-start">
+        {/* Left Column (7 Cols) */}
+        <div className="lg:col-span-7 space-y-6">
+          <Card className="animate-fade-in-up border-slate-200 bg-white shadow-xs rounded-3xl" style={{ animationDelay: "120ms" }}>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Zap className="h-4 w-4 text-emerald-600" />
+                Input Konsumsi Listrik Bulan Ini (+30 XP)
+              </CardTitle>
+            </CardHeader>
+            <EnergyForm />
+          </Card>
 
-      <div className="animate-fade-in-up" style={{ animationDelay: "280ms" }}>
-        <SolarSimulator />
-      </div>
+          <Card className="animate-fade-in-up border-slate-200 bg-white shadow-xs rounded-3xl" style={{ animationDelay: "180ms" }}>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-emerald-600" />
+                Grafik Tren Pemakaian Listrik
+              </CardTitle>
+            </CardHeader>
+            <EnergyChart data={logs.map((l) => ({ period: l.period, consumptionKwh: l.consumptionKwh }))} />
+          </Card>
 
-      {logs.length > 0 && (
-        <Card className="animate-fade-in-up border-slate-200 bg-white shadow-xs rounded-3xl" style={{ animationDelay: "300ms" }}>
-          <CardHeader>
-            <CardTitle className="text-base">Riwayat Lengkap Pencatatan</CardTitle>
-          </CardHeader>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
-                  <th className="pb-3 font-bold">Periode</th>
-                  <th className="pb-3 font-bold">Konsumsi</th>
-                  <th className="pb-3 font-bold">Biaya</th>
-                  <th className="pb-3 font-bold">Emisi CO2</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...logs].reverse().map((log) => (
-                  <tr key={log.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-emerald-50/40">
-                    <td className="py-3 font-semibold text-slate-900">{log.period}</td>
-                    <td className="py-3 font-bold text-emerald-800 font-mono">{log.consumptionKwh} kWh</td>
-                    <td className="py-3 text-slate-700 font-medium">{formatRupiah(log.costEstimate)}</td>
-                    <td className="py-3 text-slate-600 font-mono">{log.co2Estimate} kg</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {logs.length > 0 && (
+            <Card className="animate-fade-in-up border-slate-200 bg-white shadow-xs rounded-3xl" style={{ animationDelay: "240ms" }}>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <History className="h-4 w-4 text-slate-600" />
+                  Riwayat Lengkap Pencatatan
+                </CardTitle>
+              </CardHeader>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <th className="pb-3 font-bold">Periode</th>
+                      <th className="pb-3 font-bold">Konsumsi</th>
+                      <th className="pb-3 font-bold">Biaya</th>
+                      <th className="pb-3 font-bold">Emisi CO2</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...logs].reverse().map((log) => (
+                      <tr key={log.id} className="border-b border-slate-100 transition-colors last:border-0 hover:bg-emerald-50/40">
+                        <td className="py-3 font-semibold text-slate-900">{log.period}</td>
+                        <td className="py-3 font-bold text-emerald-800 font-mono">{log.consumptionKwh} kWh</td>
+                        <td className="py-3 text-slate-700 font-medium">{formatRupiah(log.costEstimate)}</td>
+                        <td className="py-3 text-slate-600 font-mono">{log.co2Estimate} kg</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Right Column (5 Cols) */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+            <RecommendationCard initialRecommendation={recommendation} />
           </div>
-        </Card>
-      )}
+
+          <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+            <SolarSimulator />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

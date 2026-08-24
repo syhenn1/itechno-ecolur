@@ -20,14 +20,12 @@ const defaultIcon = L.icon({
   iconAnchor: [12, 41],
 });
 
-// Approximate bounding box around Bojong Kulur, Gunung Putri, Kabupaten Bogor — the pilot area.
-// This is a rough hand-picked box (~4km across), not a surveyed kelurahan boundary — tighten it
-// with real GIS/administrative boundary data if precise coverage matters.
+// Accurate bounding box around Desa Bojong Kulur, Gunung Putri, Kabupaten Bogor
 const BOJONG_KULUR_BOUNDS = L.latLngBounds(
-  [-6.46, 106.88], // southwest
-  [-6.42, 106.92], // northeast
+  [-6.39, 106.955], // southwest (Ciangsana / Wanaherang border)
+  [-6.345, 106.995], // northeast (Villa Nusa Indah / Kali Cileungsi border)
 );
-const DEFAULT_CENTER: [number, number] = [-6.44, 106.9];
+const DEFAULT_CENTER: [number, number] = [-6.3687, 106.9745]; // Kantor Desa Bojong Kulur
 
 function ClickHandler({ onPick }: { onPick: (lat: number, lng: number) => void }) {
   useMapEvents({
