@@ -5,8 +5,8 @@ import { Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Official EcoLur emblem badge (/icons/ecolur-logo.svg)
- * with graceful fallback.
+ * Official Kabupaten Bogor emblem, with graceful fallback to a generic icon if the file is ever
+ * missing/renamed. The real logo now lives at public/icons/Lambang_Kabupaten_Bogor.svg.webp.
  */
 export function GovernmentBadge({ className }: { className?: string }) {
   const [logoFailed, setLogoFailed] = useState(false);
@@ -16,9 +16,9 @@ export function GovernmentBadge({ className }: { className?: string }) {
       {!logoFailed ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src="/icons/ecolur-logo.png"
-          alt="Logo EcoLur"
-          className="h-5 w-5 rounded-full object-cover drop-shadow-xs"
+          src="/icons/Lambang_Kabupaten_Bogor.svg.webp"
+          alt="Lambang Kabupaten Bogor"
+          className="h-5 w-5 object-contain drop-shadow-xs"
           onError={() => setLogoFailed(true)}
         />
       ) : (

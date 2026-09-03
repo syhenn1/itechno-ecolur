@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { RefreshCw, Sparkles, Bot, Zap } from "lucide-react";
+import { RefreshCw, Bot } from "lucide-react";
 
 export function RecommendationCard({ initialRecommendation }: { initialRecommendation: string }) {
   const [recommendation, setRecommendation] = useState(initialRecommendation);

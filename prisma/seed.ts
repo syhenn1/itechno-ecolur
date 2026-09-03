@@ -240,13 +240,89 @@ async function main() {
     skipDuplicates: true,
   });
 
+  // Bulk Waste Logs
+  const wasteTypes = ["Kardus Bekas", "Botol Plastik PET", "Minyak Jelantah", "Kertas Campur", "Logam/Besi Tua"];
+  const bankSampahNames = ["Bank Sampah Berseri RW 05", "Bank Sampah Mandiri RT 02", "Bank Sampah Hijau Daun"];
+  const wasteLogsData: Array<{ userId: string; wasteType: string; weightKg: number; xpEarned: number; status: string; bankSampah: string }> = [];
+  
+  for (const citizen of citizens) {
+    if (Math.random() > 0.3) {
+      const type = wasteTypes[Math.floor(Math.random() * wasteTypes.length)];
+      const weight = Math.round((Math.random() * 4 + 1) * 10) / 10;
+      wasteLogsData.push({
+        userId: citizen.id,
+        wasteType: type,
+        weightKg: weight,
+        xpEarned: Math.round(weight * 15),
+        status: "VERIFIED",
+        bankSampah: bankSampahNames[Math.floor(Math.random() * bankSampahNames.length)]
+      });
+    }
+  }
+  await prisma.wasteLog.deleteMany({});
+  await prisma.wasteLog.createMany({ data: wasteLogsData });
+
+  // Community Quests
+  await prisma.communityQuest.deleteMany({});
+  await prisma.communityQuest.createMany({
+    data: [
+      { rtRw: "RT 01/RW 05", title: "Target Hemat 20% Konsumsi Energi", targetValue: 20, currentValue: 15.5, unit: "%", rewardXp: 500 },
+      { rtRw: "RT 03/RW 02", title: "Pengumpulan Minyak Jelantah 50 Liter", targetValue: 50, currentValue: 22, unit: "Liter", rewardXp: 300 },
+      { rtRw: "RT 02/RW 06", title: "Pemilahan Sampah Organik 100Kg", targetValue: 100, currentValue: 100, status: "COMPLETED", unit: "Kg", rewardXp: 1000 }
+    ]
+  });
+
+  // Officer Location
+  await prisma.officerLocation.deleteMany({});
+  await prisma.officerLocation.create({
+    data: {
+      officerId: officer.id,
+      lat: HOTSPOT_INTERSECTION[0],
+      lng: HOTSPOT_INTERSECTION[1]
+    }
+  });
+
+  // Reward Catalog & Redemptions
+  await prisma.rewardRedemption.deleteMany({});
+  await prisma.rewardCatalog.deleteMany({});
+  
+  const catalogs = [
+    { name: "Beras Organik Setra Ramos 5kg", description: "Beras lokal premium dari Koperasi", costXp: 1500, stock: 10, provider: "Koperasi Desa Bojong Kulur" },
+    { name: "Token Listrik Rp 50.000", description: "Voucher listrik prabayar", costXp: 800, stock: 50, provider: "BUMDes Bojong Kulur" },
+    { name: "Minyak Goreng 2L", description: "Minyak goreng kemasan", costXp: 500, stock: 30, provider: "Koperasi Desa Bojong Kulur" },
+    { name: "Bibit Tanaman Cabai", description: "Bibit sayuran dari KWT", costXp: 100, stock: 100, provider: "Kelompok Wanita Tani RW 01" }
+  ];
+  
+  await prisma.rewardCatalog.createMany({ data: catalogs });
+
+  // Mobility Logs
+  const mobilityModes = ["TRANSPORTASI_UMUM", "SEPEDA", "JALAN_KAKI"];
+  const mobilityLogsData: Array<{ userId: string; mode: string; distanceKm: number; xpEarned: number }> = [];
+  
+  for (const citizen of citizens) {
+    if (Math.random() > 0.5) {
+      const mode = mobilityModes[Math.floor(Math.random() * mobilityModes.length)];
+      const dist = Math.round((Math.random() * 9 + 1) * 10) / 10;
+      mobilityLogsData.push({
+        userId: citizen.id,
+        mode: mode,
+        distanceKm: dist,
+        xpEarned: Math.round(dist * 10)
+      });
+    }
+  }
+  await prisma.mobilityLog.deleteMany({});
+  await prisma.mobilityLog.createMany({ data: mobilityLogsData });
+
   console.log("Seeding database berhasil (Parallel & High Speed):");
-  console.log(`  ✓ ${citizens.length} Warga Terdaftar (RT 01 s.d RT 08 Bojong Kulur)`);
-  console.log(`  ✓ ${energyLogsData.length} Log Energi Bulanan`);
-  console.log(`  ✓ ${reportSeeds.length} Laporan Infrastruktur & Kebersihan`);
-  console.log(`  ✓ ${badgesData.length} Lencana Penghargaan Warga`);
-  console.log(`  ✓ ${claimsData.length} Tiket Klaim Hadiah`);
-  console.log("  ✓ Akun Demo Aktif (OTP 000000):");
+  console.log(`  - ${citizens.length} Warga Terdaftar (RT 01 s.d RT 08 Bojong Kulur)`);
+  console.log(`  - ${energyLogsData.length} Log Energi Bulanan`);
+  console.log(`  - ${reportSeeds.length} Laporan Infrastruktur & Kebersihan`);
+  console.log(`  - ${badgesData.length} Lencana Penghargaan Warga`);
+  console.log(`  - ${claimsData.length} Tiket Klaim Hadiah`);
+  console.log(`  - ${wasteLogsData.length} Catatan Bank Sampah`);
+  console.log(`  - ${mobilityLogsData.length} Catatan Mobilitas Jejak Karbon`);
+  console.log("  - Akun Demo Aktif (OTP 000000):");
   console.log("    - Warga   : 081234567890 (Warga Demo)");
   console.log("    - Petugas : 081234567891");
   console.log("    - Admin   : 081234567892");

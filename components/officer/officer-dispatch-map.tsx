@@ -13,13 +13,13 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Building2, Navigation, MapPin, ShieldAlert, AlertTriangle, ArrowUpRight } from "lucide-react";
+import { Building2, Navigation, ArrowUpRight } from "lucide-react";
 import {
   OFFICER_BASE_COORDINATES,
   type DispatchReport,
   type SortMode,
 } from "@/lib/spatial/officer-dispatch";
-import { cn, statusLabel } from "@/lib/utils";
+import { statusLabel } from "@/lib/utils";
 
 // Officer Base Custom Icon
 const officerBaseIcon = L.divIcon({
@@ -122,7 +122,6 @@ export function OfficerDispatchMap({
   reports,
   selectedReportId,
   onSelectReport,
-  sortMode,
 }: OfficerDispatchMapProps) {
   const selectedReport = useMemo(() => {
     return reports.find((r) => r.id === selectedReportId) ?? (reports.length > 0 ? reports[0] : null);

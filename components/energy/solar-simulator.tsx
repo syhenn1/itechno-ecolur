@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Sun, Sparkles, Trees, DollarSign, ArrowRight, Zap, ShieldCheck } from "lucide-react";
+import { Sun, Sparkles, Trees, DollarSign, ArrowRight } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 
 export function SolarSimulator() {

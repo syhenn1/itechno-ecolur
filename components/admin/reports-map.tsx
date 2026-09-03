@@ -60,11 +60,10 @@ export function ReportsMap({ reports }: { reports: MapReport[] }) {
   const center: [number, number] = reports.length > 0 ? [reports[0].lat, reports[0].lng] : DEFAULT_CENTER;
 
   // Build QuadTree spatial partition in memory
-  const { quadTree, clusters } = useMemo(() => {
+  const { clusters } = useMemo(() => {
     const qt = new QuadTree<MapReport>(BOJONG_BOUNDS, 3, 0, 5);
     qt.insertMany(reports);
-    const cls = qt.getClusters(3);
-    return { quadTree: qt, clusters: cls };
+    return { clusters: qt.getClusters(3) };
   }, [reports]);
 
   return (

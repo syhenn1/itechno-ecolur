@@ -10,7 +10,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";

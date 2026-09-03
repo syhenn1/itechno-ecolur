@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, Copy, X, Sparkles, QrCode, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -28,13 +28,11 @@ interface ClaimVoucherModalProps {
 
 export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) {
   const [copied, setCopied] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!voucher || !mounted) return null;
+  // No SSR-mount guard needed here: `voucher` starts null and is only ever set from a
+  // client-side fetch handler (see interactive-level-card.tsx), so this never attempts to
+  // portal into `document.body` during a server render in the first place.
+  if (!voucher) return null;
 
   const handleCopyCode = (e: React.MouseEvent<HTMLButtonElement>) => {
     triggerButtonExplosion(e);

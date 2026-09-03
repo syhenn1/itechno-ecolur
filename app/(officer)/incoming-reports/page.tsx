@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { IncomingReportsList } from "@/components/officer/incoming-reports-list";
-import { MapPin, ShieldCheck } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 export default async function IncomingReportsPage() {
   const reports = await prisma.report.findMany({

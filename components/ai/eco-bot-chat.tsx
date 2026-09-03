@@ -8,7 +8,6 @@ import {
   BookOpen,
   HelpCircle,
   RotateCcw,
-  Zap,
   ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -39,6 +38,13 @@ const SAMPLE_PROMPTS = [
 ];
 
 export function EcoBotChat() {
+  // A ref-based counter rather than Date.now()/crypto.randomUUID() calls scattered through the
+  // handler — react-hooks/purity flags calling those directly, since a function defined in
+  // component scope can't always be proven to only ever run from an event handler. A ref mutation
+  // is the sanctioned escape hatch for exactly this kind of imperative bookkeeping.
+  const idCounter = useRef(0);
+  const nextId = (prefix: string) => `${prefix}-${++idCounter.current}`;
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
@@ -65,7 +71,7 @@ export function EcoBotChat() {
     if (!textToSend.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: nextId("user"),
       role: "user",
       text: textToSend.trim(),
       timestamp: new Date(),
@@ -89,7 +95,7 @@ export function EcoBotChat() {
       }
 
       const botMessage: ChatMessage = {
-        id: `bot-${Date.now()}`,
+        id: nextId("bot"),
         role: "assistant",
         text: data.answer,
         sources: data.sources,
@@ -100,7 +106,7 @@ export function EcoBotChat() {
       setMessages((prev) => [...prev, botMessage]);
     } catch (err) {
       const errorMessage: ChatMessage = {
-        id: `err-${Date.now()}`,
+        id: nextId("err"),
         role: "assistant",
         text: err instanceof Error ? err.message : "Terjadi kesalahan koneksi. Silakan coba lagi.",
         timestamp: new Date(),

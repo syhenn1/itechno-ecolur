@@ -7,21 +7,18 @@ import {
   MapPin,
   Clock,
   AlertTriangle,
-  ShieldAlert,
-  ShieldCheck,
   CheckCircle2,
   Phone,
   MessageSquare,
   Search,
-  Filter,
   Navigation,
   ExternalLink,
   ChevronRight,
   User,
   Calendar,
 } from "lucide-react";
-import { cn, statusLabel } from "@/lib/utils";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { StatusTimeline } from "@/components/reports/status-timeline";
 import { StatusUpdateForm } from "@/components/reports/status-update-form";

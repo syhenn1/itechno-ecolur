@@ -1,4 +1,4 @@
-import { Gift } from "lucide-react";
+import { Gift, ShieldCheck } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { statusLabel } from "@/lib/utils";
 import { LEVELS } from "@/lib/gamification-data";
@@ -33,9 +33,16 @@ export default async function AdminDashboardPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="animate-fade-in-up">
-        <GovernmentBadge className="mb-1" />
-        <h1 className="text-2xl font-semibold text-slate-900">Dashboard Transparansi</h1>
-        <p className="text-sm text-slate-600">Statistik agregat energi dan laporan warga.</p>
+        <GovernmentBadge className="mb-2" />
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-bold text-emerald-800 mb-2 border border-emerald-200">
+          <ShieldCheck className="h-3.5 w-3.5" /> Dashboard Transparansi &middot; SDG 11
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Dashboard Transparansi Publik
+        </h1>
+        <p className="text-sm text-slate-600 mt-1">
+          Statistik agregat energi dan laporan warga Desa Bojong Kulur, real-time dari basis data.
+        </p>
       </div>
 
       <div className="grid animate-fade-in-up gap-4 sm:grid-cols-2 lg:grid-cols-4" style={{ animationDelay: "60ms" }}>

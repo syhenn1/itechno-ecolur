@@ -1,10 +1,10 @@
 import { PriorityQueue } from "../lib/dsa/priority-queue";
-import { QuadTree, haversineDistance } from "../lib/dsa/quadtree";
+import { QuadTree } from "../lib/dsa/quadtree";
 import { Trie } from "../lib/dsa/trie";
 import { InvertedIndex } from "../lib/dsa/inverted-index";
 import { ECOLUR_KNOWLEDGE_BASE } from "../lib/rag/knowledge-base";
-import { retrieveKnowledge, getQuerySuggestions, askEcoBot } from "../lib/rag/engine";
-import { triageReports } from "../lib/spatial/officer-dispatch";
+import { retrieveKnowledge, askEcoBot } from "../lib/rag/engine";
+import { triageReports, type DispatchReport } from "../lib/spatial/officer-dispatch";
 
 function assert(condition: boolean, message: string) {
   if (!condition) {
@@ -74,7 +74,7 @@ async function runTests() {
   assert(response.sources.length > 0, "EcoBot should return source citations");
 
   console.log("\n=== 6. TESTING OFFICER SPATIAL DISPATCH & TRIAGE ===");
-  const dummyReports: any[] = [
+  const dummyReports: DispatchReport[] = [
     {
       id: "rep-1",
       category: "sampah",

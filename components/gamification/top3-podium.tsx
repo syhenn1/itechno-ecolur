@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Trophy, Crown, ArrowRight, ChevronRight, User } from "lucide-react";
+import { Trophy, Crown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type LeaderboardUser } from "@/lib/gamification-data";
 

@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   // Pooled connection (pgbouncer) — used by the app at runtime, safe for Vercel's serverless functions.
-  url = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
   // Direct connection — used only for migrations, which pgbouncer's transaction pooling can't run.
   directUrl = env("DIRECT_URL")
 }
@@ -23,10 +23,15 @@ model User {
   // Present only when this User also has an Officer profile (role should be OFFICER).
   officer    Officer?
 
+  // Relations for new features
+  wasteLogs         WasteLog[]
+  rewardRedemptions RewardRedemption[]
+  mobilityLogs      MobilityLog[]
+
   // Gamification (lib/gamification.ts). `xp` is the source of truth; `level` is derived from it
   // and cached here on every award so list/dashboard queries don't need to recompute it.
-  xp          Int           @default(0)
-  level       Int           @default(1)
+  xp          Int          @default(0)
+  level       Int          @default(1)
   xpEvents    XpEvent[]
   prizeClaims PrizeClaim[]
 
@@ -40,14 +45,20 @@ enum Role {
 }
 
 model EnergyLog {
-  id             String   @id @default(uuid())
+  id             String @id @default(uuid())
   userId         String
-  user           User     @relation(fields: [userId], references: [id])
+  user           User   @relation(fields: [userId], references: [id])
   period         String // format: "2026-08"
   consumptionKwh Float
   costEstimate   Float
   co2Estimate    Float
-  createdAt      DateTime @default(now())
+
+  // OCR Integration
+  ocrImageUrl   String?
+  ocrRawText    String?
+  isOcrVerified Boolean @default(false)
+
+  createdAt DateTime @default(now())
 
   // One entry per user per month — resubmitting the same period updates it instead of duplicating.
   @@unique([userId, period])
@@ -104,6 +115,7 @@ model Officer {
   department String
   area       String
   statusLogs ReportStatusLog[]
+  location   OfficerLocation?
 }
 
 model Badge {
@@ -142,5 +154,80 @@ model PrizeClaim {
   claimedAt DateTime?
 
   @@unique([userId, level])
+  @@index([userId])
+}
+
+model WasteLog {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  wasteType  String
+  weightKg   Float
+  xpEarned   Int
+  status     String   @default("PENDING")
+  bankSampah String
+  createdAt  DateTime @default(now())
+
+  @@index([userId, status])
+}
+
+model CommunityQuest {
+  id           String   @id @default(uuid())
+  rtRw         String
+  title        String
+  targetValue  Float
+  currentValue Float    @default(0)
+  unit         String
+  status       String   @default("ACTIVE")
+  rewardXp     Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([rtRw, status])
+}
+
+model OfficerLocation {
+  id        String   @id @default(uuid())
+  officerId String   @unique
+  officer   Officer  @relation(fields: [officerId], references: [id])
+  lat       Float
+  lng       Float
+  updatedAt DateTime @updatedAt
+}
+
+model RewardCatalog {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  costXp      Int
+  stock       Int
+  provider    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  redemptions RewardRedemption[]
+}
+
+model RewardRedemption {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  rewardCatalogId String
+  rewardCatalog   RewardCatalog @relation(fields: [rewardCatalogId], references: [id])
+  status          String        @default("PENDING")
+  redeemedAt      DateTime      @default(now())
+
+  @@index([userId, status])
+}
+
+model MobilityLog {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  mode       String
+  distanceKm Float
+  xpEarned   Int
+  createdAt  DateTime @default(now())
+
   @@index([userId])
 }

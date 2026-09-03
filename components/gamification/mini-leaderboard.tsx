@@ -6,13 +6,11 @@ import { type LeaderboardUser } from "@/lib/gamification-data";
 
 interface MiniLeaderboardProps {
   users?: LeaderboardUser[];
-  currentUserId?: string;
   onViewFull?: () => void;
 }
 
 export function MiniLeaderboard({
   users = [],
-  currentUserId,
   onViewFull,
 }: MiniLeaderboardProps) {
   const topUsers = users.slice(0, 5);
