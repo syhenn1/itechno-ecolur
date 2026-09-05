@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Gift, QrCode, Check, Lock } from "lucide-react";
-import { toast } from "sonner";
+import { Gift, QrCode, Check, Lock } from "lucide-react";
+import { toast } from "@/lib/toast";
 import { type LevelDef } from "@/lib/gamification-data";
 import { cn } from "@/lib/utils";
 import { triggerButtonExplosion } from "@/lib/confetti";
 import { ClaimVoucherModal, type VoucherData } from "./claim-voucher-modal";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
+import { Button } from "@/components/ui/button";
 
 interface InteractiveLevelCardProps {
   levelDef: LevelDef;
@@ -27,6 +29,7 @@ export function InteractiveLevelCard({
   isClaimedInitial = false,
   claimedAtDate,
 }: InteractiveLevelCardProps) {
+  const tutorial = useTutorial();
   const [loading, setLoading] = useState(false);
   const [isClaimed, setIsClaimed] = useState(isClaimedInitial);
   const [activeVoucher, setActiveVoucher] = useState<VoucherData | null>(null);
@@ -61,6 +64,7 @@ export function InteractiveLevelCard({
       setActiveVoucher(data.voucher);
       triggerButtonExplosion(origin);
       toast.success(`Selamat! Hadiah ${levelDef.prize} berhasil Anda klaim!`);
+      tutorial?.complete("claim_prize");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan koneksi.");
     } finally {
@@ -92,12 +96,12 @@ export function InteractiveLevelCard({
     <>
       <div
         className={cn(
-          "rounded-2xl border p-3.5 sm:p-4 transition-all duration-150",
+          "rounded-md border p-3.5 sm:p-4 transition-colors",
           isCurrent
-            ? "border-emerald-500 bg-gradient-to-r from-emerald-50/80 via-white to-lime-50/40 shadow-xs ring-1 ring-emerald-500/30"
+            ? "border-emerald-400 bg-emerald-50"
             : isReached
-            ? "border-slate-200 bg-white shadow-2xs hover:border-emerald-300"
-            : "border-slate-200/80 bg-slate-50/70 opacity-80"
+              ? "border-slate-200 bg-white hover:border-slate-300"
+              : "border-slate-200 bg-slate-50 opacity-80",
         )}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -106,32 +110,23 @@ export function InteractiveLevelCard({
             <div className="relative shrink-0">
               <div
                 className={cn(
-                  "flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl p-1",
-                  isReached ? "bg-white shadow-2xs border border-slate-100" : "bg-slate-200/60 grayscale"
+                  "flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-md p-1",
+                  isReached ? "bg-white border border-slate-200" : "bg-slate-200/60 grayscale",
                 )}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={levelDef.badgeIcon}
-                  alt={levelDef.badgeName}
-                  className={cn("h-7 w-7 sm:h-9 sm:w-9 object-contain", isCurrent && "animate-bounce-slow")}
-                />
+                <img src={levelDef.badgeIcon} alt={levelDef.badgeName} className="h-7 w-7 sm:h-9 sm:w-9 object-contain" />
               </div>
-              {isCurrent && (
-                <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-600 ring-2 ring-white">
-                  <Sparkles className="h-2 w-2 text-white" />
-                </span>
-              )}
             </div>
 
             <div className="min-w-0 leading-snug">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-xs sm:text-sm font-extrabold text-slate-900 truncate">{levelDef.name}</span>
-                <span className="rounded bg-slate-100 px-1.5 py-0.2 text-[9px] sm:text-[10px] font-bold text-slate-600 font-mono">
+                <span className="text-xs sm:text-sm font-bold text-slate-900 truncate">{levelDef.name}</span>
+                <span className="rounded bg-slate-100 px-1.5 py-0.2 text-[9px] sm:text-[10px] font-semibold text-slate-600 font-mono">
                   {levelDef.xpRequired} XP
                 </span>
                 {isCurrent && (
-                  <span className="rounded-full bg-emerald-600 px-2 py-0.2 text-[8px] sm:text-[9px] font-extrabold text-white">
+                  <span className="rounded bg-emerald-700 px-2 py-0.2 text-[8px] sm:text-[9px] font-bold text-white">
                     Level Anda
                   </span>
                 )}
@@ -153,27 +148,24 @@ export function InteractiveLevelCard({
             {isReached ? (
               levelDef.prize ? (
                 isClaimed ? (
-                  <button
-                    type="button"
-                    onClick={handleOpenExistingVoucher}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 rounded-xl bg-slate-100 hover:bg-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs active:scale-95 transition-all outline-none cursor-pointer"
-                  >
-                    <QrCode className="h-3.5 w-3.5 text-emerald-700" />
-                    <span>Lihat E-Voucher</span>
-                  </button>
+                  <Button variant="outline" size="sm" onClick={handleOpenExistingVoucher} className="w-full sm:w-auto">
+                    <QrCode className="h-3.5 w-3.5" />
+                    <span>Lihat e-voucher</span>
+                  </Button>
                 ) : (
-                  <button
-                    type="button"
+                  <Button
+                    variant="primary"
+                    size="sm"
                     onClick={handleClaimPrize}
-                    disabled={loading}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 rounded-xl bg-gradient-to-r from-eco-forest via-eco-leaf to-eco-lime text-white px-3.5 py-1.5 text-xs font-extrabold shadow-md eco-glow-leaf active:scale-95 transition-all animate-pulse-glow outline-none cursor-pointer"
+                    loading={loading}
+                    data-tutorial-zone="claim_prize"
+                    className="w-full sm:w-auto"
                   >
-                    <Sparkles className="h-3.5 w-3.5 text-yellow-300" />
-                    <span>{loading ? "..." : "Klaim Hadiah"}</span>
-                  </button>
+                    Klaim hadiah
+                  </Button>
                 )
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 border border-emerald-200">
+                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 border border-emerald-200">
                   <Check className="h-3 w-3 stroke-[3]" />
                   Tercapai
                 </span>

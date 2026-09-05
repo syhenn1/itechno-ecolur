@@ -4,6 +4,10 @@ import { XP_AMOUNTS, LEVELS, levelForXp, BADGE_CATALOG, type XpEventType, type B
 
 export interface AwardResult {
   awarded: boolean;
+  /** XP actually granted this call — 0 when `awarded` is false (e.g. daily_login already
+   *  claimed today). Lets the client show a "+XX EXP" popup without hardcoding amounts that
+   *  could drift out of sync with lib/gamification-data.ts's XP_AMOUNTS. */
+  amount: number;
   leveledUp: boolean;
   newLevel?: number;
   newBadges: BadgeDef[];
@@ -27,7 +31,7 @@ export async function awardXp(userId: string, type: XpEventType): Promise<AwardR
   ]);
 
   if (type === "daily_login" && existingDaily !== null) {
-    return { awarded: false, leveledUp: false, newBadges: [] };
+    return { awarded: false, amount: 0, leveledUp: false, newBadges: [] };
   }
 
   const amount = XP_AMOUNTS[type];
@@ -54,6 +58,7 @@ export async function awardXp(userId: string, type: XpEventType): Promise<AwardR
 
   return {
     awarded: true,
+    amount,
     leveledUp: newLevel > oldLevel,
     newLevel: newLevel > oldLevel ? newLevel : undefined,
     newBadges,

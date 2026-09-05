@@ -124,27 +124,152 @@ body {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
-@keyframes ripple {
-  from {
-    transform: scale(0);
-    opacity: 0.45;
+/* Tutorial spotlight ring (components/tutorial/tutorial-pointer.tsx) — a pulsing outline on top
+   of the ring that already carries the dimming box-shadow, so the eye is drawn to it. */
+@keyframes tutorial-ring {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5);
   }
-  to {
-    transform: scale(2.4);
-    opacity: 0;
+  50% {
+    box-shadow: 0 0 0 7px rgba(16, 185, 129, 0.15);
   }
 }
 
-.animate-ripple {
-  animation: ripple 600ms ease-out forwards;
+.animate-tutorial-ring {
+  animation: tutorial-ring 1.6s ease-in-out infinite;
+}
+
+/* Entrance for the spotlight backdrop (components/tutorial/tutorial-pointer.tsx) — the dimming
+   box-shadow fades in instead of just snapping to a dark screen the instant a step appears. */
+@keyframes tutorial-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-tutorial-backdrop-in {
+  animation: tutorial-backdrop-in 0.35s ease-out both;
+}
+
+/* Tutorial "Eits, mau ke mana?" popup (components/tutorial/tutorial-provider.tsx) — pops in at
+   screen center each time a blocked click happens. */
+@keyframes tutorial-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-tutorial-pop {
+  animation: tutorial-pop 0.2s ease-out both;
+}
+
+/* Exit for the same popups (lib/toast.tsx) — plays while the toast is marked "leaving", just
+   before it's actually removed from the queue. */
+@keyframes tutorial-pop-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+.animate-tutorial-pop-out {
+  animation: tutorial-pop-out 0.22s ease-in both;
+}
+
+/* Toast auto-dismiss countdown bar (lib/toast.tsx) — animation-duration is set inline per toast
+   to match its actual `duration`, so the bar always finishes exactly when the toast closes. */
+@keyframes toast-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-toast-progress {
+  animation-name: toast-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+/* Floating "+XX EXP" badge (lib/xp-popup.ts) — pops up wherever the citizen just saved
+   something XP-worthy, drifts upward, and fades out. Plain CSS (not a Tailwind utility) since
+   the element is created imperatively outside React. */
+@keyframes xp-popup-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -65%) scale(1.15);
+  }
+  20% {
+    transform: translate(-50%, -75%) scale(1);
+  }
+  /* Held fully visible from here... */
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+  /* ...only fading out in the last stretch, instead of fading continuously the moment it
+     appears — that's what made it feel like it vanished the instant it showed up. */
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -160%) scale(1);
+  }
+}
+
+.ecolur-xp-popup {
+  position: fixed;
+  z-index: 999999;
+  pointer-events: none;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #047857;
+  background: #ffffff;
+  border: 2px solid #10b981;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.85rem;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+  white-space: nowrap;
+  animation: xp-popup-float 2.2s cubic-bezier(0.22, 0.9, 0.25, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-up,
-  .animate-ripple,
   .animate-bounce-slow,
-  .animate-pulse-glow {
+  .animate-pulse-glow,
+  .animate-tutorial-ring,
+  .animate-tutorial-pop,
+  .animate-tutorial-pop-out,
+  .animate-tutorial-backdrop-in,
+  .animate-toast-progress {
     animation: none !important;
+  }
+
+  .ecolur-xp-popup {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  /* Button.tsx's hover/press fill circle — an inline-styled transition (its size depends on
+     pointer position), so it needs !important to actually be overridden here. */
+  .btn-fill {
+    transition: none !important;
   }
 }
 

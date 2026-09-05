@@ -1,16 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import {
-  Bot,
-  Send,
-  Sparkles,
-  BookOpen,
-  HelpCircle,
-  RotateCcw,
-  ShieldCheck,
-} from "lucide-react";
+import { Bot, Send, BookOpen, HelpCircle, RotateCcw, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface SourceCitation {
   title: string;
@@ -129,43 +122,32 @@ export function EcoBotChat() {
   };
 
   return (
-    <div className="flex flex-col h-[700px] w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+    <div className="flex flex-col h-[700px] w-full rounded-md border border-slate-200 bg-white overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-emerald-50 via-teal-50 to-white px-5 py-4">
+      <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm shadow-emerald-200">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-emerald-700 text-white">
             <Bot className="h-5 w-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-base font-semibold text-slate-900">EcoBot Assistant</h2>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-800">
-                <Sparkles className="h-3 w-3" /> RAG Engine
-              </span>
-            </div>
+            <h2 className="text-base font-semibold text-slate-900">EcoBot</h2>
             <p className="text-xs text-slate-500">
-              Didukung basis data regulasi ESDM, tarif PLN, & SOP Bojong Kulur
+              Didukung basis data regulasi ESDM, tarif PLN, dan SOP Bojong Kulur
             </p>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={handleClear}
-          title="Reset Percakapan"
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 active:scale-95"
-        >
+        <Button variant="outline" size="icon" onClick={handleClear} title="Reset Percakapan" className="h-8 w-8">
           <RotateCcw className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
 
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50/40">
-        {/* RAG Banner info */}
-        <div className="flex items-start gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 text-xs text-emerald-900">
-          <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-700 mt-0.5" />
+        <div className="flex items-start gap-2.5 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+          <ShieldCheck className="h-4 w-4 shrink-0 text-slate-500 mt-0.5" />
           <div>
-            <span className="font-semibold">Transparansi RAG (Retrieval-Augmented Generation):</span> Setiap jawaban
-            disaring menggunakan struktur data <em>Inverted Index</em> &amp; <em>Priority Queue (Max-Heap)</em> dari dokumen resmi regulasi energi &amp; tata kota.
+            Jawaban EcoBot merujuk pada dokumen resmi regulasi energi dan tata kota. Untuk keputusan resmi, tetap
+            konfirmasikan ke petugas desa atau kantor PLN setempat.
           </div>
         </div>
 
@@ -190,12 +172,11 @@ export function EcoBotChat() {
               {/* RAG Sources Section */}
               {msg.sources && msg.sources.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowSourcesFor(showSourcesFor === msg.id ? null : msg.id)
-                    }
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 hover:text-emerald-800 transition-colors"
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowSourcesFor(showSourcesFor === msg.id ? null : msg.id)}
+                    className="h-auto px-0 py-0 text-emerald-700"
                   >
                     <BookOpen className="h-3.5 w-3.5" />
                     <span>
@@ -203,7 +184,7 @@ export function EcoBotChat() {
                         ? "Sembunyikan Sumber Rujukan"
                         : `Lihat ${msg.sources.length} Dokumen Rujukan RAG`}
                     </span>
-                  </button>
+                  </Button>
 
                   {showSourcesFor === msg.id && (
                     <div className="mt-2 space-y-1.5 animate-fade-in-up">
@@ -263,15 +244,16 @@ export function EcoBotChat() {
           </div>
           <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
             {SAMPLE_PROMPTS.map((prompt, idx) => (
-              <button
+              <Button
                 key={idx}
-                type="button"
+                variant="outline"
+                size="sm"
                 onClick={() => handleSend(prompt)}
                 disabled={isLoading}
-                className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-700 transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800 active:scale-95 disabled:opacity-50"
+                className="h-auto bg-slate-50 py-1 font-normal"
               >
                 {prompt}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -294,13 +276,9 @@ export function EcoBotChat() {
             disabled={isLoading}
             className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:bg-slate-50"
           />
-          <button
-            type="submit"
-            disabled={!input.trim() || isLoading}
-            className="inline-flex h-10 items-center justify-center rounded-xl bg-emerald-600 px-4 text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-          >
+          <Button type="submit" variant="primary" size="icon" disabled={!input.trim() || isLoading}>
             <Send className="h-4 w-4" />
-          </button>
+          </Button>
         </form>
       </div>
     </div>

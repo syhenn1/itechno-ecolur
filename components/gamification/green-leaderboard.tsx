@@ -44,17 +44,14 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 shadow-xs shrink-0">
+          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-amber-50 text-amber-700 shrink-0">
             <Trophy className="h-5 w-5" />
           </span>
           <div>
-            <h3 className="text-base font-extrabold text-slate-900">Papan Peringkat Warga Hijau</h3>
-            <p className="text-xs text-slate-500">Warga paling aktif dalam efisiensi energi &amp; laporan lingkungan di Desa Bojong Kulur.</p>
+            <h3 className="text-base font-bold text-slate-900">Papan peringkat warga</h3>
+            <p className="text-xs text-slate-500">Warga paling aktif dalam efisiensi energi dan laporan lingkungan di Desa Bojong Kulur.</p>
           </div>
         </div>
-        <span className="self-start sm:self-center text-xs font-extrabold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 whitespace-nowrap shrink-0">
-          Musim 2026
-        </span>
       </div>
 
       {/* Stepped Stairs Competition Podium (Top 3) */}
@@ -77,9 +74,9 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
             </div>
 
             {/* Stepped Pedestal Block #2 */}
-            <div className="w-full rounded-t-3xl bg-gradient-to-b from-slate-300 via-slate-200 to-slate-300/90 border-t-4 border-slate-400 p-3 shadow-inner flex flex-col items-center justify-center h-20 sm:h-24">
+            <div className="w-full rounded-t-md bg-slate-200 border-t-4 border-slate-400 p-3 flex flex-col items-center justify-center h-20 sm:h-24">
               <span className="text-2xl sm:text-3xl font-black text-slate-700 font-mono">2</span>
-              <span className="text-[9px] font-black uppercase tracking-wider text-slate-600">Runner Up</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-600">Peringkat 2</span>
             </div>
           </div>
         )}
@@ -107,9 +104,9 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
             </div>
 
             {/* Stepped Pedestal Block #1 */}
-            <div className="w-full rounded-t-3xl bg-gradient-to-b from-amber-400 via-yellow-400 to-amber-500 border-t-4 border-yellow-200 p-4 shadow-lg eco-glow-gold flex flex-col items-center justify-center h-28 sm:h-36 relative">
+            <div className="w-full rounded-t-md bg-amber-400 border-t-4 border-yellow-200 p-4 flex flex-col items-center justify-center h-28 sm:h-36 relative">
               <span className="text-3xl sm:text-4xl font-black text-amber-950 font-mono">1</span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">Champion</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900">Peringkat 1</span>
             </div>
           </div>
         )}
@@ -132,9 +129,9 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
             </div>
 
             {/* Stepped Pedestal Block #3 */}
-            <div className="w-full rounded-t-3xl bg-gradient-to-b from-amber-200 via-amber-100 to-amber-200/90 border-t-4 border-amber-300 p-3 shadow-inner flex flex-col items-center justify-center h-14 sm:h-16">
+            <div className="w-full rounded-t-md bg-amber-100 border-t-4 border-amber-300 p-3 flex flex-col items-center justify-center h-14 sm:h-16">
               <span className="text-xl sm:text-2xl font-black text-amber-800 font-mono">3</span>
-              <span className="text-[9px] font-black uppercase tracking-wider text-amber-700">3rd Place</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-amber-700">Peringkat 3</span>
             </div>
           </div>
         )}
@@ -208,7 +205,7 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
                   <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5 truncate">
                     <span className="truncate">{u.name}</span>
                     {u.isCurrentUser && (
-                      <span className="rounded-full bg-emerald-600 px-2 py-0.2 text-[9px] font-bold text-white shrink-0">
+                      <span className="rounded-md bg-emerald-600 px-2 py-0.2 text-[9px] font-bold text-white shrink-0">
                         Anda
                       </span>
                     )}
@@ -234,7 +231,7 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
             type="button"
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={effectivePage <= 1}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-sm disabled:opacity-40 disabled:hover:translate-y-0 disabled:cursor-not-allowed cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
             <span>Sebelumnya</span>
@@ -250,7 +247,7 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
                   "flex h-8 w-8 items-center justify-center rounded-xl text-xs font-extrabold transition-all cursor-pointer",
                   effectivePage === pageNum
                     ? "bg-emerald-600 text-white shadow-xs"
-                    : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                    : "bg-white border border-slate-200 text-slate-700 hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-sm"
                 )}
               >
                 {pageNum}
@@ -262,7 +259,7 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
             type="button"
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={effectivePage >= totalPages}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-sm disabled:opacity-40 disabled:hover:translate-y-0 disabled:cursor-not-allowed cursor-pointer"
           >
             <span>Selanjutnya</span>
             <ChevronRight className="h-4 w-4" />

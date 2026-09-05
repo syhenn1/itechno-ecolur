@@ -132,21 +132,15 @@ export function OfficerDispatchMap({
     : OFFICER_BASE_COORDINATES;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-sm">
-      {/* Map Header Status Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 bg-gradient-to-r from-emerald-50/80 via-white to-slate-50 p-4">
+    <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 p-4">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-eco-forest to-eco-leaf text-white shadow-xs">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-emerald-700 text-white">
             <Navigation className="h-4 w-4" />
           </span>
           <div>
             <div className="flex items-center gap-1.5">
-              <h3 className="text-sm font-extrabold text-slate-900">
-                Peta Spasial Penugasan Petugas (KNN)
-              </h3>
-              <span className="rounded-full bg-emerald-100 px-2 py-0.2 text-[10px] font-extrabold text-emerald-800 border border-emerald-200">
-                Live GPS
-              </span>
+              <h3 className="text-sm font-bold text-slate-900">Peta penugasan petugas</h3>
             </div>
             <p className="text-[11px] text-slate-500">
               Pos Acuan: <strong>Kantor Desa Bojong Kulur</strong> ({OFFICER_BASE_COORDINATES[0]}, {OFFICER_BASE_COORDINATES[1]})
@@ -271,7 +265,7 @@ export function OfficerDispatchMap({
                       <button
                         type="button"
                         onClick={() => onSelectReport(report.id)}
-                        className="text-emerald-700 font-bold hover:underline flex items-center gap-0.5"
+                        className="text-emerald-700 font-bold hover:underline flex items-center gap-0.5 transition-transform duration-150 hover:-translate-y-0.5"
                       >
                         <span>Pilih</span>
                         <ArrowUpRight className="h-3 w-3" />

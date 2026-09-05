@@ -3,6 +3,7 @@
 import { Trophy, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type LeaderboardUser } from "@/lib/gamification-data";
+import { Button } from "@/components/ui/button";
 
 interface MiniLeaderboardProps {
   users?: LeaderboardUser[];
@@ -27,8 +28,8 @@ export function MiniLeaderboard({
             <p className="text-[10px] text-slate-500">Peringkat keaktifan RT/RW</p>
           </div>
         </div>
-        <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 whitespace-nowrap shrink-0">
-          Musim 2026
+        <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 whitespace-nowrap shrink-0">
+          2026
         </span>
       </div>
 
@@ -99,14 +100,10 @@ export function MiniLeaderboard({
       </div>
 
       {onViewFull && (
-        <button
-          type="button"
-          onClick={onViewFull}
-          className="w-full text-center text-xs font-bold text-emerald-700 hover:text-emerald-900 py-1.5 rounded-xl hover:bg-emerald-50 transition-colors flex items-center justify-center gap-1 cursor-pointer"
-        >
+        <Button variant="ghost" size="sm" onClick={onViewFull} className="w-full">
           <span>Lihat Podium Lengkap</span>
           <ArrowRight className="h-3.5 w-3.5" />
-        </button>
+        </Button>
       )}
     </div>
   );

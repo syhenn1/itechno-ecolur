@@ -6,8 +6,11 @@
 // - TARIFF_RP_PER_KWH mirrors PLN's long-standing R1/TR 1300-2200 VA residential rate.
 // - EMISSION_KG_CO2_PER_KWH mirrors commonly-cited approximations for Indonesia's grid mix.
 // Replace both with the current official figures for the pilot area if precision matters for judging.
-const TARIFF_RP_PER_KWH = 1444.7;
-const EMISSION_KG_CO2_PER_KWH = 0.87;
+// Exported so lib/energy-calc.ts stays the single source of truth for these figures — anything
+// that needs to estimate cost/CO2 from kWh imports them from here instead of keeping its own
+// copy that can silently drift out of sync.
+export const TARIFF_RP_PER_KWH = 1444.7;
+export const EMISSION_KG_CO2_PER_KWH = 0.87;
 
 export function estimateCost(consumptionKwh: number): number {
   return Math.round(consumptionKwh * TARIFF_RP_PER_KWH);

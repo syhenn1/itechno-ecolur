@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Target, Sparkles, Flame, Bot, Zap, Camera } from "lucide-react";
+import { ArrowRight, Target, Flame, Bot, Zap, Camera } from "lucide-react";
 import { ECO_QUESTS, type EcoQuest } from "@/lib/gamification-data";
 
 function renderQuestIcon(iconName: EcoQuest["iconName"]) {
@@ -33,8 +33,8 @@ export function EcoQuestsCard() {
             <p className="text-xs text-slate-500">Selesaikan misi untuk melipatgandakan perolehan XP dan naik level lebih cepat.</p>
           </div>
         </div>
-        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
-          4 Misi Aktif
+        <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200">
+          4 misi aktif
         </span>
       </div>
 
@@ -42,17 +42,17 @@ export function EcoQuestsCard() {
         {ECO_QUESTS.map((quest) => (
           <div
             key={quest.id}
-            className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white to-slate-50/50 p-4 transition-all hover:border-emerald-300 hover:shadow-sm"
+            className="flex flex-col justify-between rounded-md border border-slate-200 bg-white p-4 transition-colors hover:border-emerald-300"
           >
             <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 border border-emerald-200/80 shadow-2xs">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-emerald-50 border border-emerald-200">
                 {renderQuestIcon(quest.iconName)}
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1">
                   <h4 className="text-xs font-bold text-slate-900 truncate">{quest.title}</h4>
-                  <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-extrabold text-emerald-800 shrink-0">
-                    <Sparkles className="h-2.5 w-2.5 text-emerald-600" /> +{quest.xpReward} XP
+                  <span className="inline-flex items-center gap-0.5 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 shrink-0">
+                    +{quest.xpReward} XP
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-600 mt-1 line-clamp-2 leading-relaxed">

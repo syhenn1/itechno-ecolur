@@ -32,7 +32,6 @@
     "react-dom": "latest",
     "react-leaflet": "latest",
     "recharts": "latest",
-    "sonner": "^2.0.8",
     "zod": "latest"
   },
   "devDependencies": {

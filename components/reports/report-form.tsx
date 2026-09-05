@@ -3,11 +3,12 @@
 import { useState, type FormEvent } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label, Textarea } from "@/components/ui/input";
 import { showGamificationToasts } from "@/lib/gamification-client";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
 
 const LocationPicker = dynamic(
   () => import("@/components/reports/location-picker").then((m) => m.LocationPicker),
@@ -32,6 +33,7 @@ const CATEGORIES = [
 
 export function ReportForm() {
   const router = useRouter();
+  const tutorial = useTutorial();
   const [category, setCategory] = useState(CATEGORIES[0].value);
   const [description, setDescription] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
@@ -41,10 +43,18 @@ export function ReportForm() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
+    if (description.trim().length < 10) {
+      toast.error("Deskripsi terlalu pendek", { description: "Ceritakan masalahnya minimal 10 karakter, ya." });
+      return;
+    }
+
     if (!location) {
       toast.error("Tandai lokasi kejadian di peta terlebih dahulu.");
       return;
     }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const origin = { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight };
 
     setLoading(true);
     try {
@@ -60,7 +70,8 @@ export function ReportForm() {
       if (!res.ok) throw new Error(data.error ?? "Gagal mengirim laporan");
 
       toast.success("Laporan terkirim", { description: "Anda bisa memantau statusnya di Laporan Saya." });
-      showGamificationToasts(data.gamification);
+      showGamificationToasts(data.gamification, origin);
+      tutorial?.complete("report_submit");
       router.push("/my-reports");
       router.refresh();
     } catch (err) {
@@ -71,7 +82,7 @@ export function ReportForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} data-tutorial-zone="report_submit" className="space-y-4">
       <div>
         <Label htmlFor="category">Kategori</Label>
         <select
@@ -96,8 +107,6 @@ export function ReportForm() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Jelaskan masalah yang Anda temukan sedetail mungkin..."
-          required
-          minLength={10}
         />
       </div>
 
@@ -122,7 +131,7 @@ export function ReportForm() {
       <div>
         <Label>Lokasi</Label>
         <p className="mb-1.5 text-xs text-slate-500">
-          Klik pada peta untuk menandai lokasi kejadian — dibatasi di area Bojong Kulur (kotak putus-putus).
+          Klik pada peta untuk menandai lokasi kejadian, dibatasi di area Bojong Kulur (kotak putus-putus).
         </p>
         <LocationPicker value={location} onChange={(lat, lng) => setLocation({ lat, lng })} />
       </div>

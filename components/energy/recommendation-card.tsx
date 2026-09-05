@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { RefreshCw, Bot } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function RecommendationCard({ initialRecommendation }: { initialRecommendation: string }) {
   const [recommendation, setRecommendation] = useState(initialRecommendation);
@@ -15,7 +16,7 @@ export function RecommendationCard({ initialRecommendation }: { initialRecommend
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal memperbarui rekomendasi");
       setRecommendation(data.recommendation);
-      toast.success("Rekomendasi hemat energi berhasil diperbarui!");
+      toast.success("Rekomendasi diperbarui");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
@@ -24,38 +25,32 @@ export function RecommendationCard({ initialRecommendation }: { initialRecommend
   }
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-emerald-300/80 bg-gradient-to-r from-emerald-50 via-lime-50/50 to-white p-6 shadow-sm eco-glow-leaf transition-all hover:shadow-md">
-      {/* Decorative ambient aura */}
-      <div className="absolute top-0 right-0 -mt-6 -mr-6 h-28 w-28 rounded-full bg-lime-300/20 blur-2xl pointer-events-none" />
-
-      <div className="mb-3 flex items-center justify-between gap-3">
+    <div className="rounded-md border border-slate-200 bg-white overflow-hidden">
+      {/* Same scoped gradient exception as the solar simulator's result panel — reserved for
+          the app's AI-powered features so they read as a distinct "smart" surface. */}
+      <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-emerald-600 to-emerald-800 p-4 sm:p-5">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-eco-forest to-eco-leaf text-white shadow-xs">
-            <Bot className="h-4 w-4" />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white/15 text-white">
+            <Bot className="h-4.5 w-4.5" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-sm font-extrabold text-emerald-950">Rekomendasi Cerdas AI</span>
-              <span className="rounded-full bg-emerald-100 px-2 py-0.2 text-[10px] font-bold text-emerald-800 border border-emerald-200">
+              <span className="text-sm font-bold text-white">Rekomendasi AI</span>
+              <span className="rounded-md bg-white/15 px-2 py-0.2 text-[10px] font-semibold text-emerald-50">
                 SDG 7
               </span>
             </div>
-            <p className="text-[10px] text-slate-500">Analisis tren konsumsi &amp; tips efisiensi</p>
+            <p className="text-[10px] text-emerald-100">Analisis tren konsumsi dan tips efisiensi</p>
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleRefresh}
-          disabled={loading}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs transition-all hover:bg-emerald-50 active:scale-95 disabled:opacity-50"
-        >
+        <Button type="button" variant="glass" size="sm" onClick={handleRefresh} disabled={loading} className="shrink-0">
           <RefreshCw className={loading ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} aria-hidden="true" />
-          <span>{loading ? "Menganalisis..." : "Perbarui"}</span>
-        </button>
+          <span className="hidden sm:inline">{loading ? "Menganalisis..." : "Perbarui"}</span>
+        </Button>
       </div>
 
-      <p key={recommendation} className="animate-fade-in-up text-xs sm:text-sm leading-relaxed text-emerald-950/90 bg-white/70 backdrop-blur-xs p-4 rounded-2xl border border-emerald-200/60 shadow-2xs">
+      <p className="text-xs sm:text-sm leading-relaxed text-slate-700 bg-slate-50 p-4 m-5 rounded-md border border-slate-200">
         {recommendation}
       </p>
     </div>

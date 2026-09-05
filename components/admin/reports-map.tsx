@@ -74,8 +74,8 @@ export function ReportsMap({ reports }: { reports: MapReport[] }) {
             type="button"
             onClick={() => setView("pins")}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95",
-              view === "pins" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700",
+              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:-translate-y-0.5 active:scale-95 active:translate-y-0",
+              view === "pins" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700 hover:shadow-sm",
             )}
           >
             <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
@@ -85,8 +85,8 @@ export function ReportsMap({ reports }: { reports: MapReport[] }) {
             type="button"
             onClick={() => setView("heatmap")}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95",
-              view === "heatmap" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700",
+              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:-translate-y-0.5 active:scale-95 active:translate-y-0",
+              view === "heatmap" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700 hover:shadow-sm",
             )}
           >
             <Flame className="h-3.5 w-3.5" aria-hidden="true" />
@@ -96,23 +96,26 @@ export function ReportsMap({ reports }: { reports: MapReport[] }) {
             type="button"
             onClick={() => setView("spatial")}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all active:scale-95",
-              view === "spatial" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700",
+              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:-translate-y-0.5 active:scale-95 active:translate-y-0",
+              view === "spatial" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700 hover:shadow-sm",
             )}
           >
             <Grid className="h-3.5 w-3.5" aria-hidden="true" />
-            Klaster Spasial (QuadTree)
+            Klaster wilayah
           </button>
         </div>
 
         {view === "spatial" && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-800 border border-emerald-200">
-            <Layers className="h-3 w-3" /> {clusters.length} Partisi Kuadran Aktif
+          <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-800 border border-emerald-200">
+            <Layers className="h-3 w-3" /> {clusters.length} klaster
           </span>
         )}
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-slate-300">
+      {/* relative z-0: contains Leaflet's internal pane/control z-index (up to 1000) inside its
+          own stacking context, so the map can't render on top of fixed-position popups elsewhere
+          in the app (see components/reports/location-picker.tsx for the full explanation). */}
+      <div className="relative z-0 overflow-hidden rounded-lg border border-slate-300">
         <MapContainer center={center} zoom={13} style={{ height: 350, width: "100%" }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

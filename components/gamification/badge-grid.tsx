@@ -47,10 +47,8 @@ function BadgeIcon({ badge, earned }: { badge: BadgeDef; earned: boolean }) {
   return (
     <div
       className={cn(
-        "flex h-14 w-14 items-center justify-center rounded-2xl transition-all shadow-2xs border",
-        earned
-          ? "bg-gradient-to-br from-emerald-50 to-emerald-100/70 border-emerald-300 text-emerald-900 eco-glow-leaf"
-          : "bg-slate-50 border-slate-200 text-slate-300 opacity-60",
+        "flex h-14 w-14 items-center justify-center rounded-md border",
+        earned ? "bg-emerald-50 border-emerald-300 text-emerald-900" : "bg-slate-50 border-slate-200 text-slate-300 opacity-60",
       )}
     >
       {renderBadgeVector(badge.iconName, earned)}
@@ -61,18 +59,15 @@ function BadgeIcon({ badge, earned }: { badge: BadgeDef; earned: boolean }) {
 export function BadgeGrid({ earnedTypes }: { earnedTypes: string[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {BADGE_CATALOG.map((badge, index) => {
+      {BADGE_CATALOG.map((badge) => {
         const earned = earnedTypes.includes(badge.type);
         return (
           <div
             key={badge.type}
             className={cn(
-              "animate-fade-in-up flex flex-col items-center gap-2 rounded-2xl border p-3.5 text-center transition-all",
-              earned
-                ? "border-emerald-300/80 bg-white shadow-2xs hover:border-emerald-400"
-                : "border-slate-200 bg-slate-50/50 opacity-75"
+              "flex flex-col items-center gap-2 rounded-md border p-3.5 text-center transition-colors",
+              earned ? "border-emerald-300 bg-white hover:border-emerald-400" : "border-slate-200 bg-slate-50 opacity-75",
             )}
-            style={{ animationDelay: `${index * 30}ms` }}
           >
             <BadgeIcon badge={badge} earned={earned} />
             <div>

@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Navbar } from "@/components/layout/navbar";
+import { AppFooter } from "@/components/layout/app-footer";
+import { TutorialProvider } from "@/components/tutorial/tutorial-provider";
 import { levelForXp } from "@/lib/gamification-data";
 
 const CITIZEN_LINKS = [
@@ -22,7 +24,8 @@ export default async function CitizenLayout({ children }: { children: ReactNode 
   return (
     <div className="min-h-screen bg-slate-100/70 pb-28 sm:pb-32 md:pb-8">
       <Navbar name={session.name} roleLabel="Warga" links={CITIZEN_LINKS} level={currentLevel} />
-      {children}
+      <TutorialProvider>{children}</TutorialProvider>
+      <AppFooter />
     </div>
   );
 }

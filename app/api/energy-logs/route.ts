@@ -61,5 +61,7 @@ export const POST = withErrorHandling(async (request: Request) => {
 
   const gamification = existingLog ? null : await awardXp(session.userId, "energy_log");
 
-  return NextResponse.json({ log, gamification }, { status: 201 });
+  // `isUpdate` lets the client tell the citizen why there's no XP/celebration this time — editing
+  // an already-logged month on purpose (not a bug) so it can't be farmed by resubmitting.
+  return NextResponse.json({ log, gamification, isUpdate: Boolean(existingLog) }, { status: 201 });
 });

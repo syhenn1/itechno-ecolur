@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { MapContainer, Marker, Rectangle, TileLayer, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 // Leaflet's default marker icons resolve to broken paths under most JS bundlers. Importing the
 // PNGs directly from node_modules is the commonly-suggested fix, but it's unreliable across
@@ -52,7 +52,11 @@ export function LocationPicker({
   const handlePick = useCallback((lat: number, lng: number) => onChange(lat, lng), [onChange]);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-300">
+    // relative z-0: Leaflet's own CSS gives its internal panes/controls z-index values up to
+    // 1000 that, without an explicit z-index here to contain them in their own stacking context,
+    // leak out and compare against the rest of the page — which let the map render on top of
+    // fixed-position popups (toasts, the tutorial pointer) elsewhere in the app.
+    <div className="relative z-0 overflow-hidden rounded-lg border border-slate-300">
       <MapContainer
         center={value ? [value.lat, value.lng] : DEFAULT_CENTER}
         zoom={15}

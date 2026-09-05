@@ -25,11 +25,6 @@ export interface LevelDef {
   prizeType?: "pulsa" | "voucher" | "sembako" | "grand_prize";
   voucherCodePrefix?: string;
   prizeDetail?: string;
-  themeColor: string;
-  gradientClass: string;
-  glowClass: string;
-  accentBg: string;
-  borderClass: string;
 }
 
 export const LEVELS: LevelDef[] = [
@@ -39,11 +34,6 @@ export const LEVELS: LevelDef[] = [
     badgeName: "Bronze",
     badgeIcon: "/icons/badge-bronze.png",
     xpRequired: 0,
-    themeColor: "#7b4425",
-    gradientClass: "from-[#7b4425]/15 via-[#7b4425]/5 to-transparent",
-    glowClass: "shadow-sm",
-    accentBg: "bg-[#7b4425]/10 text-[#7b4425] border-[#7b4425]/20",
-    borderClass: "border-[#7b4425]/30",
   },
   {
     level: 2,
@@ -55,11 +45,6 @@ export const LEVELS: LevelDef[] = [
     prizeType: "pulsa",
     voucherCodePrefix: "PULSA15",
     prizeDetail: "Kode voucher digital pulsa all operator atau token listrik PLN prabayar.",
-    themeColor: "#64748b",
-    gradientClass: "from-slate-100 via-slate-50 to-white",
-    glowClass: "shadow-md hover:shadow-slate-300/50",
-    accentBg: "bg-slate-100 text-slate-800 border-slate-300",
-    borderClass: "border-slate-300",
   },
   {
     level: 3,
@@ -70,12 +55,7 @@ export const LEVELS: LevelDef[] = [
     prize: "Voucher Koperasi Desa Rp35.000",
     prizeType: "voucher",
     voucherCodePrefix: "KOPDES35",
-    prizeDetail: "Dapat dibelanjakan di Koperasi Desa Bojong Kulur & UMKM mitra.",
-    themeColor: "#d97706",
-    gradientClass: "from-amber-100/70 via-yellow-50/50 to-white",
-    glowClass: "eco-glow-gold",
-    accentBg: "bg-amber-100 text-amber-900 border-amber-300",
-    borderClass: "border-amber-400/80",
+    prizeDetail: "Dapat dibelanjakan di Koperasi Desa Bojong Kulur dan UMKM mitra.",
   },
   {
     level: 4,
@@ -86,12 +66,7 @@ export const LEVELS: LevelDef[] = [
     prize: "Paket MBG (Makan Bergizi Gratis) Ramah Lingkungan",
     prizeType: "sembako",
     voucherCodePrefix: "MBG-RUBY",
-    prizeDetail: "Paket makan bergizi & produk organik lokal dari mitra UMKM Kecamatan Gunung Putri.",
-    themeColor: "#e11d48",
-    gradientClass: "from-rose-100/70 via-rose-50/50 to-white",
-    glowClass: "eco-glow-ruby",
-    accentBg: "bg-rose-100 text-rose-900 border-rose-300",
-    borderClass: "border-rose-400/80",
+    prizeDetail: "Paket makan bergizi dan produk organik lokal dari mitra UMKM Kecamatan Gunung Putri.",
   },
   {
     level: 5,
@@ -99,15 +74,10 @@ export const LEVELS: LevelDef[] = [
     badgeName: "Diamond",
     badgeIcon: "/icons/badge-diamond.png",
     xpRequired: 1500,
-    prize: "Sepeda / Set Alat Hemat Energi & Piagam Bupati",
+    prize: "Sepeda / Set Alat Hemat Energi dan Piagam Bupati",
     prizeType: "grand_prize",
     voucherCodePrefix: "DIAMOND-HERO",
     prizeDetail: "Hadiah utama fisik resmi dan piagam penghargaan Duta Keberlanjutan dari Bupati Bogor.",
-    themeColor: "#0891b2",
-    gradientClass: "from-cyan-100/80 via-sky-50/60 to-white",
-    glowClass: "eco-glow-diamond",
-    accentBg: "bg-cyan-100 text-cyan-950 border-cyan-300",
-    borderClass: "border-cyan-400",
   },
 ];
 

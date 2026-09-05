@@ -1,234 +1,251 @@
-# EcoLur — Smart Sustainable Digital Solution for Inclusive Society
+# EcoLur
 
-> An integrated digital platform for household/SME energy monitoring and public service reporting, powered by AI-driven recommendations.
+Platform digital untuk warga Desa Bojong Kulur (Kecamatan Gunung Putri, Kabupaten Bogor) memantau konsumsi listrik rumah tangga dan melaporkan masalah infrastruktur kota, dengan dashboard transparansi untuk pemerintah desa.
 
-Developed as a **Web Development Platform for Community Sustainability**
-Sub-theme: *Smart Sustainable Digital Solution for Inclusive Society*
-SDGs implemented: **SDG 7**, **SDG 9**, **SDG 11**
+Dikembangkan untuk **ITechno Cup 2026 - Web Development Student Competition**
+Sub-tema: *Smart Sustainable Digital Solution for Inclusive Society*
+SDG yang diterapkan: **SDG 7**, **SDG 9**, **SDG 11**
 
 ---
 
-## Table of Contents
+## Daftar Isi
 
-- [Background & Purpose](#background--purpose)
-- [SDGs Implemented](#sdgs-implemented)
-- [Key Features](#key-features)
+- [Latar Belakang dan Tujuan](#latar-belakang-dan-tujuan)
+- [SDG yang Diterapkan](#sdg-yang-diterapkan)
+- [Fitur Utama](#fitur-utama)
 - [Tech Stack](#tech-stack)
-- [Architecture & Technical Documentation](#architecture--technical-documentation)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [AI Usage in Development](#ai-usage-in-development)
-- [Team](#team)
-- [Links](#links)
-- [License](#license)
+- [Arsitektur](#arsitektur)
+- [Instalasi](#instalasi)
+- [Cara Menggunakan](#cara-menggunakan)
+- [Akun Demo](#akun-demo)
+- [Struktur Proyek](#struktur-proyek)
+- [Penggunaan AI dalam Pengembangan](#penggunaan-ai-dalam-pengembangan)
+- [Tim](#tim)
+- [Tautan](#tautan)
+- [Lisensi](#lisensi)
 
 ---
 
-## Background & Purpose
+## Latar Belakang dan Tujuan
 
-Many cities and districts in Indonesia face two problems that are rarely solved together:
+Banyak kelurahan dan desa di Indonesia menghadapi dua masalah yang jarang ditangani bersamaan:
 
-1. **Household/SME energy consumption goes unmonitored** — residents lack visibility into their electricity usage patterns, making it hard to take concrete energy-saving action.
-2. **Public service issues are reported manually and slowly** — infrastructure reports (broken roads, garbage, drainage) are often untracked, leaving residents unsure whether their report was ever followed up.
+1. **Konsumsi listrik rumah tangga tidak terpantau** - warga tidak punya gambaran jelas soal pola pemakaian listrik mereka, sehingga sulit mengambil langkah hemat energi yang konkret.
+2. **Laporan masalah infrastruktur lambat dan manual** - laporan seperti jalan rusak, sampah menumpuk, atau lampu jalan padam sering tidak terlacak, membuat warga tidak tahu apakah laporannya pernah ditindaklanjuti.
 
-**EcoLur** brings both into one platform: residents can monitor their energy footprint and report/track city infrastructure issues, while local government gets a real-time, data-driven transparency dashboard for decision-making.
+EcoLur menggabungkan keduanya dalam satu platform: warga bisa memantau jejak energi mereka sekaligus melaporkan dan melacak masalah infrastruktur kota, sementara pemerintah desa mendapatkan dashboard transparansi berbasis data untuk pengambilan keputusan.
 
-The name **EcoLur** combines *"Eco"* (sustainability) with *"Lur"* — taken from **Bojong Kulur**, the pilot area for this project in **Gunung Putri, Kabupaten Bogor**, and also a familiar, friendly term of address in local slang. The platform is designed to start in one kelurahan but scale to any city or district in Indonesia facing the same energy and public service challenges.
+Nama **EcoLur** berasal dari *"Eco"* (keberlanjutan) dan *"Lur"* - diambil dari **Bojong Kulur**, wilayah percontohan proyek ini di Gunung Putri, Kabupaten Bogor, sekaligus sapaan akrab dalam bahasa gaul lokal. Platform ini dirancang untuk dimulai di satu desa, tapi bisa diperluas ke kota atau kabupaten lain yang menghadapi tantangan energi dan layanan publik yang sama.
 
-Goals of the application:
-- Encourage energy-saving awareness through clear, actionable data.
-- Speed up and add transparency to the public issue reporting process.
-- Provide aggregate data local government can use for better city planning.
+Tujuan aplikasi:
+- Mendorong kesadaran hemat energi lewat data yang jelas dan dapat ditindaklanjuti.
+- Mempercepat dan menambah transparansi proses pelaporan masalah publik.
+- Menyediakan data agregat yang bisa dipakai pemerintah desa untuk perencanaan.
+- Memberi insentif nyata (poin, level, hadiah) supaya partisipasi warga berkelanjutan, bukan sekali coba lalu ditinggalkan.
 
 ---
 
-## SDGs Implemented
+## SDG yang Diterapkan
 
-| SDG | Implementation in EcoLur |
+| SDG | Penerapan di EcoLur |
 |---|---|
-| **SDG 7** — Affordable and Clean Energy | Household/SME energy consumption monitoring, cost and carbon emission estimates, AI-driven energy-saving recommendations, energy-saving gamification. |
-| **SDG 9** — Industry, Innovation, and Infrastructure | Modern web-based digital system for managing city data, append-only log architecture for audit trails, AI integrated as a service innovation. |
-| **SDG 11** — Sustainable Cities and Communities | Public service reporting module with real-time status tracking, transparency dashboard for local government, map view of reports and energy data. |
+| **SDG 7** - Energi Bersih dan Terjangkau | Pemantauan konsumsi listrik rumah tangga, estimasi biaya dan emisi karbon, rekomendasi hemat energi berbasis AI. |
+| **SDG 9** - Industri, Inovasi, dan Infrastruktur | Sistem digital untuk data kota, log status laporan yang bersifat append-only untuk jejak audit, AI dan struktur data khusus (spatial indexing, retrieval) sebagai inovasi layanan. |
+| **SDG 11** - Kota dan Komunitas Berkelanjutan | Modul pelaporan masalah publik dengan pelacakan status, dashboard transparansi untuk pemerintah desa, peta sebaran laporan dan heatmap area bermasalah. |
 
 ---
 
-## Key Features
+## Fitur Utama
 
-### Energy Module (SDG 7)
-- Track electricity consumption per period
-- Consumption trend visualization, cost and carbon emission estimates
-- Automatic AI-generated energy-saving recommendations (Gemini API)
-- Gamification: energy-saving score and achievement badges
+### Modul Energi (SDG 7)
+- Catat konsumsi listrik bulanan, lihat grafik tren, estimasi biaya dan emisi CO2.
+- Rekomendasi hemat energi otomatis dari AI (Google Gemini), berdasarkan riwayat konsumsi masing-masing warga.
 
-### Public Service Module (SDG 11)
-- Report public issues with photo and location pin
-- Real-time status tracking (*Reported → Verified → In Progress → Resolved*)
-- Automatic notifications to the reporter when status changes
-- AI-powered automatic report categorization
+### Modul Layanan Publik (SDG 11)
+- Lapor masalah infrastruktur (jalan rusak, sampah, drainase, penerangan jalan, dll.) dengan foto dan titik lokasi GPS, dibatasi ke area Bojong Kulur.
+- Pelacakan status laporan secara real-time (Dilaporkan - Terverifikasi - Diproses - Selesai), dengan riwayat lengkap yang tidak pernah ditimpa (append-only log).
+- Petugas desa memverifikasi dan memperbarui status laporan lewat terminal khusus, dengan pengurutan laporan berdasarkan jarak dan tingkat prioritas.
 
-### Transparency Dashboard (Local Gov/Admin)
-- Aggregate energy and report statistics per area
-- Map view of data distribution (Leaflet + OpenStreetMap)
-- AI-generated summaries of recurring issue patterns
-- Report data export
+### Gamifikasi dan Apresiasi Warga
+- Sistem poin XP dari aktivitas nyata: login harian, mencatat konsumsi energi, mengirim laporan, dan laporan yang selesai ditangani.
+- 5 tingkat level (Bronze - Silver - Gold - Ruby - Diamond), masing-masing dengan hadiah nyata (pulsa, voucher koperasi desa, paket sembako, hingga hadiah utama).
+- Lencana pencapaian, misi harian/mingguan, papan peringkat warga, dan absensi harian dengan pelacakan hari beruntun.
 
-**Differentiator**: combining two everyday citizen concerns (energy and public services) into one platform, backed by an append-only log architecture for a full audit trail, with AI integrated not as a bolt-on chatbot but at real decision points (energy recommendations & report classification).
+### Asisten AI (EcoBot)
+- Chatbot yang menjawab pertanyaan seputar tarif listrik PLN, regulasi panel surya, tips hemat energi, dan prosedur pelaporan warga.
+- Jawaban dirujuk dari basis pengetahuan lokal (regulasi ESDM, tarif PLN, SOP desa), bukan jawaban generik tanpa sumber.
+
+### Dashboard Transparansi (Pemerintah Desa/Admin)
+- Statistik agregat energi dan laporan per area.
+- Peta sebaran laporan dan heatmap konsentrasi masalah.
+- Ringkasan pola masalah berulang dari AI, untuk membantu pengambilan keputusan.
+- Ekspor data laporan, dan pengelolaan klaim hadiah warga.
 
 ---
 
 ## Tech Stack
 
-| Category | Technology | Purpose |
+| Kategori | Teknologi | Fungsi |
 |---|---|---|
-| Core framework | **Next.js 14+ (App Router) + TypeScript** | Fullstack — frontend and API routes in one app, simplifying deployment to Vercel |
-| Styling | **Tailwind CSS** | Responsive, consistent styling across screen sizes |
-| Database | **PostgreSQL** (via Neon/Supabase free tier) | Core data storage (users, reports, energy logs) |
-| ORM | **Prisma** | Type-safe database queries and migrations |
-| Authentication | **Phone number-based OTP** | Passwordless login, matching common Indonesian user habits |
-| Maps | **Leaflet.js + OpenStreetMap** | Report location visualization without a paid API key |
-| Charts | **Recharts** | Energy trend and dashboard statistics visualization |
-| AI | **Google Gemini API** (free tier) | Energy-saving recommendations & report summarization/classification |
-| Realtime | **Supabase Realtime / Pusher** (free tier) | Report status notifications without page refresh |
-| Hosting | **Vercel** | Free hosting for frontend + API routes |
+| Framework inti | **Next.js (App Router) + TypeScript** | Fullstack - frontend dan API routes dalam satu aplikasi, memudahkan deployment ke Vercel |
+| Styling | **Tailwind CSS** | Styling responsif dan konsisten di semua ukuran layar |
+| Database | **PostgreSQL** (via Supabase) | Penyimpanan data utama (pengguna, laporan, log energi, gamifikasi) |
+| ORM | **Prisma** | Query dan migrasi database dengan tipe yang aman |
+| Autentikasi | **OTP berbasis nomor HP** | Login tanpa kata sandi |
+| Peta | **Leaflet.js + OpenStreetMap** | Visualisasi lokasi laporan tanpa API key berbayar |
+| Grafik | **Recharts** | Visualisasi tren konsumsi energi |
+| AI | **Google Gemini API** | Rekomendasi hemat energi, ringkasan laporan, dan asisten chat EcoBot |
+| Penyimpanan file | **Supabase Storage** | Foto laporan warga |
+| Hosting | **Vercel** | Hosting gratis untuk frontend dan API routes |
+
+Selain itu, proyek ini punya beberapa struktur data kustom di `lib/dsa/` (priority queue, quadtree, trie, inverted index) yang dipakai untuk triase spasial petugas (`lib/spatial/`) dan mesin pencarian basis pengetahuan EcoBot (`lib/rag/`).
 
 ---
 
-## Architecture & Technical Documentation
+## Arsitektur
 
-Full system architecture, per-actor use case diagrams, ERD, and report status flow are documented in [`ARCHITECTURE.md`](ARCHITECTURE.md).
+Arsitektur sistem lengkap, use case per aktor, ERD, dan alur status laporan ada di [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
 
-## Installation
+## Instalasi
 
-### Prerequisites
-- Node.js v18 or newer
-- npm or pnpm
-- A free PostgreSQL database (recommended: [Neon](https://neon.tech) or [Supabase](https://supabase.com))
-- A Google Gemini API key (free via [Google AI Studio](https://aistudio.google.com))
+### Prasyarat
+- Node.js v18 atau lebih baru
+- npm
+- Database PostgreSQL gratis (disarankan [Supabase](https://supabase.com))
+- API key Google Gemini gratis (lewat [Google AI Studio](https://aistudio.google.com))
 
-### Setup steps
+### Langkah setup
 
 ```bash
-# 1. Clone the repository
+# 1. Clone repository
 git clone https://github.com/<username>/ecolur.git
 cd ecolur
 
 # 2. Install dependencies
 npm install
 
-# 3. Copy the environment variable template
+# 3. Salin template environment variable
 cp .env.example .env
 
-# 4. Fill in .env with your own credentials
-# DATABASE_URL, GEMINI_API_KEY, etc. (see .env.example)
+# 4. Isi .env dengan kredensial Anda sendiri
+# DATABASE_URL, DIRECT_URL, GEMINI_API_KEY, SESSION_SECRET, dll. (lihat .env.example)
 
-# 5. Run database migrations
+# 5. Jalankan migrasi database
 npx prisma migrate dev
 
-# 6. (Optional) Seed sample data
+# 6. Isi data demo
 npx prisma db seed
 
-# 7. Start the development server
+# 7. Jalankan server pengembangan
 npm run dev
 ```
 
-The app will be running at `http://localhost:3000`
+Aplikasi berjalan di `http://localhost:3000`
 
 ---
 
-## Usage
+## Cara Menggunakan
+
+Setelah login (lihat [Akun Demo](#akun-demo) di bawah), aplikasi menampilkan tampilan berbeda sesuai peran:
+
+1. **Warga**: masuk lewat nomor HP dan kode OTP, lalu diarahkan ke halaman Energi. Catat konsumsi listrik bulanan, lihat rekomendasi AI, kirim laporan masalah lewat menu Lapor, dan pantau level/lencana/hadiah lewat menu Hadiah & Lencana. Tanyakan hal seputar listrik atau regulasi ke EcoBot lewat menu Tanya AI.
+2. **Petugas**: masuk ke Laporan Masuk, memverifikasi laporan warga, memperbarui status, dan menambahkan catatan tindak lanjut.
+3. **Admin**: masuk ke Dashboard Transparansi untuk melihat statistik agregat, peta sebaran laporan, ringkasan pola masalah dari AI, mengelola klaim hadiah warga, dan mengekspor data.
 
 ```bash
-# Log in as a citizen (demo account after seeding)
-Phone number: 081234567890
-Demo OTP (development mode): 000000
-
-# Build for production
+# Build untuk produksi
 npm run build
 npm run start
 
-# Open Prisma Studio to inspect the database
+# Buka Prisma Studio untuk memeriksa database
 npx prisma studio
 ```
 
-Basic usage flow:
-1. A citizen logs in via OTP → inputs energy consumption data or files a public issue report.
-2. A local officer logs in → verifies incoming reports → updates their status.
-3. A local government admin logs in → monitors the aggregate dashboard and data map.
+---
+
+## Akun Demo
+
+Setelah menjalankan `npx prisma db seed`, tiga akun demo tersedia (kode OTP selalu `000000` selama `OTP_PROVIDER_API_KEY` belum diisi):
+
+| Peran | Nomor HP |
+|---|---|
+| Warga | 081234567890 |
+| Petugas | 081234567891 |
+| Admin | 081234567892 |
+
+Karena data yang dipakai untuk demo ini sama dengan data yang tersimpan di database sungguhan, setiap input yang dilakukan lewat akun demo (catatan energi baru, laporan baru, klaim hadiah, dan sebagainya) benar-benar tersimpan — baik oleh akun Warga Demo maupun warga lain yang sudah diseed, dan aksi Petugas/Admin (verifikasi laporan, tandai hadiah terkirim) juga ikut mengubah data yang sama. Kalau data demo sudah terlalu jauh berubah dari kondisi awal, gunakan tombol **Reset Demo** di menu navigasi untuk mengembalikannya ke data awal tanpa perlu menjalankan ulang seed dari terminal — ini juga otomatis memulai ulang tutorial dari langkah pertama.
 
 ---
 
-## Project Structure
+## Struktur Proyek
 
 ```
 ecolur/
 ├── app/                          # Next.js App Router
-│   ├── (auth)/                   # Login & OTP pages (no navbar layout)
-│   ├── (citizen)/                # Citizen: energy, report, my-reports (own layout + navbar)
-│   ├── (officer)/                # Officer: incoming-reports (own layout + navbar)
-│   ├── (admin)/                  # Admin: dashboard (own layout + navbar)
-│   └── api/                      # Route handlers — auth, energy-logs, reports, ai/*
+│   ├── (auth)/                   # Login dan OTP
+│   ├── (citizen)/                # Warga: energi, lapor, hadiah & lencana, tanya AI
+│   ├── (officer)/                # Petugas: laporan masuk
+│   ├── (admin)/                  # Admin: dashboard transparansi
+│   ├── privacy/, terms/          # Kebijakan privasi dan syarat & ketentuan
+│   └── api/                      # Route handlers
 ├── components/
-│   ├── ui/                       # Button, Card, Input/Textarea/Label, StatusBadge
-│   ├── layout/                   # Role-aware Navbar
-│   ├── auth/                     # OtpForm
-│   ├── energy/                   # EnergyForm, EnergyChart, RecommendationCard
-│   ├── reports/                  # ReportForm, LocationPicker, StatusTimeline, StatusUpdateForm
-│   └── admin/                    # ReportsMap(+loader), AiSummaryPanel, ExportCsvButton
+│   ├── ui/                       # Komponen dasar (Button, Card, Input, dll.)
+│   ├── layout/                   # Navbar, badge pemerintah
+│   ├── auth/, energy/, reports/  # Komponen per modul
+│   ├── gamification/             # Level, lencana, misi, papan peringkat, klaim hadiah
+│   ├── ai/                       # Chat EcoBot
+│   ├── officer/, admin/          # Komponen petugas dan admin
+│   └── landing/                  # Komponen landing page
 ├── lib/
-│   ├── db.ts                     # Prisma client singleton
-│   ├── session.ts                # Edge-safe: signed session cookie + stateless OTP challenge
-│   ├── auth.ts                   # Node-only: DB-touching auth helpers, re-exports session.ts
-│   ├── ai.ts                     # Gemini API wrapper (recommend / summarize / classify)
-│   ├── supabase.ts               # Server-side Storage upload (report photos)
-│   ├── validations.ts            # Zod schemas for every API route
-│   ├── rate-limit.ts             # In-memory rate limiter
-│   ├── energy-calc.ts            # Server-side cost/CO2 estimate from raw kWh
-│   ├── actions.ts                # Server Actions (logout)
-│   └── utils.ts                  # cn(), formatRupiah(), statusLabel()
+│   ├── db.ts, session.ts, auth.ts, ai.ts, supabase.ts
+│   ├── gamification.ts, gamification-data.ts, gamification-client.ts
+│   ├── dsa/                      # Priority queue, quadtree, trie, inverted index
+│   ├── rag/                      # Basis pengetahuan dan mesin retrieval EcoBot
+│   └── spatial/                  # Triase dan penugasan spasial petugas
 ├── prisma/
-│   ├── schema.prisma             # Database schema (see ARCHITECTURE.md)
-│   └── seed.ts                   # Demo citizen/officer/admin + sample data
-├── public/                       # Static assets
-├── proxy.ts                      # Route protection + role-based access (Next.js 16 "proxy" convention)
-├── ARCHITECTURE.md               # Full architecture, use cases, ERD
-├── CLAUDE.md                     # Project context for AI coding assistant
+│   ├── schema.prisma
+│   └── seed.ts
+├── public/                       # Aset statis (logo, ikon lencana, foto)
+├── ARCHITECTURE.md
+├── CLAUDE.md                     # Konteks proyek untuk asisten AI pengembangan
 ├── .env.example
 └── package.json
 ```
 
 ---
 
-## AI Usage in Development
+## Penggunaan AI dalam Pengembangan
 
-In line with competition rule #7, here is a transparent disclosure of how AI is used in this project:
+Sesuai aturan kompetisi soal transparansi penggunaan AI:
 
-- **AI as a product feature**: Google Gemini API is used to generate energy-saving recommendations and to summarize/classify public issue reports. Only relevant data is sent to the AI (no sensitive personal data such as full phone numbers).
-- **AI as a development aid**: part of the codebase was developed with the help of an AI coding assistant (Claude), but all architecture decisions, technical choices, and final output have been reviewed and are fully understood by the team.
-- **Ethical commitment**: the team takes full responsibility for all generated code and content, ensuring no copyright infringement, protecting user data privacy (OTP authentication, no unencrypted storage of sensitive data), and performing basic security validation (input sanitization, rate limiting on public endpoints).
+- **AI sebagai fitur produk**: Google Gemini API dipakai untuk rekomendasi hemat energi, ringkasan pola laporan, dan asisten chat EcoBot. Data yang dikirim ke AI dibatasi hanya yang relevan (tanpa nomor HP lengkap atau data pribadi sensitif lainnya), dan input warga disaring untuk mencegah prompt injection.
+- **AI sebagai alat bantu pengembangan**: sebagian besar kode proyek ini dikembangkan dengan bantuan asisten coding AI (Claude), namun seluruh keputusan arsitektur, pilihan teknis, dan hasil akhir telah ditinjau dan dipahami sepenuhnya oleh tim.
+- **Komitmen etis**: tim bertanggung jawab penuh atas seluruh kode dan konten yang dihasilkan, memastikan tidak ada pelanggaran hak cipta, melindungi privasi data pengguna (autentikasi OTP, tanpa penyimpanan data sensitif tanpa enkripsi), dan menerapkan validasi keamanan dasar (sanitasi input, pembatasan laju permintaan).
 
 ---
 
-## Team
+## Tim
 
-| Name | Student ID | University | Role |
+| Nama | NIM | Universitas | Peran |
 |---|---|---|---|
-| [Member 1 Name] | [Student ID] | [University] | [Fullstack Developer] |
-| [Member 2 Name] | [Student ID] | [University] | [UI/UX Designer] |
-| [Member 3 Name] | [Student ID] | [University] | [Backend Developer] |
+| [Nama Anggota 1] | [NIM] | [Universitas] | [Fullstack Developer] |
+| [Nama Anggota 2] | [NIM] | [Universitas] | [UI/UX Designer] |
+| [Nama Anggota 3] | [NIM] | [Universitas] | [Backend Developer] |
 
 ---
 
-## Links
+## Tautan
 
-- GitHub Repository: `[fill in repo link]`
-- Live demo (hosting): `[fill in Vercel/Netlify link]`
-- Pitch deck: `[fill in after advancing to the final round]`
+- Repositori GitHub: `[isi tautan repo]`
+- Demo langsung (hosting): `[isi tautan Vercel]`
+- Kebijakan Privasi: `/privacy`
+- Syarat dan Ketentuan: `/terms`
+- Pitch deck: `[isi setelah lolos ke babak final]`
 
 ---
 
-## License
- 
-This project is original work — not previously published for commercial use nor a winner of any similar prior competition.
+## Lisensi
+
+Proyek ini dibuat untuk kompetisi ITechno Cup 2026 dan merupakan karya asli - belum pernah dipublikasikan untuk tujuan komersial maupun menjadi pemenang kompetisi serupa sebelumnya.

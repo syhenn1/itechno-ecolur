@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { getLevelDef } from "@/lib/gamification-data";
 
@@ -48,7 +48,7 @@ export function PrizeClaimRow({ claimId, userName, userPhone, level, prize }: Pr
         <div>
           <div className="text-sm font-bold text-slate-900">
             {userName}{" "}
-            <span className="font-semibold text-emerald-800 text-xs bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 ml-1">
+            <span className="font-semibold text-emerald-800 text-xs bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 ml-1">
               Level {level} ({levelDef.badgeName})
             </span>
           </div>
