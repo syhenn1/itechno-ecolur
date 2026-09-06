@@ -6,6 +6,7 @@ import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { statusLabel } from "@/lib/utils";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
 
 const NEXT_STATUS: Record<string, { value: string; label: string }[]> = {
   REPORTED: [{ value: "VERIFIED", label: "Verifikasi" }],
@@ -16,6 +17,7 @@ const NEXT_STATUS: Record<string, { value: string; label: string }[]> = {
 
 export function StatusUpdateForm({ reportId, currentStatus }: { reportId: string; currentStatus: string }) {
   const router = useRouter();
+  const tutorial = useTutorial();
   const [notes, setNotes] = useState("");
   const [pendingStatus, setPendingStatus] = useState<string | null>(null);
 
@@ -34,6 +36,7 @@ export function StatusUpdateForm({ reportId, currentStatus }: { reportId: string
       if (!res.ok) throw new Error(data.error ?? "Gagal memperbarui status");
       setNotes("");
       toast.success(`Status diubah ke "${statusLabel(status)}"`);
+      tutorial?.complete("officer_update_status");
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
@@ -43,7 +46,7 @@ export function StatusUpdateForm({ reportId, currentStatus }: { reportId: string
   }
 
   return (
-    <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
+    <div data-tutorial-zone="officer_update_status" className="mt-4 space-y-2 border-t border-slate-100 pt-4">
       <Textarea
         rows={2}
         value={notes}

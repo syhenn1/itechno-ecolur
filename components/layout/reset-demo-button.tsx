@@ -27,9 +27,9 @@ export function ResetDemoButton() {
 
       toast.success("Data demo direset", { description: "Semua akun demo dikembalikan ke kondisi awal." });
       setOpen(false);
-      // Same event the navbar's "Panduan" button dispatches — the forced tutorial (citizen) or
-      // the info modal (petugas/admin) both already listen for it, so this restarts whichever
-      // one applies to the current session without Reset Demo needing to know which role it is.
+      // Same event the navbar's "Panduan" button dispatches -- the forced tutorial for every
+      // role (Warga, Petugas, Admin) already listens for it, so this restarts whichever one
+      // applies to the current session without Reset Demo needing to know which role it is.
       window.dispatchEvent(new Event("ecolur:open-onboarding"));
       router.refresh();
     } catch (err) {

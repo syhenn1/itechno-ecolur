@@ -2,6 +2,7 @@
 
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
 
 interface ExportRow {
   id: string;
@@ -21,6 +22,8 @@ function toCsv(rows: ExportRow[]): string {
 }
 
 export function ExportCsvButton({ rows }: { rows: ExportRow[] }) {
+  const tutorial = useTutorial();
+
   function handleExport() {
     const csv = toCsv(rows);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -32,10 +35,11 @@ export function ExportCsvButton({ rows }: { rows: ExportRow[] }) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    tutorial?.complete("admin_export");
   }
 
   return (
-    <Button type="button" variant="outline" size="sm" onClick={handleExport}>
+    <Button type="button" variant="outline" size="sm" data-tutorial-zone="admin_export" onClick={handleExport}>
       <Download className="h-4 w-4" aria-hidden="true" />
       Ekspor CSV
     </Button>

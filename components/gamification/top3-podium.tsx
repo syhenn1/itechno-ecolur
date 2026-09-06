@@ -92,7 +92,7 @@ export function Top3Podium({
           <div className="flex flex-col items-center text-center min-w-0 relative">
             <div className="flex flex-col items-center w-full pb-1 min-w-0">
               <div className="relative mb-0.5">
-                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white shadow-xs">
+                <span className="absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white shadow-xs">
                   <Crown className="h-2.5 w-2.5" />
                 </span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}

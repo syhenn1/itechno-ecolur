@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { getLevelDef } from "@/lib/gamification-data";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
 
 interface PrizeClaimRowProps {
   claimId: string;
@@ -16,6 +17,7 @@ interface PrizeClaimRowProps {
 
 export function PrizeClaimRow({ claimId, userName, userPhone, level, prize }: PrizeClaimRowProps) {
   const router = useRouter();
+  const tutorial = useTutorial();
   const [loading, setLoading] = useState(false);
   const levelDef = getLevelDef(level);
 
@@ -26,6 +28,7 @@ export function PrizeClaimRow({ claimId, userName, userPhone, level, prize }: Pr
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal menandai klaim");
       toast.success(`Hadiah untuk ${userName} ditandai sudah diberikan`);
+      tutorial?.complete("admin_prize_claim");
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
@@ -35,7 +38,10 @@ export function PrizeClaimRow({ claimId, userName, userPhone, level, prize }: Pr
   }
 
   return (
-    <li className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-2xs">
+    <li
+      data-tutorial-zone="admin_prize_claim"
+      className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-2xs"
+    >
       <div className="flex items-center gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 border border-slate-100 p-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}

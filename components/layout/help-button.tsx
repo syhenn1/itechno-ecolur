@@ -3,8 +3,8 @@
 import { CircleHelp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-/** Reopens the role-specific onboarding tour rendered in each layout (see
- *  components/onboarding/onboarding-tour.tsx), which listens for this event. */
+/** Reopens the role-specific forced tour (see components/tutorial/tutorial-provider.tsx) in its
+ *  non-blocking "guide" replay mode -- that provider listens for this event in every layout. */
 export function HelpButton() {
   return (
     <Button

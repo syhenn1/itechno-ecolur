@@ -27,7 +27,7 @@ export default async function CitizenLayout({ children }: { children: ReactNode 
       {/* pb-* clears the fixed mobile bottom nav — scoped to just the content, not the whole
           page, otherwise it left a big empty gap below the footer that sits after it. */}
       <div className="pb-28 sm:pb-32 md:pb-8">
-        <TutorialProvider>{children}</TutorialProvider>
+        <TutorialProvider role="CITIZEN">{children}</TutorialProvider>
       </div>
       <AppFooter />
     </div>

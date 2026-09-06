@@ -22,6 +22,7 @@ import { Card } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { StatusTimeline } from "@/components/reports/status-timeline";
 import { StatusUpdateForm } from "@/components/reports/status-update-form";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
 import {
   triageReports,
   type DispatchReport,
@@ -55,6 +56,7 @@ export function IncomingReportsList({
   initialReports: DispatchReport[];
   stats: OfficerStats;
 }) {
+  const tutorial = useTutorial();
   const [sortMode, setSortMode] = useState<SortMode>("KNN_DISTANCE");
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
@@ -282,7 +284,11 @@ export function IncomingReportsList({
                   <div
                     key={report.id}
                     id={`report-card-${report.id}`}
-                    onClick={() => setSelectedReportId(report.id)}
+                    data-tutorial-zone="officer_select_report"
+                    onClick={() => {
+                      setSelectedReportId(report.id);
+                      tutorial?.complete("officer_select_report");
+                    }}
                     className={cn(
                       "cursor-pointer rounded-3xl border p-4 transition-all",
                       isSelected

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "@/lib/toast";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTutorial } from "@/components/tutorial/tutorial-provider";
 
 const CATEGORIES = [
   { value: "all", label: "Semua Kategori" },
@@ -15,6 +16,7 @@ const CATEGORIES = [
 ];
 
 export function AiSummaryPanel() {
+  const tutorial = useTutorial();
   const [category, setCategory] = useState("all");
   const [summary, setSummary] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -30,6 +32,7 @@ export function AiSummaryPanel() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal membuat ringkasan");
       setSummary(data.summary);
+      tutorial?.complete("admin_ai_summary");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
@@ -39,7 +42,7 @@ export function AiSummaryPanel() {
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div data-tutorial-zone="admin_ai_summary" className="flex flex-col gap-2 sm:flex-row">
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}

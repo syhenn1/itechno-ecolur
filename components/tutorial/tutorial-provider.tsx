@@ -3,17 +3,23 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "@/lib/toast";
-import { TUTORIAL_STEPS } from "@/lib/tutorial-steps";
+import { TUTORIAL_STEPS_BY_ROLE, type TutorialRole } from "@/lib/tutorial-steps";
 import { TutorialPointer } from "./tutorial-pointer";
 import { TutorialMascot } from "./tutorial-mascot";
 import { cn } from "@/lib/utils";
 
-// Bumped to v2: an earlier version of "Panduan" rewrote this key back to "not done" every time
-// it was reopened, before the forced/guide split existed — anyone who clicked it back then has
-// a permanently stuck "unfinished tour" flag under the old key. Renaming the key orphans that
-// stale value instead of trying to migrate it, so the tour cleanly restarts fresh once and then
-// behaves correctly (persisting only for the real forced walkthrough) from here on.
-const STORAGE_KEY = "ecolur_tutorial_citizen_v2";
+// One persisted key per role, so a Warga account and a Petugas/Admin account sharing the same
+// browser never step on each other's tour progress.
+const STORAGE_KEYS: Record<TutorialRole, string> = {
+  // Bumped to v2: an earlier version of "Panduan" rewrote this key back to "not done" every time
+  // it was reopened, before the forced/guide split existed — anyone who clicked it back then has
+  // a permanently stuck "unfinished tour" flag under the old key. Renaming the key orphans that
+  // stale value instead of trying to migrate it, so the tour cleanly restarts fresh once and then
+  // behaves correctly (persisting only for the real forced walkthrough) from here on.
+  CITIZEN: "ecolur_tutorial_citizen_v2",
+  OFFICER: "ecolur_tutorial_officer_v1",
+  ADMIN: "ecolur_tutorial_admin_v1",
+};
 
 interface StoredState {
   active: boolean;
@@ -41,24 +47,24 @@ interface TutorialContextValue {
 
 const TutorialContext = createContext<TutorialContextValue | null>(null);
 
-/** Safe to call from any client component — returns null (no-op) outside the citizen layout,
- *  so shared components used by more than one role don't need to guard every call site. */
+/** Safe to call from any client component — returns null (no-op) outside a role layout that
+ *  renders TutorialProvider, so shared components don't need to guard every call site. */
 export function useTutorial() {
   return useContext(TutorialContext);
 }
 
-function readStored(): StoredState | null {
+function readStored(storageKey: string): StoredState | null {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     return raw ? (JSON.parse(raw) as StoredState) : null;
   } catch {
     return null;
   }
 }
 
-function writeStored(state: StoredState) {
+function writeStored(storageKey: string, state: StoredState) {
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    window.localStorage.setItem(storageKey, JSON.stringify(state));
   } catch {
     // Private mode / storage disabled — the tour just won't resume after a refresh, harmless.
   }
@@ -75,18 +81,20 @@ interface TargetState {
 }
 
 /**
- * A forced, action-gated product tour for first-time citizens: unlike a normal onboarding modal
- * (read some text, click through), each step only advances when the citizen actually performs
+ * A forced, action-gated product tour for first-time users of any role: unlike a normal
+ * onboarding modal (read some text, click through), each step only advances when the user actually performs
  * the real action elsewhere in the app — see the `complete("...")` calls in EnergyForm,
  * ReportForm, InteractiveLevelCard, and GamificationHub's leaderboard tab. A spotlight ring +
- * tooltip (TutorialPointer) tracks and points straight at whatever the citizen needs to touch
+ * tooltip (TutorialPointer) tracks and points straight at whatever the user needs to touch
  * next — the real target once they're on the right page, or the nav link toward it if they
  * aren't yet. That lockdown only applies the first time (mode "forced"); replaying it later via
  * Panduan/Reset Demo runs in "guide" mode instead — same pointer, nothing blocked, closable.
  */
-export function TutorialProvider({ children }: { children: ReactNode }) {
+export function TutorialProvider({ role, children }: { role: TutorialRole; children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const steps = TUTORIAL_STEPS_BY_ROLE[role];
+  const storageKey = STORAGE_KEYS[role];
   const [mode, setMode] = useState<TourMode>("forced");
   const [active, setActive] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
@@ -103,20 +111,23 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
   // once mounted in the browser, so this can't be computed in a lazy useState initializer
   // without risking a server/client hydration mismatch — a legitimate one-time external read.
   useEffect(() => {
-    const stored = readStored();
+    const stored = readStored(storageKey);
     if (!stored) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setActive(true);
-      writeStored({ active: true, stepIndex: 0, done: false });
+      writeStored(storageKey, { active: true, stepIndex: 0, done: false });
     } else if (!stored.done && stored.active) {
-      const resumeIndex = Math.min(stored.stepIndex, TUTORIAL_STEPS.length - 1);
+      const resumeIndex = Math.min(stored.stepIndex, steps.length - 1);
       setActive(true);
       setStepIndex(resumeIndex);
       stepIndexRef.current = resumeIndex;
     }
+    // Role never changes for a mounted provider (each layout hardcodes its own role), so this
+    // only needs to run once per mount — matching the original one-time-hydration intent.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const currentStep = active ? (TUTORIAL_STEPS[stepIndex] ?? null) : null;
+  const currentStep = active ? (steps[stepIndex] ?? null) : null;
 
   // Reads/advances `stepIndexRef` (not React state) as its source of truth, and updates the ref
   // synchronously before doing anything else. This is what actually matters here: React's Strict
@@ -130,16 +141,16 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
   // safe no-op.
   const complete = useCallback((stepId: string) => {
     const idx = stepIndexRef.current;
-    const step = TUTORIAL_STEPS[idx];
+    const step = steps[idx];
     if (!step || step.id !== stepId) return;
 
     const nextIdx = idx + 1;
     stepIndexRef.current = nextIdx;
     const isForced = modeRef.current === "forced";
 
-    if (nextIdx >= TUTORIAL_STEPS.length) {
+    if (nextIdx >= steps.length) {
       setActive(false);
-      if (isForced) writeStored({ active: false, stepIndex: 0, done: true });
+      if (isForced) writeStored(storageKey, { active: false, stepIndex: 0, done: true });
       toast.success("Semua langkah selesai!", {
         description: "Kamu sudah coba semua fitur utama EcoLur. Selamat menjelajah!",
       });
@@ -147,11 +158,11 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
     }
 
     setStepIndex(nextIdx);
-    if (isForced) writeStored({ active: true, stepIndex: nextIdx, done: false });
+    if (isForced) writeStored(storageKey, { active: true, stepIndex: nextIdx, done: false });
     // No "Langkah selesai" toast here (unlike the final one below) — the pointer/tooltip for the
     // next step appears immediately and already says exactly this ("Langkah X/5 · ..."), so a
     // center-screen toast on top of it was just duplicate information colliding with it visually.
-  }, []);
+  }, [steps, storageKey]);
 
   // Triggered by the navbar's Panduan button and by Reset Demo — a non-blocking replay, never
   // written to storage, so it can never overwrite the persisted "completed the mandatory tour"

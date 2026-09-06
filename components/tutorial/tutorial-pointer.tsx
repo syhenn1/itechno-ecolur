@@ -26,7 +26,7 @@ const TOOLTIP_MAX_WIDTH = 380;
 const EDGE_MARGIN = 12;
 
 /**
- * Draws a spotlight ring around the element the citizen needs to interact with next, plus a
+ * Draws a spotlight ring around the element the user needs to interact with next, plus a
  * small card next to it explaining the step — a real pointer instead of a bottom-of-screen bar,
  * so the eye goes straight to the right spot. The ring's own `box-shadow` (a huge spread) is what
  * dims the rest of the screen — one property doing both jobs (highlight + backdrop), no separate
