@@ -79,14 +79,19 @@ export interface PopupShellProps {
   [dataAttr: `data-${string}`]: string | boolean | undefined;
 }
 
-// Left mascot panel's width -- kept as a single source of truth since the status badge below has
-// to straddle the exact seam between the two panels (left-<PANEL_WIDTH> - translate-x-1/2).
-const PANEL_WIDTH_CLASS = "w-36"; // 9rem / 144px
-const PANEL_WIDTH_LEFT_CLASS = "left-36";
+// Mascot panel size -- kept as a single source of truth since the status badge below has to
+// straddle the exact seam between the two panels, and that seam is a different edge depending on
+// layout direction (see the responsive note on the outer card below).
+const PANEL_SIZE_CLASS = "h-32 sm:h-auto sm:w-48"; // mobile: 8rem-tall top band. sm+: 12rem-wide side panel.
 
-/** The shared popup card: a wide landscape layout with a color-coded mascot panel on the left
- *  (gradient + status badge straddling the seam) and the message/actions on the right -- used for
- *  toasts (lib/toast.tsx), the tutorial's blocked-click notice, and the Reset Demo confirmation.
+/** The shared popup card: a color-coded mascot panel (gradient + status badge straddling the
+ *  seam) alongside the message/actions -- used for toasts (lib/toast.tsx), the tutorial's
+ *  blocked-click notice, and the Reset Demo confirmation.
+ *
+ *  Stacked (mascot on top) below the `sm` breakpoint, landscape (mascot on the left) from `sm` up
+ *  -- a fixed side-by-side layout at every width was tried first and broke on narrow phones: the
+ *  mascot panel doesn't shrink, so it ate most of a ~360px screen and squeezed the actual message
+ *  into a sliver. Stacking on mobile gives the message its own full-width row instead.
  *
  *  The badge is a sibling of both panels, not a child of either -- each panel clips its own
  *  gradient/mascot to its own rounded corner (`overflow-hidden`), so a badge nested inside either
@@ -113,16 +118,20 @@ export function PopupShell({
     <div
       {...rest}
       className={cn(
-        "relative flex w-full max-w-[480px] overflow-visible rounded-[28px] bg-white shadow-2xl",
+        // Mobile: fills the backdrop's own padding (w-full), never a fixed/viewport-relative
+        // width that could overflow a narrow screen. From sm+ up it targets ~35% of the viewport
+        // width, floored so the mascot panel + content never gets cramped on a mid-size window,
+        // and capped so it doesn't balloon on an ultra-wide monitor.
+        "relative flex w-full flex-col overflow-visible rounded-[28px] bg-white shadow-2xl sm:flex-row sm:w-[35vw] sm:min-w-[560px] max-w-[680px]",
         leaving ? "animate-tutorial-pop-out" : "animate-tutorial-pop",
         className,
       )}
     >
-      {/* Left: mascot panel */}
+      {/* Mascot panel: top band on mobile, left side panel from sm+ (see PANEL_SIZE_CLASS). */}
       <div
         className={cn(
-          "relative flex shrink-0 items-center justify-center overflow-hidden rounded-l-[28px]",
-          PANEL_WIDTH_CLASS,
+          "relative flex w-full shrink-0 items-center justify-center overflow-hidden rounded-t-[28px] sm:w-auto sm:rounded-t-none sm:rounded-l-[28px]",
+          PANEL_SIZE_CLASS,
           meta.panelGradient,
         )}
       >
@@ -131,25 +140,30 @@ export function PopupShell({
         <span aria-hidden="true" className="absolute -right-3 bottom-6 h-8 w-8 rounded-full bg-white/15" />
         <span aria-hidden="true" className="absolute left-3 top-8 h-4 w-4 rounded-full bg-white/15" />
 
-        <TutorialMascot mood={meta.mood} className="relative z-[1] h-24 w-20" />
+        <TutorialMascot mood={meta.mood} className="relative z-[1] h-28 w-24 sm:h-36 sm:w-32" />
       </div>
 
       {/* Status badge -- a sibling of both panels (see the function doc above), straddling the
-          seam between them, vertically pinned near the top so it never collides with the message. */}
+          seam between them: the horizontal seam (bottom of the top band) on mobile, the vertical
+          seam (right edge of the side panel) from sm+. */}
       <span
         className={cn(
-          "absolute top-5 z-[2] flex h-13 w-13 -translate-x-1/2 items-center justify-center rounded-full bg-white shadow-lg",
-          PANEL_WIDTH_LEFT_CLASS,
+          "absolute z-[2] flex h-13 w-13 items-center justify-center rounded-full bg-white shadow-lg",
+          // Mobile: pinned to top-32/left-6, nudged up by half its own height (-translate-y-1/2)
+          // to straddle the h-32 mascot band's bottom edge (see PANEL_SIZE_CLASS above -- same
+          // "32" token both places). sm+: re-pinned to the vertical seam instead (left-48 matches
+          // the panel's sm:w-48), centered on it horizontally, translate-y reset to 0.
+          "left-6 top-32 -translate-x-0 -translate-y-1/2 sm:left-48 sm:top-5 sm:-translate-x-1/2 sm:translate-y-0",
           meta.badgeColorClass,
         )}
       >
         <BadgeIcon className="h-6 w-6" />
       </span>
 
-      {/* Right: content. overflow-hidden so the footer progress bar (flush to the edges, see
-          lib/toast.tsx) can't poke past this panel's own rounded bottom-right corner -- doesn't
-          affect the badge above, which is a sibling positioned at the outer card level. */}
-      <div className="relative flex-1 overflow-hidden rounded-r-[28px] px-6 py-6 text-left">
+      {/* Content. overflow-hidden so the footer progress bar (flush to the edges, see
+          lib/toast.tsx) can't poke past this panel's own rounded corner -- doesn't affect the
+          badge above, which is a sibling positioned at the outer card level. */}
+      <div className="relative min-w-0 flex-1 overflow-hidden rounded-b-[28px] px-6 py-6 text-left sm:rounded-b-none sm:rounded-r-[28px]">
         {onClose && (
           <Button
             variant="ghost"
@@ -162,7 +176,12 @@ export function PopupShell({
           </Button>
         )}
 
-        <p className={cn("mb-1.5 pr-8 text-[11.5px] font-bold tracking-wide", meta.eyebrowColorClass)}>{eyebrow}</p>
+        {/* mt-9/sm:mt-20: clears the status badge straddling the seam above (see the badge's own
+            comment) -- on mobile it pokes ~26px down into this panel, on sm+ its bottom edge
+            sits ~72px from the card's top since the content panel starts at the very top there. */}
+        <p className={cn("mb-1.5 mt-9 pr-8 text-[11.5px] font-bold tracking-wide sm:mt-20", meta.eyebrowColorClass)}>
+          {eyebrow}
+        </p>
         <h2 className="mb-2.5 pr-8 font-[family-name:var(--font-baloo)] text-[21px] font-bold leading-tight text-slate-900">
           {title}
         </h2>

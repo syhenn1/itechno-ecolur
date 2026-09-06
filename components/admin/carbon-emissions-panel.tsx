@@ -62,7 +62,10 @@ export function CarbonEmissionsPanel({
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={220}>
-          <AreaChart data={monthly} margin={{ top: 12, right: 12, left: -16, bottom: 0 }}>
+            {/* left: 0, not negative -- see components/energy/energy-chart.tsx's comment: a
+                negative left margin pushes Y-axis labels to a negative x inside the chart's own
+                SVG, silently clipped by its default overflow:hidden viewport on narrow screens. */}
+          <AreaChart data={monthly} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="carbonFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={ACCENT_COLOR} stopOpacity={0.4} />

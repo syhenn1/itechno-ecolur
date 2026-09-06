@@ -63,8 +63,10 @@ export function RtRwDistributionChart({ data }: { data: RtRwPoint[] }) {
           <YAxis
             type="category"
             dataKey="rtRw"
-            width={72}
-            tick={{ fontSize: 12, fill: "#334155", fontWeight: 600 }}
+            // 88px: fits "RT 0X/RW 0Y" (the longest label this data produces) on one line at the
+            // tick font size below -- 72px wrapped it to two lines on a narrow mobile chart.
+            width={88}
+            tick={{ fontSize: 11, fill: "#334155", fontWeight: 600 }}
             axisLine={{ stroke: "#cbd5e1" }}
             tickLine={false}
           />
