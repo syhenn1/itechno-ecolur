@@ -1,29 +1,17 @@
-"use client";
-
-import { useState } from "react";
 import { Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Official Kabupaten Bogor emblem, with graceful fallback to a generic icon if the file is ever
- * missing/renamed. The real logo now lives at public/icons/Lambang_Kabupaten_Bogor.svg.webp.
+ * Attribution line for the dashboard's real-world pilot location. Deliberately does NOT use the
+ * actual Kabupaten Bogor government emblem/logo -- EcoLur is a fictional-village competition
+ * submission (Jatikulur), not an official government system, so displaying the real coat of arms
+ * would misrepresent it as one. A generic landmark icon carries the same "this is a government-
+ * style dashboard" cue without borrowing a real institution's mark.
  */
 export function GovernmentBadge({ className }: { className?: string }) {
-  const [logoFailed, setLogoFailed] = useState(false);
-
   return (
     <div className={cn("inline-flex items-center gap-2 text-xs font-medium text-slate-600", className)}>
-      {!logoFailed ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src="/icons/Lambang_Kabupaten_Bogor.svg.webp"
-          alt="Lambang Kabupaten Bogor"
-          className="h-5 w-5 object-contain drop-shadow-xs"
-          onError={() => setLogoFailed(true)}
-        />
-      ) : (
-        <Landmark className="h-4 w-4 text-emerald-700" aria-hidden="true" />
-      )}
+      <Landmark className="h-4 w-4 text-emerald-700" aria-hidden="true" />
       <span>Pemerintah Kabupaten Bogor &middot; Kecamatan Gunung Putri</span>
     </div>
   );
