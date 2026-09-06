@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/toast";
-import { RotateCcw, TriangleAlert, X } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PopupShell } from "@/components/ui/popup-shell";
 
 /**
  * Every screen in this demo (XP, badges, energy logs, reports) writes to the real database so
@@ -64,35 +65,15 @@ export function ResetDemoButton() {
           role="dialog"
           aria-modal="true"
         >
-          <div className="w-full max-w-sm rounded-md border border-slate-200 bg-white p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-amber-50 text-amber-700">
-                  <TriangleAlert className="h-4.5 w-4.5" />
-                </span>
-                <h2 className="text-sm font-bold text-slate-900">Reset data demo?</h2>
-              </div>
-              <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Tutup" className="h-8 w-8">
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <p className="mt-3 text-xs leading-relaxed text-slate-600">
-              Semua akun demo (Warga Demo, Petugas Demo, Admin Demo, dan warga lain yang sudah
-              diseed) akan dikembalikan ke XP, level, lencana, log energi, dan laporan awal — dan
-              tutorial akan dimulai lagi dari langkah 1. Perubahan ini memengaruhi database asli
-              dan tidak bisa dibatalkan.
-            </p>
-
-            <div className="mt-4 flex justify-end gap-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => setOpen(false)}>
-                Batal
-              </Button>
-              <Button type="button" variant="warning" size="sm" onClick={handleConfirm} loading={loading}>
-                {loading ? "Mereset..." : "Ya, reset sekarang"}
-              </Button>
-            </div>
-          </div>
+          <PopupShell
+            type="warning"
+            eyebrow="Konfirmasi"
+            title="Reset data demo?"
+            message="Semua akun demo (Warga Demo, Petugas Demo, Admin Demo, dan warga lain yang sudah diseed) akan dikembalikan ke XP, level, lencana, log energi, dan laporan awal -- dan tutorial akan dimulai lagi dari langkah 1. Perubahan ini memengaruhi database asli dan tidak bisa dibatalkan."
+            primary={{ label: loading ? "Mereset..." : "Ya, reset sekarang", onClick: handleConfirm, loading }}
+            secondary={{ label: "Batal", onClick: () => setOpen(false) }}
+            onClose={() => setOpen(false)}
+          />
         </div>
       )}
     </div>

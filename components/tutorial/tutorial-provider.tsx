@@ -5,8 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { toast } from "@/lib/toast";
 import { TUTORIAL_STEPS_BY_ROLE, type TutorialRole } from "@/lib/tutorial-steps";
 import { TutorialPointer } from "./tutorial-pointer";
-import { TutorialMascot } from "./tutorial-mascot";
-import { cn } from "@/lib/utils";
+import { PopupShell } from "@/components/ui/popup-shell";
 
 // One persisted key per role, so a Warga account and a Petugas/Admin account sharing the same
 // browser never step on each other's tour progress.
@@ -182,6 +181,12 @@ export function TutorialProvider({ role, children }: { role: TutorialRole; child
     setActive(false);
   }, []);
 
+  // Lets the "Eits" block popup's own button close it immediately instead of only ever waiting
+  // out the 1800ms auto-dismiss timer below.
+  const dismissBlocked = useCallback(() => {
+    setBlocked((b) => (b ? { ...b, leaving: true } : b));
+  }, []);
+
   // Listen for the navbar's "Panduan" button (dispatches this same event the old onboarding
   // modal used, so HelpButton itself didn't need to change).
   useEffect(() => {
@@ -337,16 +342,15 @@ export function TutorialProvider({ role, children }: { role: TutorialRole; child
           data-tutorial-ui
           className="pointer-events-none fixed inset-0 z-[200] flex items-center justify-center px-4"
         >
-          <div
-            className={cn(
-              "pointer-events-auto w-full max-w-md sm:max-w-lg rounded-md border-2 border-emerald-300 bg-white p-7 text-center shadow-2xl",
-              blocked.leaving ? "animate-tutorial-pop-out" : "animate-tutorial-pop",
-            )}
-          >
-            <TutorialMascot mood="surprised" className="mx-auto h-28 w-24" />
-            <div className="mt-3 text-xl font-bold text-emerald-800">Eits, mau ke mana?</div>
-            <p className="mt-1.5 text-sm leading-relaxed text-slate-600">Ini dulu, yuk: {blocked.text}</p>
-          </div>
+          <PopupShell
+            className="pointer-events-auto"
+            type="warning"
+            eyebrow="Tunggu dulu"
+            title="Eits, mau ke mana?"
+            message={`Ini dulu, yuk: ${blocked.text}`}
+            primary={{ label: "Oke, mengerti", onClick: dismissBlocked }}
+            leaving={blocked.leaving}
+          />
         </div>
       )}
     </TutorialContext.Provider>

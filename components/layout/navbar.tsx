@@ -47,6 +47,10 @@ export function Navbar({
 }) {
   const pathname = usePathname();
   const levelDef = typeof level === "number" ? getLevelDef(level) : null;
+  // Petugas/Admin only ever have one destination (Laporan Masuk / Dashboard) — a nav row (or a
+  // whole mobile bottom bar) with a single link to "the page you're already on" is dead weight,
+  // not navigation. Warga always has several, so this only ever hides for those single-link roles.
+  const hasNavLinks = links.length > 1;
 
   return (
     <>
@@ -68,6 +72,7 @@ export function Navbar({
           </Link>
 
           {/* Desktop Navigation Links (Hidden on Mobile) */}
+          {hasNavLinks && (
           <nav className="hidden md:flex items-center gap-1">
             {links.map((link) => {
               const Icon = getNavIcon(link.href);
@@ -90,6 +95,7 @@ export function Navbar({
               );
             })}
           </nav>
+          )}
 
           {/* Right Side: User Profile & Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
@@ -132,7 +138,10 @@ export function Navbar({
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar (Generous Tall Padding & Comfortable Reach) */}
+      {/* Mobile Bottom Navigation Bar (Generous Tall Padding & Comfortable Reach) — a whole bar
+          for a single "go to the page you're already on" link isn't navigation, so it's skipped
+          entirely for single-link roles (see hasNavLinks above), not just left empty. */}
+      {hasNavLinks && (
       <nav
         aria-label="Navigasi Utama Ponsel"
         className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white px-2 pt-2 pb-5 sm:pb-6"
@@ -167,6 +176,7 @@ export function Navbar({
           })}
         </div>
       </nav>
+      )}
     </>
   );
 }

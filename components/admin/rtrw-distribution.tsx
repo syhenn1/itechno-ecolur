@@ -31,9 +31,17 @@ function ChartTooltip({ active, payload }: TooltipProps) {
   );
 }
 
+// Above this many rows the chart stops growing the page and scrolls inside its own fixed-height
+// box instead — Jatikulur turned out to have dozens of distinct RT/RW combinations, not a
+// tidy handful, so letting the SVG height grow unbounded with data.length made the whole
+// dashboard page balloon to several screens tall.
+const MAX_VISIBLE_ROWS = 8;
+const ROW_HEIGHT = 40;
+
 /** Horizontal bar chart ranking wilayah (RT/RW) by report count — paired with a table (see the
- *  caller) so every value stays reachable without hovering. Height grows with the row count
- *  instead of being fixed, so the x-axis band is never squeezed out (see dataviz anti-patterns). */
+ *  caller) so every value stays reachable without hovering. Height grows with the row count up to
+ *  MAX_VISIBLE_ROWS worth of space, so the x-axis band is never squeezed out (see dataviz
+ *  anti-patterns) for a short list; past that it scrolls instead of pushing the page down. */
 export function RtRwDistributionChart({ data }: { data: RtRwPoint[] }) {
   if (data.length === 0) {
     return (
@@ -43,26 +51,29 @@ export function RtRwDistributionChart({ data }: { data: RtRwPoint[] }) {
     );
   }
 
-  const chartHeight = Math.max(180, data.length * 40 + 40);
+  const chartHeight = Math.max(180, data.length * ROW_HEIGHT + 40);
+  const boxHeight = Math.min(chartHeight, MAX_VISIBLE_ROWS * ROW_HEIGHT + 40);
 
   return (
-    <ResponsiveContainer width="100%" height={chartHeight}>
-      <BarChart data={data} layout="vertical" margin={{ top: 4, right: 28, left: 4, bottom: 4 }} barSize={20}>
-        <CartesianGrid horizontal={false} stroke="#e2e8f0" strokeDasharray="3 3" />
-        <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: "#64748b" }} axisLine={{ stroke: "#cbd5e1" }} tickLine={false} />
-        <YAxis
-          type="category"
-          dataKey="rtRw"
-          width={72}
-          tick={{ fontSize: 12, fill: "#334155", fontWeight: 600 }}
-          axisLine={{ stroke: "#cbd5e1" }}
-          tickLine={false}
-        />
-        <Tooltip content={<ChartTooltip />} cursor={{ fill: "#f1f5f9" }} />
-        <Bar dataKey="reportCount" fill={BAR_COLOR} radius={[0, 4, 4, 0]}>
-          <LabelList dataKey="reportCount" position="right" style={{ fill: "#334155", fontSize: 12, fontWeight: 700 }} />
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+    <div style={{ height: boxHeight }} className="overflow-y-auto overflow-x-hidden">
+      <ResponsiveContainer width="100%" height={chartHeight}>
+        <BarChart data={data} layout="vertical" margin={{ top: 4, right: 28, left: 4, bottom: 4 }} barSize={20}>
+          <CartesianGrid horizontal={false} stroke="#e2e8f0" strokeDasharray="3 3" />
+          <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: "#64748b" }} axisLine={{ stroke: "#cbd5e1" }} tickLine={false} />
+          <YAxis
+            type="category"
+            dataKey="rtRw"
+            width={72}
+            tick={{ fontSize: 12, fill: "#334155", fontWeight: 600 }}
+            axisLine={{ stroke: "#cbd5e1" }}
+            tickLine={false}
+          />
+          <Tooltip content={<ChartTooltip />} cursor={{ fill: "#f1f5f9" }} />
+          <Bar dataKey="reportCount" fill={BAR_COLOR} radius={[0, 4, 4, 0]}>
+            <LabelList dataKey="reportCount" position="right" style={{ fill: "#334155", fontSize: 12, fontWeight: 700 }} />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

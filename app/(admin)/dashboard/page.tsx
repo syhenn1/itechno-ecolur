@@ -210,9 +210,12 @@ export default async function AdminDashboardPage() {
           </CardHeader>
           <div className="space-y-4">
             <RtRwDistributionChart data={rtRwDistribution} />
-            <div className="overflow-x-auto rounded-xl border border-slate-200">
+            {/* max-h + overflow-y-auto: Jatikulur has dozens of distinct RT/RW combinations, not
+                a tidy handful -- without a cap this table alone pushed the whole dashboard page
+                several screens tall. Header stays sticky so it's still readable mid-scroll. */}
+            <div className="max-h-72 overflow-y-auto overflow-x-auto rounded-xl border border-slate-200">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-500">
+                <thead className="sticky top-0 bg-slate-50 text-slate-500">
                   <tr>
                     <th className="px-3 py-2 font-semibold">Wilayah</th>
                     <th className="px-3 py-2 font-semibold text-right">Laporan</th>

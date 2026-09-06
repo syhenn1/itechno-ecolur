@@ -1,10 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { TutorialMascot, type MascotMood } from "@/components/tutorial/tutorial-mascot";
-import { Button } from "@/components/ui/button";
+import { PopupShell, type PopupType } from "@/components/ui/popup-shell";
 
 // A drop-in replacement for sonner's `toast` API (same call shape: `toast.success(message,
 // { description, duration })`, etc.) that renders centered on screen instead of in a corner —
@@ -12,7 +9,7 @@ import { Button } from "@/components/ui/button";
 // import is enough; no call site needed to change. Kept intentionally small (no swipe-to-dismiss,
 // no promise/loading toasts, no stacking limits) since that's all this app actually uses.
 
-type ToastType = "success" | "error" | "info" | "warning";
+type ToastType = PopupType;
 
 interface ToastOptions {
   description?: string;
@@ -112,19 +109,18 @@ function getServerSnapshot() {
   return EMPTY_TOASTS;
 }
 
-// The mascot's expression stands in for a generic icon — happy/celebrating for success, sad/
-// worried for error, surprised for warning, curious for a plain info message.
-const MOODS: Record<ToastType, MascotMood> = {
-  success: "happy",
-  error: "sad",
-  info: "curious",
-  warning: "surprised",
+const EYEBROWS: Record<ToastType, string> = {
+  success: "Berhasil",
+  error: "Gagal",
+  info: "Info",
+  warning: "Perhatian",
 };
 
 /** Mount once, at the root layout — subscribes to the module-level toast queue above via
  *  useSyncExternalStore (the React-blessed way to read state that lives outside React) and
- *  renders only the front toast centered on screen. The rest of the queue waits its turn (see
- *  `ensureFrontTimer()`) instead of stacking up several of these modal-sized cards at once. */
+ *  renders only the front toast centered on screen, via the shared PopupShell. The rest of the
+ *  queue waits its turn (see `ensureFrontTimer()`) instead of stacking up several of these
+ *  modal-sized cards at once. */
 export function CenterToaster() {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const t = items[0];
@@ -137,39 +133,29 @@ export function CenterToaster() {
     // in-app navigation, so its own buttons (Lanjutkan, X) must always work regardless of
     // whatever step the forced tour is currently on.
     <div data-tutorial-ui className="pointer-events-none fixed inset-0 z-[300] flex flex-col items-center justify-center gap-3 px-4">
-      <div
+      <PopupShell
         key={t.id}
-        className={cn(
-          "pointer-events-auto relative w-full max-w-md overflow-hidden rounded-md border-2 border-emerald-300 bg-white p-7 shadow-2xl sm:max-w-lg",
-          t.leaving ? "animate-tutorial-pop-out" : "animate-tutorial-pop",
-        )}
-      >
-        <div className="flex items-start gap-4">
-          <TutorialMascot mood={MOODS[t.type]} className="h-24 w-20 shrink-0" />
-          <div className="min-w-0 flex-1 pt-1">
-            <div className="text-xl font-bold text-slate-900">{t.message}</div>
-            {t.description && <p className="mt-1.5 text-base leading-relaxed text-slate-600">{t.description}</p>}
-          </div>
-          <Button variant="ghost" size="icon" onClick={() => dismiss(t.id)} aria-label="Tutup" className="h-8 w-8">
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <Button type="button" onClick={() => dismiss(t.id)} className="mt-5 w-full">
-          Lanjutkan
-        </Button>
-
-        {/* Progress bar counting down to auto-dismiss — paused visually once `leaving` (the
-            exit animation takes over instead of finishing the shrink). */}
-        {!t.leaving && (
-          <div className="absolute inset-x-0 bottom-0 h-1 bg-emerald-100" aria-hidden="true">
-            <div
-              className="animate-toast-progress h-full bg-emerald-400"
-              style={{ animationDuration: `${t.duration}ms` }}
-            />
-          </div>
-        )}
-      </div>
+        className="pointer-events-auto"
+        type={t.type}
+        eyebrow={EYEBROWS[t.type]}
+        title={t.message}
+        message={t.description}
+        primary={{ label: "Lanjutkan", onClick: () => dismiss(t.id) }}
+        onClose={() => dismiss(t.id)}
+        leaving={t.leaving}
+        footer={
+          // Progress bar counting down to auto-dismiss -- paused visually once `leaving` (the
+          // exit animation takes over instead of finishing the shrink).
+          !t.leaving && (
+            <div className="relative -mx-6 -mb-6 mt-4 h-1 overflow-hidden bg-slate-100" aria-hidden="true">
+              <div
+                className="animate-toast-progress h-full bg-slate-300"
+                style={{ animationDuration: `${t.duration}ms` }}
+              />
+            </div>
+          )
+        }
+      />
     </div>
   );
 }
