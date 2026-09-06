@@ -21,7 +21,7 @@ export default async function ReportPage() {
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Lapor masalah dan pantau riwayat</h1>
         <p className="text-sm text-slate-600 mt-1">
-          Kirim laporan kerusakan fasilitas publik di sekitar Bojong Kulur dan pantau status perbaikannya.
+          Kirim laporan kerusakan fasilitas publik di sekitar Jatikulur dan pantau status perbaikannya.
         </p>
       </div>
 

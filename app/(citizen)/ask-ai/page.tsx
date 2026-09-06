@@ -39,7 +39,7 @@ export default async function AskAiPage() {
               </li>
               <li className="flex items-start gap-2 bg-slate-50 p-2.5 rounded-md border border-slate-100">
                 <ShieldCheck className="h-3.5 w-3.5 text-sky-600 mt-0.5 shrink-0" />
-                <span><strong>SOP Desa Bojong Kulur:</strong> alur penanganan jalan rusak dan sampah.</span>
+                <span><strong>SOP Desa Jatikulur:</strong> alur penanganan jalan rusak dan sampah.</span>
               </li>
             </ul>
           </div>
@@ -57,7 +57,7 @@ export default async function AskAiPage() {
                 &ldquo;Apakah ada denda jika tidak memakai token listrik prabayar?&rdquo;
               </div>
               <div className="bg-slate-50 p-2 rounded-md border border-slate-200 italic">
-                &ldquo;Bagaimana standar waktu perbaikan jalan rusak di Bojong Kulur?&rdquo;
+                &ldquo;Bagaimana standar waktu perbaikan jalan rusak di Jatikulur?&rdquo;
               </div>
             </div>
           </div>

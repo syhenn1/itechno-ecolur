@@ -4,7 +4,7 @@ This file is read automatically by Claude Code at the start of every session on 
 
 ## About the project
 
-**EcoLur** (*"Eco"* + *"Lur"*, from **Bojong Kulur**, Gunung Putri, Kabupaten Bogor — the pilot area) — a web platform for smart sustainable digital solutions for an inclusive society, combining two modules:
+**EcoLur** (*"Eco"* + *"Lur"*, from **Jatikulur**, Gunung Putri, Kabupaten Bogor — the pilot area) — a web platform for smart sustainable digital solutions for an inclusive society, combining two modules:
 1. **Energy module (SDG 7)** — citizens input electricity consumption, get AI-powered energy-saving recommendations.
 2. **Public service module (SDG 11)** — citizens report city infrastructure issues, officers verify & update status, local government monitors an aggregate dashboard.
 

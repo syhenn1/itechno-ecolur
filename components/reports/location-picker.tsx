@@ -20,19 +20,19 @@ const defaultIcon = L.icon({
   iconAnchor: [12, 41],
 });
 
-// Accurate bounding box around Desa Bojong Kulur, Gunung Putri, Kabupaten Bogor
-const BOJONG_KULUR_BOUNDS = L.latLngBounds(
+// Accurate bounding box around Desa Jatikulur, Gunung Putri, Kabupaten Bogor
+const JATIKULUR_BOUNDS = L.latLngBounds(
   [-6.39, 106.955], // southwest (Ciangsana / Wanaherang border)
   [-6.345, 106.995], // northeast (Villa Nusa Indah / Kali Cileungsi border)
 );
-const DEFAULT_CENTER: [number, number] = [-6.3687, 106.9745]; // Kantor Desa Bojong Kulur
+const DEFAULT_CENTER: [number, number] = [-6.3687, 106.9745]; // Kantor Desa Jatikulur
 
 function ClickHandler({ onPick }: { onPick: (lat: number, lng: number) => void }) {
   useMapEvents({
     click(e) {
-      if (!BOJONG_KULUR_BOUNDS.contains(e.latlng)) {
+      if (!JATIKULUR_BOUNDS.contains(e.latlng)) {
         toast.error("Lokasi di luar jangkauan", {
-          description: "Titik laporan harus berada di area Bojong Kulur.",
+          description: "Titik laporan harus berada di area Jatikulur.",
         });
         return;
       }
@@ -61,7 +61,7 @@ export function LocationPicker({
         center={value ? [value.lat, value.lng] : DEFAULT_CENTER}
         zoom={15}
         minZoom={13}
-        maxBounds={BOJONG_KULUR_BOUNDS}
+        maxBounds={JATIKULUR_BOUNDS}
         maxBoundsViscosity={1.0}
         style={{ height: 280, width: "100%" }}
       >
@@ -70,7 +70,7 @@ export function LocationPicker({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <Rectangle
-          bounds={BOJONG_KULUR_BOUNDS}
+          bounds={JATIKULUR_BOUNDS}
           pathOptions={{ color: "#059669", weight: 1, fill: false, dashArray: "6 6" }}
         />
         <ClickHandler onPick={handlePick} />

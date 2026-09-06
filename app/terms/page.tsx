@@ -23,7 +23,7 @@ export default function TermsPage() {
 
         <p>
           Dengan menggunakan EcoLur, Anda menyetujui syarat dan ketentuan berikut. EcoLur adalah platform untuk
-          warga Desa Bojong Kulur, Kecamatan Gunung Putri, Kabupaten Bogor, dan disediakan sebagai layanan publik
+          warga Desa Jatikulur, Kecamatan Gunung Putri, Kabupaten Bogor, dan disediakan sebagai layanan publik
           desa, bukan layanan komersial.
         </p>
 
@@ -59,7 +59,7 @@ export default function TermsPage() {
             Poin XP diperoleh dari aktivitas nyata (login harian, pencatatan energi, dan laporan yang benar-benar
             terkirim). Hadiah pada tiap level (pulsa, voucher koperasi desa, paket sembako, atau hadiah lainnya)
             tunduk pada ketersediaan program dan dapat berubah sewaktu-waktu tanpa pemberitahuan sebelumnya. Hadiah
-            yang sudah diklaim akan diproses atau ditukarkan langsung di Kantor Desa Bojong Kulur pada hari kerja.
+            yang sudah diklaim akan diproses atau ditukarkan langsung di Kantor Desa Jatikulur pada hari kerja.
             Kami berhak membatalkan poin atau hadiah yang diperoleh lewat kecurangan.
           </p>
         </section>
@@ -84,7 +84,7 @@ export default function TermsPage() {
         <section className="space-y-2">
           <h2 className="text-base font-bold text-slate-900">7. Kontak</h2>
           <p>
-            Pertanyaan seputar syarat dan ketentuan ini dapat disampaikan ke Kantor Desa Bojong Kulur, Kecamatan
+            Pertanyaan seputar syarat dan ketentuan ini dapat disampaikan ke Kantor Desa Jatikulur, Kecamatan
             Gunung Putri, Kabupaten Bogor.
           </p>
         </section>

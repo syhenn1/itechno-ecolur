@@ -71,7 +71,7 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
                 <img src="/icons/ecolur-logo.png" alt="EcoLur" className="h-8 w-8 rounded-md object-cover" />
                 <div>
                   <div className="text-[11px] font-semibold text-slate-900 uppercase">E-voucher EcoLur</div>
-                  <div className="text-[9px] text-slate-500">Desa Bojong Kulur, Gunung Putri</div>
+                  <div className="text-[9px] text-slate-500">Desa Jatikulur, Gunung Putri</div>
                 </div>
               </div>
               <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 border border-emerald-200">
@@ -123,7 +123,7 @@ export function ClaimVoucherModal({ voucher, onClose }: ClaimVoucherModalProps) 
             <ShieldCheck className="h-4 w-4 shrink-0 text-slate-500 mt-0.5" />
             <div className="leading-relaxed text-[11px]">
               <strong>Cara penukaran:</strong> untuk hadiah pulsa atau voucher digital akan diproses otomatis, atau
-              tunjukkan kode kupon di atas kepada petugas di Kantor Desa Bojong Kulur pada hari kerja.
+              tunjukkan kode kupon di atas kepada petugas di Kantor Desa Jatikulur pada hari kerja.
             </div>
           </div>
 

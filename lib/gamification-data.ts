@@ -55,7 +55,7 @@ export const LEVELS: LevelDef[] = [
     prize: "Voucher Koperasi Desa Rp35.000",
     prizeType: "voucher",
     voucherCodePrefix: "KOPDES35",
-    prizeDetail: "Dapat dibelanjakan di Koperasi Desa Bojong Kulur dan UMKM mitra.",
+    prizeDetail: "Dapat dibelanjakan di Koperasi Desa Jatikulur dan UMKM mitra.",
   },
   {
     level: 4,

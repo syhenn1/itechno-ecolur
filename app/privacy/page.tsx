@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         </div>
 
         <p>
-          EcoLur adalah platform milik Desa Bojong Kulur, Kecamatan Gunung Putri, Kabupaten Bogor, untuk pemantauan
+          EcoLur adalah platform milik Desa Jatikulur, Kecamatan Gunung Putri, Kabupaten Bogor, untuk pemantauan
           konsumsi energi warga dan pelaporan masalah infrastruktur. Halaman ini menjelaskan data apa saja yang kami
           kumpulkan, untuk apa data itu digunakan, dan hak Anda atas data tersebut.
         </p>
@@ -80,7 +80,7 @@ export default function PrivacyPage() {
         <section className="space-y-2">
           <h2 className="text-base font-bold text-slate-900">Kontak</h2>
           <p>
-            Pertanyaan seputar kebijakan privasi ini dapat disampaikan ke Kantor Desa Bojong Kulur, Kecamatan Gunung
+            Pertanyaan seputar kebijakan privasi ini dapat disampaikan ke Kantor Desa Jatikulur, Kecamatan Gunung
             Putri, Kabupaten Bogor.
           </p>
         </section>

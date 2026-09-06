@@ -143,7 +143,7 @@ export function OfficerDispatchMap({
               <h3 className="text-sm font-bold text-slate-900">Peta penugasan petugas</h3>
             </div>
             <p className="text-[11px] text-slate-500">
-              Pos Acuan: <strong>Kantor Desa Bojong Kulur</strong> ({OFFICER_BASE_COORDINATES[0]}, {OFFICER_BASE_COORDINATES[1]})
+              Pos Acuan: <strong>Kantor Desa Jatikulur</strong> ({OFFICER_BASE_COORDINATES[0]}, {OFFICER_BASE_COORDINATES[1]})
             </p>
           </div>
         </div>
@@ -203,7 +203,7 @@ export function OfficerDispatchMap({
               <div className="p-1 text-center">
                 <div className="font-extrabold text-emerald-950 text-xs flex items-center justify-center gap-1">
                   <Building2 className="h-3.5 w-3.5 text-emerald-700" />
-                  Pos Petugas Bojong Kulur
+                  Pos Petugas Jatikulur
                 </div>
                 <div className="text-[10px] text-slate-500 mt-0.5">
                   Titik Awal Penghitungan Jarak KNN

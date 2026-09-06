@@ -131,7 +131,7 @@ export function ReportForm() {
       <div>
         <Label>Lokasi</Label>
         <p className="mb-1.5 text-xs text-slate-500">
-          Klik pada peta untuk menandai lokasi kejadian, dibatasi di area Bojong Kulur (kotak putus-putus).
+          Klik pada peta untuk menandai lokasi kejadian, dibatasi di area Jatikulur (kotak putus-putus).
         </p>
         <LocationPicker value={location} onChange={(lat, lng) => setLocation({ lat, lng })} />
       </div>

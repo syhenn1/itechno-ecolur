@@ -25,8 +25,8 @@ const SAMPLE_PROMPTS = [
   "Berapa tarif listrik PLN 900 VA dan 1300 VA?",
   "Bagaimana syarat pasang solar panel di rumah (Permen ESDM)?",
   "Tips menghemat konsumsi listrik AC dan kulkas",
-  "SOP perbaikan jalan rusak di Bojong Kulur",
-  "Jadwal pengangkutan sampah di area Bojong Kulur",
+  "SOP perbaikan jalan rusak di Jatikulur",
+  "Jadwal pengangkutan sampah di area Jatikulur",
   "Bagaimana cara mendapatkan XP dan hadiah di EcoLur?",
 ];
 
@@ -42,7 +42,7 @@ export function EcoBotChat() {
     {
       id: "welcome",
       role: "assistant",
-      text: "Halo! Saya **EcoBot**, asisten cerdas EcoLur. Saya siap membantu Anda dengan informasi resmi seputar **regulasi energi, tarif PLN, panduan PLTS Atap, tips hemat listrik**, serta **SOP layanan publik & infrastruktur di Bojong Kulur**.\n\nApa yang ingin Anda tanyakan hari ini?",
+      text: "Halo! Saya **EcoBot**, asisten cerdas EcoLur. Saya siap membantu Anda dengan informasi resmi seputar **regulasi energi, tarif PLN, panduan PLTS Atap, tips hemat listrik**, serta **SOP layanan publik & infrastruktur di Jatikulur**.\n\nApa yang ingin Anda tanyakan hari ini?",
       timestamp: new Date(),
     },
   ]);
@@ -132,7 +132,7 @@ export function EcoBotChat() {
           <div>
             <h2 className="text-base font-semibold text-slate-900">EcoBot</h2>
             <p className="text-xs text-slate-500">
-              Didukung basis data regulasi ESDM, tarif PLN, dan SOP Bojong Kulur
+              Didukung basis data regulasi ESDM, tarif PLN, dan SOP Jatikulur
             </p>
           </div>
         </div>

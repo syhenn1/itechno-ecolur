@@ -4,12 +4,12 @@ import { seedDemoData } from "./seed-logic";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Memulai proses seeding database cepat Desa Bojong Kulur...");
+  console.log("Memulai proses seeding database cepat Desa Jatikulur...");
 
   const result = await seedDemoData(prisma);
 
   console.log("Seeding database berhasil (Parallel & High Speed):");
-  console.log(`  - ${result.citizens} Warga Terdaftar (RT 01 s.d RT 08 Bojong Kulur)`);
+  console.log(`  - ${result.citizens} Warga Terdaftar (RT 01 s.d RT 08 Jatikulur)`);
   console.log(`  - ${result.energyLogs} Log Energi Bulanan`);
   console.log(`  - ${result.reports} Laporan Infrastruktur & Kebersihan`);
   console.log(`  - ${result.badges} Lencana Penghargaan Warga`);

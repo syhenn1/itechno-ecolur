@@ -94,7 +94,7 @@ export async function seedDemoData(prisma: PrismaClient) {
       userId: officerUser.id,
       name: officerUser.name,
       department: "Dinas Pekerjaan Umum & Lingkungan",
-      area: "Bojong Kulur",
+      area: "Jatikulur",
     },
   });
 
@@ -147,7 +147,7 @@ export async function seedDemoData(prisma: PrismaClient) {
   await prisma.report.deleteMany({});
 
   const HOTSPOT_INTERSECTION: [number, number] = [-6.366, 106.972]; // Villa Nusa Indah intersection
-  const HOTSPOT_MARKET: [number, number] = [-6.372, 106.976]; // Pasar Bojong Kulur
+  const HOTSPOT_MARKET: [number, number] = [-6.372, 106.976]; // Pasar Jatikulur
   const HOTSPOT_LOWLAND: [number, number] = [-6.360, 106.968]; // Bantaran Kali Cileungsi
 
   interface ReportSeed {
@@ -302,9 +302,9 @@ export async function seedDemoData(prisma: PrismaClient) {
   await prisma.rewardCatalog.deleteMany({});
 
   const catalogs = [
-    { name: "Beras Organik Setra Ramos 5kg", description: "Beras lokal premium dari Koperasi", costXp: 1500, stock: 10, provider: "Koperasi Desa Bojong Kulur" },
-    { name: "Token Listrik Rp 50.000", description: "Voucher listrik prabayar", costXp: 800, stock: 50, provider: "BUMDes Bojong Kulur" },
-    { name: "Minyak Goreng 2L", description: "Minyak goreng kemasan", costXp: 500, stock: 30, provider: "Koperasi Desa Bojong Kulur" },
+    { name: "Beras Organik Setra Ramos 5kg", description: "Beras lokal premium dari Koperasi", costXp: 1500, stock: 10, provider: "Koperasi Desa Jatikulur" },
+    { name: "Token Listrik Rp 50.000", description: "Voucher listrik prabayar", costXp: 800, stock: 50, provider: "BUMDes Jatikulur" },
+    { name: "Minyak Goreng 2L", description: "Minyak goreng kemasan", costXp: 500, stock: 30, provider: "Koperasi Desa Jatikulur" },
     { name: "Bibit Tanaman Cabai", description: "Bibit sayuran dari KWT", costXp: 100, stock: 100, provider: "Kelompok Wanita Tani RW 01" },
   ];
 

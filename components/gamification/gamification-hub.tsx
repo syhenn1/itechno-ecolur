@@ -206,10 +206,10 @@ export function GamificationHub({
           <div className="rounded-md border border-slate-200 bg-white p-4 sm:p-5">
             <div className="flex items-center gap-2 text-slate-900 font-bold text-xs mb-1.5">
               <ShieldCheck className="h-4 w-4 text-slate-500" />
-              <span>Program resmi Desa Bojong Kulur</span>
+              <span>Program resmi Desa Jatikulur</span>
             </div>
             <p className="text-[11px] text-slate-600 leading-relaxed">
-              E-voucher dan paket sembako didanai oleh program kemitraan lingkungan dan CSR energi terbarukan Desa Bojong Kulur.
+              E-voucher dan paket sembako didanai oleh program kemitraan lingkungan dan CSR energi terbarukan Desa Jatikulur.
             </p>
           </div>
         </div>

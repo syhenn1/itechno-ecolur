@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const reports = await prisma.report.findMany();
-  console.log(`Updating ${reports.length} reports to real Bojong Kulur coordinates...`);
+  console.log(`Updating ${reports.length} reports to real Jatikulur coordinates...`);
   
   for (const r of reports) {
     // Shift latitude from ~ -6.44 to -6.3687 + small jitter
@@ -20,7 +20,7 @@ async function main() {
     });
   }
   
-  console.log("All reports updated to Bojong Kulur (Gunung Putri, Bogor)!");
+  console.log("All reports updated to Jatikulur (Gunung Putri, Bogor)!");
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());

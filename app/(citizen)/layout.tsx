@@ -22,9 +22,13 @@ export default async function CitizenLayout({ children }: { children: ReactNode 
   const currentLevel = user ? levelForXp(user.xp) : 1;
 
   return (
-    <div className="min-h-screen bg-slate-100/70 pb-28 sm:pb-32 md:pb-8">
+    <div className="min-h-screen bg-slate-100/70">
       <Navbar name={session.name} roleLabel="Warga" links={CITIZEN_LINKS} level={currentLevel} />
-      <TutorialProvider>{children}</TutorialProvider>
+      {/* pb-* clears the fixed mobile bottom nav — scoped to just the content, not the whole
+          page, otherwise it left a big empty gap below the footer that sits after it. */}
+      <div className="pb-28 sm:pb-32 md:pb-8">
+        <TutorialProvider>{children}</TutorialProvider>
+      </div>
       <AppFooter />
     </div>
   );

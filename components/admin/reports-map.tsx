@@ -43,10 +43,10 @@ interface MapReport {
   lng: number;
 }
 
-// Accurate center of Desa Bojong Kulur, Gunung Putri, Kabupaten Bogor
+// Accurate center of Desa Jatikulur, Gunung Putri, Kabupaten Bogor
 const DEFAULT_CENTER: [number, number] = [-6.3687, 106.9745];
 
-const BOJONG_BOUNDS: BoundingBox = {
+const JATIKULUR_BOUNDS: BoundingBox = {
   minLat: -6.39,
   maxLat: -6.345,
   minLng: 106.955,
@@ -61,7 +61,7 @@ export function ReportsMap({ reports }: { reports: MapReport[] }) {
 
   // Build QuadTree spatial partition in memory
   const { clusters } = useMemo(() => {
-    const qt = new QuadTree<MapReport>(BOJONG_BOUNDS, 3, 0, 5);
+    const qt = new QuadTree<MapReport>(JATIKULUR_BOUNDS, 3, 0, 5);
     qt.insertMany(reports);
     return { clusters: qt.getClusters(3) };
   }, [reports]);
@@ -201,7 +201,7 @@ export function ReportsMap({ reports }: { reports: MapReport[] }) {
 
       {view === "spatial" && (
         <p className="text-xs text-slate-500">
-          <strong>Struktur Data 2D QuadTree:</strong> Mempartisi ruang geografis Bojong Kulur menjadi 4 kuadran rekursif.
+          <strong>Struktur Data 2D QuadTree:</strong> Mempartisi ruang geografis Jatikulur menjadi 4 kuadran rekursif.
           Warna kotak menandakan kepadatan laporan (Hijau: Rendah, Oranye: Sedang, Merah: Hotspot).
         </p>
       )}

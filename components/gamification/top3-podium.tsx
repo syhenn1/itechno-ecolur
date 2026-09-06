@@ -51,7 +51,7 @@ export function Top3Podium({
             <h3 className={cn("font-bold text-slate-900 leading-tight", compact ? "text-xs" : "text-sm")}>
               Papan peringkat 10 besar
             </h3>
-            {!compact && <p className="text-[10px] text-slate-500">Desa Bojong Kulur</p>}
+            {!compact && <p className="text-[10px] text-slate-500">Desa Jatikulur</p>}
           </div>
         </div>
       </div>

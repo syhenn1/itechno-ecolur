@@ -18,7 +18,7 @@ const STEPS: Record<Role, Step[]> = {
     {
       icon: Sparkles,
       title: "Selamat datang di EcoLur",
-      body: "EcoLur membantu warga Bojong Kulur mencatat konsumsi listrik dan melaporkan masalah infrastruktur di sekitar rumah. Setiap aktivitas yang Anda lakukan di sini mengumpulkan XP.",
+      body: "EcoLur membantu warga Jatikulur mencatat konsumsi listrik dan melaporkan masalah infrastruktur di sekitar rumah. Setiap aktivitas yang Anda lakukan di sini mengumpulkan XP.",
     },
     {
       icon: Zap,
@@ -45,7 +45,7 @@ const STEPS: Record<Role, Step[]> = {
     {
       icon: Sparkles,
       title: "Selamat datang, Petugas",
-      body: "Akun Anda bertugas memverifikasi dan menindaklanjuti laporan warga Bojong Kulur seputar infrastruktur dan kebersihan lingkungan.",
+      body: "Akun Anda bertugas memverifikasi dan menindaklanjuti laporan warga Jatikulur seputar infrastruktur dan kebersihan lingkungan.",
     },
     {
       icon: ShieldAlert,
@@ -62,7 +62,7 @@ const STEPS: Record<Role, Step[]> = {
     {
       icon: Sparkles,
       title: "Selamat datang, Admin",
-      body: "Dashboard ini merangkum data energi dan laporan infrastruktur seluruh warga Bojong Kulur untuk mendukung pengambilan keputusan pemerintah desa.",
+      body: "Dashboard ini merangkum data energi dan laporan infrastruktur seluruh warga Jatikulur untuk mendukung pengambilan keputusan pemerintah desa.",
     },
     {
       icon: BarChart3,

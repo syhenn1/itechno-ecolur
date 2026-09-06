@@ -63,7 +63,7 @@ export function LevelProgressBar({ progress }: { progress: LevelProgress }) {
           </div>
         ) : (
           <div className="flex items-center gap-2 text-slate-800">
-            <span className="font-semibold">Duta Keberlanjutan Desa Bojong Kulur</span>
+            <span className="font-semibold">Duta Keberlanjutan Desa Jatikulur</span>
           </div>
         )}
 

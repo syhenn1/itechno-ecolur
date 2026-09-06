@@ -2,11 +2,11 @@ import { QuadTree, haversineDistance, type SpatialPoint, type BoundingBox } from
 import { PriorityQueue } from "../dsa/priority-queue";
 import type { ReportStatus } from "@prisma/client";
 
-// Reference base coordinates for Bojong Kulur Officer Dispatch Post (Kantor Desa Bojong Kulur, Gunung Putri, Bogor)
+// Reference base coordinates for Jatikulur Officer Dispatch Post (Kantor Desa Jatikulur, Gunung Putri, Bogor)
 export const OFFICER_BASE_COORDINATES: [number, number] = [-6.3687, 106.9745];
 
-// Accurate bounding box covering Desa Bojong Kulur and surroundings (Gunung Putri, Kab. Bogor)
-export const BOJONG_KULUR_BOUNDING_BOX: BoundingBox = {
+// Accurate bounding box covering Desa Jatikulur and surroundings (Gunung Putri, Kab. Bogor)
+export const JATIKULUR_BOUNDING_BOX: BoundingBox = {
   minLat: -6.39,
   maxLat: -6.345,
   minLng: 106.955,
@@ -51,7 +51,7 @@ export interface DispatchReport extends SpatialPoint {
  */
 export function buildReportsQuadTree(
   reports: DispatchReport[],
-  boundary: BoundingBox = BOJONG_KULUR_BOUNDING_BOX,
+  boundary: BoundingBox = JATIKULUR_BOUNDING_BOX,
 ): QuadTree<DispatchReport> {
   const quadTree = new QuadTree<DispatchReport>(boundary, 4, 0, 6);
   quadTree.insertMany(reports);

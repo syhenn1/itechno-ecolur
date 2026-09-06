@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 // 3 used further down in the services carousel) — rotating through all of them here instead of
 // showing just one gives the hero section actual visual variety without needing new assets.
 const HERO_IMAGES = [
-  { src: "/images/hero-smart-village.jpg", alt: "Suasana Desa Bojong Kulur" },
+  { src: "/images/hero-smart-village.jpg", alt: "Suasana Desa Jatikulur" },
   { src: "/images/service-solar-monitor.jpg", alt: "Pemantauan konsumsi listrik dan panel surya" },
   { src: "/images/service-field-dispatch.jpg", alt: "Petugas menindaklanjuti laporan warga" },
   { src: "/images/service-citizen-rewards.jpg", alt: "Warga mengumpulkan XP dan hadiah" },

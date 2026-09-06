@@ -7,7 +7,7 @@ export function AppFooter() {
   return (
     <footer className="border-t border-slate-200 bg-white py-5 text-xs text-slate-500">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 sm:flex-row sm:px-6 lg:px-8">
-        <span>2026 EcoLur &middot; Pemerintah Desa Bojong Kulur</span>
+        <span>2026 EcoLur &middot; Pemerintah Desa Jatikulur</span>
         <div className="flex items-center gap-4">
           <Link href="/privacy" className="transition-colors hover:text-slate-700">
             Kebijakan Privasi

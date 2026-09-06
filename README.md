@@ -1,6 +1,6 @@
 # EcoLur
 
-Platform digital untuk warga Desa Bojong Kulur (Kecamatan Gunung Putri, Kabupaten Bogor) memantau konsumsi listrik rumah tangga dan melaporkan masalah infrastruktur kota, dengan dashboard transparansi untuk pemerintah desa.
+Platform digital untuk warga Desa Jatikulur (Kecamatan Gunung Putri, Kabupaten Bogor) memantau konsumsi listrik rumah tangga dan melaporkan masalah infrastruktur kota, dengan dashboard transparansi untuk pemerintah desa.
 
 Dikembangkan untuk **ITechno Cup 2026 - Web Development Student Competition**
 Sub-tema: *Smart Sustainable Digital Solution for Inclusive Society*
@@ -35,7 +35,7 @@ Banyak kelurahan dan desa di Indonesia menghadapi dua masalah yang jarang ditang
 
 EcoLur menggabungkan keduanya dalam satu platform: warga bisa memantau jejak energi mereka sekaligus melaporkan dan melacak masalah infrastruktur kota, sementara pemerintah desa mendapatkan dashboard transparansi berbasis data untuk pengambilan keputusan.
 
-Nama **EcoLur** berasal dari *"Eco"* (keberlanjutan) dan *"Lur"* - diambil dari **Bojong Kulur**, wilayah percontohan proyek ini di Gunung Putri, Kabupaten Bogor, sekaligus sapaan akrab dalam bahasa gaul lokal. Platform ini dirancang untuk dimulai di satu desa, tapi bisa diperluas ke kota atau kabupaten lain yang menghadapi tantangan energi dan layanan publik yang sama.
+Nama **EcoLur** berasal dari *"Eco"* (keberlanjutan) dan *"Lur"* - diambil dari **Jatikulur**, wilayah percontohan proyek ini di Gunung Putri, Kabupaten Bogor, sekaligus sapaan akrab dalam bahasa gaul lokal. Platform ini dirancang untuk dimulai di satu desa, tapi bisa diperluas ke kota atau kabupaten lain yang menghadapi tantangan energi dan layanan publik yang sama.
 
 Tujuan aplikasi:
 - Mendorong kesadaran hemat energi lewat data yang jelas dan dapat ditindaklanjuti.
@@ -62,7 +62,7 @@ Tujuan aplikasi:
 - Rekomendasi hemat energi otomatis dari AI (Google Gemini), berdasarkan riwayat konsumsi masing-masing warga.
 
 ### Modul Layanan Publik (SDG 11)
-- Lapor masalah infrastruktur (jalan rusak, sampah, drainase, penerangan jalan, dll.) dengan foto dan titik lokasi GPS, dibatasi ke area Bojong Kulur.
+- Lapor masalah infrastruktur (jalan rusak, sampah, drainase, penerangan jalan, dll.) dengan foto dan titik lokasi GPS, dibatasi ke area Jatikulur.
 - Pelacakan status laporan secara real-time (Dilaporkan - Terverifikasi - Diproses - Selesai), dengan riwayat lengkap yang tidak pernah ditimpa (append-only log).
 - Petugas desa memverifikasi dan memperbarui status laporan lewat terminal khusus, dengan pengurutan laporan berdasarkan jarak dan tingkat prioritas.
 

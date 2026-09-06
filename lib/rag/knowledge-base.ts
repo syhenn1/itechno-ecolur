@@ -63,15 +63,15 @@ Prosedur perubahan daya dan pengajuan subsidi:
     `.trim(),
   },
 
-  // --- SDG 11: PUBLIC SERVICES & BOJONG KULUR INFRASTRUCTURE ---
+  // --- SDG 11: PUBLIC SERVICES & JATIKULUR INFRASTRUCTURE ---
   {
-    id: "sop-jalan-rusak-bojongkulur",
+    id: "sop-jalan-rusak-jatikulur",
     category: "public_service",
-    title: "SOP Pelaporan dan Perbaikan Jalan Berlubang & Aspal Desa Bojong Kulur",
-    source: "Dinas Pekerjaan Umum & Tata Ruang Kab. Bogor / Pemdes Bojong Kulur",
-    keywords: ["jalan", "rusak", "lubang", "aspal", "perbaikan", "sop", "sla", "bojong kulur", "dpu"],
+    title: "SOP Pelaporan dan Perbaikan Jalan Berlubang & Aspal Desa Jatikulur",
+    source: "Dinas Pekerjaan Umum & Tata Ruang Kab. Bogor / Pemdes Jatikulur",
+    keywords: ["jalan", "rusak", "lubang", "aspal", "perbaikan", "sop", "sla", "jatikulur", "dpu"],
     content: `
-Standar Operasional Prosedur penanganan jalan rusak di Desa Bojong Kulur, Gunung Putri:
+Standar Operasional Prosedur penanganan jalan rusak di Desa Jatikulur, Gunung Putri:
 1. Pelaporan Warga: Laporan dimasukkan lewat EcoLur dengan foto titik kerusakan dan koordinat GPS akurat.
 2. Verifikasi Lapangan (SLA: 1x24 Jam): Petugas lapangan memverifikasi ukuran lubang, volume lalu lintas, dan tingkat bahaya (kategori darurat vs pemeliharaan rutin).
 3. Penjadwalan Perbaikan:
@@ -81,15 +81,15 @@ Standar Operasional Prosedur penanganan jalan rusak di Desa Bojong Kulur, Gunung
     `.trim(),
   },
   {
-    id: "sop-pengelolaan-sampah-bojongkulur",
+    id: "sop-pengelolaan-sampah-jatikulur",
     category: "public_service",
-    title: "Jadwal dan Mekanisme Pengelolaan Sampah Warga & Pasar Bojong Kulur",
-    source: "Dinas Lingkungan Hidup Kab. Bogor & BUMDes Bojong Kulur",
+    title: "Jadwal dan Mekanisme Pengelolaan Sampah Warga & Pasar Jatikulur",
+    source: "Dinas Lingkungan Hidup Kab. Bogor & BUMDes Jatikulur",
     keywords: ["sampah", "jadwal", "truk", "pasar", "daur ulang", "dlh", "bank sampah", "retribusi"],
     content: `
-Jadwal pengangkutan dan pengelolaan sampah di wilayah Bojong Kulur:
+Jadwal pengangkutan dan pengelolaan sampah di wilayah Jatikulur:
 1. Pengangkutan Sampah Permukiman: Dilakukan 3 kali seminggu (Senin, Rabu, Sabtu pagi) oleh armada kebersihan desa.
-2. Area Komersial & Pasar Bojong Kulur: Pengangkutan harian setiap pukul 05.00 - 08.00 WIB guna mencegah penumpukan sampah organik.
+2. Area Komersial & Pasar Jatikulur: Pengangkutan harian setiap pukul 05.00 - 08.00 WIB guna mencegah penumpukan sampah organik.
 3. Larangan Pembakaran: Membakar sampah secara terbuka dilarang keras berdasarkan Perda Pengelolaan Lingkungan karena mencemari udara dan berisiko memicu kebakaran.
 4. Program Bank Sampah EcoLur: Warga dapat menyetorkan sampah anorganik terpilah (kardus, botol plastik, logam) ke Bank Sampah RW untuk mendapatkan poin reward/XP EcoLur.
     `.trim(),
@@ -98,23 +98,23 @@ Jadwal pengangkutan dan pengelolaan sampah di wilayah Bojong Kulur:
     id: "sop-drainase-banjir-cileungsi",
     category: "public_service",
     title: "Protokol Penanganan Drainase Mampet & Titik Rawan Luapan Sungai Cileungsi",
-    source: "BPBD Kab. Bogor & Posko Siaga Banjir Bojong Kulur",
+    source: "BPBD Kab. Bogor & Posko Siaga Banjir Jatikulur",
     keywords: ["drainase", "got", "banjir", "cileungsi", "sungai", "pompa", "bpbd", "hujan", "sedimen"],
     content: `
-Protokol antisipasi dan penanganan drainase di Bojong Kulur (area pertemuan Sungai Cileungsi dan Cikeas):
+Protokol antisipasi dan penanganan drainase di Jatikulur (area pertemuan Sungai Cileungsi dan Cikeas):
 1. Pengerukan Sedimen Rutin: Dilakukan secara berkala sebelum musim penghujan pada saluran primer dan sekunder.
 2. Laporan Warga Soal Got Tersumbat: Diprioritaskan untuk pembersihan manual oleh tim kebersihan dalam kurun waktu maksimal 48 jam.
 3. Status Siaga Banjir:
    - Siaga 3 (Waspada): Ketinggian air Cileungsi naik, warga diimbau mengamankan barang berharga.
-   - Siaga 2 & 1 (Kritis): Tim tanggap darurat dan pompa mobile diaktifkan di titik tanggul Villa Nusa Indah / Bojong Kulur.
-4. Kontak Darurat Bencana: Posko Siaga Bojong Kulur / BPBD Kab. Bogor (112 atau 021-87914800).
+   - Siaga 2 & 1 (Kritis): Tim tanggap darurat dan pompa mobile diaktifkan di titik tanggul Villa Nusa Indah / Jatikulur.
+4. Kontak Darurat Bencana: Posko Siaga Jatikulur / BPBD Kab. Bogor (112 atau 021-87914800).
     `.trim(),
   },
   {
     id: "ecolur-gamification-prizes",
     category: "gamification",
     title: "Panduan Level, XP, Lencana, dan Klaim Hadiah di Platform EcoLur",
-    source: "Pemerintah Desa Bojong Kulur & Tim EcoLur",
+    source: "Pemerintah Desa Jatikulur & Tim EcoLur",
     keywords: ["xp", "level", "hadiah", "lencana", "voucher", "klaim", "gamifikasi", "poin"],
     content: `
 Sistem Reward & Gamifikasi EcoLur:

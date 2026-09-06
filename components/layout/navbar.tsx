@@ -63,7 +63,7 @@ export function Navbar({
             />
             <div className="flex flex-col leading-none">
               <span className="text-base sm:text-lg font-bold text-slate-900">EcoLur</span>
-              <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 mt-0.5">Bojong Kulur, Bogor</span>
+              <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 mt-0.5">Jatikulur, Bogor</span>
             </div>
           </Link>
 

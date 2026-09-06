@@ -71,7 +71,7 @@ export default async function HomePage() {
             />
             <div className="flex flex-col leading-none">
               <span className="text-base font-bold text-slate-900">EcoLur</span>
-              <span className="text-[11px] font-medium text-slate-500 mt-0.5">Bojong Kulur, Bogor</span>
+              <span className="text-[11px] font-medium text-slate-500 mt-0.5">Jatikulur, Bogor</span>
             </div>
           </Link>
 
@@ -85,10 +85,10 @@ export default async function HomePage() {
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 pb-8 sm:pb-12">
             <div className="max-w-2xl space-y-4">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                Catat konsumsi listrik dan laporkan masalah infrastruktur di Bojong Kulur.
+                Catat konsumsi listrik dan laporkan masalah infrastruktur di Jatikulur.
               </h1>
               <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-xl">
-                EcoLur adalah platform untuk warga Bojong Kulur: input meteran listrik bulanan untuk
+                EcoLur adalah platform untuk warga Jatikulur: input meteran listrik bulanan untuk
                 rekomendasi hemat energi dari AI, dan laporkan jalan rusak atau sampah menumpuk lengkap
                 dengan foto dan lokasi. Setiap laporan bisa dipantau statusnya sampai selesai.
               </p>
@@ -180,7 +180,7 @@ export default async function HomePage() {
               className="h-7 w-7 rounded-md object-cover"
             />
             <div>
-              <div className="font-semibold text-slate-900">Pemerintah Desa Bojong Kulur</div>
+              <div className="font-semibold text-slate-900">Pemerintah Desa Jatikulur</div>
               <div className="text-[11px] text-slate-500">Kecamatan Gunung Putri, Kabupaten Bogor, Jawa Barat</div>
             </div>
           </div>

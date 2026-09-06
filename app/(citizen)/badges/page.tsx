@@ -57,7 +57,7 @@ export default async function BadgesPage() {
       id: u.id,
       rank: idx + 1,
       name: u.name,
-      rtRw: u.rtRw || "Desa Bojong Kulur",
+      rtRw: u.rtRw || "Desa Jatikulur",
       xp: u.xp,
       level: lvl,
       badgeName: def.badgeName,

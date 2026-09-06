@@ -151,7 +151,7 @@ export function PublicServicesCarousel() {
               </span>
               <div className="leading-tight">
                 <div className="text-xs font-semibold text-slate-900">{slide.badge}</div>
-                <div className="text-[11px] text-slate-500">Bojong Kulur</div>
+                <div className="text-[11px] text-slate-500">Jatikulur</div>
               </div>
             </div>
           </div>

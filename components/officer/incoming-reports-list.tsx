@@ -137,7 +137,7 @@ export function IncomingReportsList({
             </span>
           </div>
           <div className="mt-2 text-2xl sm:text-3xl font-bold text-slate-900 font-mono">{nearestDistance}</div>
-          <div className="mt-1 text-[11px] font-medium text-slate-500">Dari pos Desa Bojong Kulur</div>
+          <div className="mt-1 text-[11px] font-medium text-slate-500">Dari pos Desa Jatikulur</div>
         </div>
       </div>
 
@@ -417,7 +417,7 @@ export function IncomingReportsList({
                     {activeReport.user?.phone && (
                       <div className="flex items-center gap-1.5">
                         <a
-                          href={`https://wa.me/${activeReport.user.phone.replace(/^0/, "62")}?text=Halo%20${encodeURIComponent(activeReport.user.name || "Bapak/Ibu")},%20saya%20petugas%20lapangan%20Desa%20Bojong%20Kulur%20terkait%20laporan%20${encodeURIComponent(activeReport.category)}.`}
+                          href={`https://wa.me/${activeReport.user.phone.replace(/^0/, "62")}?text=Halo%20${encodeURIComponent(activeReport.user.name || "Bapak/Ibu")},%20saya%20petugas%20lapangan%20Desa%20Jatikulur%20terkait%20laporan%20${encodeURIComponent(activeReport.category)}.`}
                           target="_blank"
                           rel="noreferrer"
                           className="inline-flex items-center gap-1 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition-colors"

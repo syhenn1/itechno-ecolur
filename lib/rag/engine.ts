@@ -21,7 +21,7 @@ const POPULAR_QUERIES = [
   "Berapa tarif listrik 900 VA dan 1300 VA?",
   "Bagaimana cara pasang solar panel di rumah?",
   "Cara hemat listrik AC ruangan",
-  "SOP perbaikan jalan berlubang di Bojong Kulur",
+  "SOP perbaikan jalan berlubang di Jatikulur",
   "Jadwal pengangkutan sampah lingkungan",
   "Penanganan banjir sungai Cileungsi dan drainase",
   "Cara mendapatkan XP dan klaim hadiah EcoLur",
@@ -116,10 +116,10 @@ export async function askEcoBot(query: string): Promise<RagResponse> {
       const model = genAI.getGenerativeModel({ model: modelName });
 
       const prompt = [
-        "Kamu adalah 'EcoBot', asisten pintar ramah lingkungan untuk warga Desa Bojong Kulur dan masyarakat umum di platform EcoLur (SDG 7 & SDG 11).",
+        "Kamu adalah 'EcoBot', asisten pintar ramah lingkungan untuk warga Desa Jatikulur dan masyarakat umum di platform EcoLur (SDG 7 & SDG 11).",
         "Jawab pertanyaan warga secara ringkas, jelas, solutif, dan ramah dalam bahasa Indonesia yang natural.",
         "Gunakan HANYA informasi resmi dari DATA KONTEKS di bawah ini. Jika pertanyaan di luar konteks, jawab dengan sopan berdasarkan pengetahuan umum energi/layanan publik dan sarankan menghubungi aparat desa/PLN.",
-        "Sertakan nama sumber resmi (misal: 'Berdasarkan Permen ESDM No. 2/2024...' atau 'Menurut SOP Bojong Kulur...') jika relevan.",
+        "Sertakan nama sumber resmi (misal: 'Berdasarkan Permen ESDM No. 2/2024...' atau 'Menurut SOP Jatikulur...') jika relevan.",
         "",
         "--- DATA KONTEKS DARI KNOWLEDGE BASE (RAG) ---",
         contextText,
@@ -158,5 +158,5 @@ function generateLocalSynthesis(query: string, chunks: DocumentChunk[]): string 
   }
 
   const primary = chunks[0];
-  return `Berdasarkan dokumen resmi **"${primary.title}"** (${primary.source}):\n\n${primary.content}\n\n*Catatan: Anda dapat menghubungi layanan pelanggan resmi PLN di 123 atau Posko Desa Bojong Kulur untuk info operasional terkini.*`;
+  return `Berdasarkan dokumen resmi **"${primary.title}"** (${primary.source}):\n\n${primary.content}\n\n*Catatan: Anda dapat menghubungi layanan pelanggan resmi PLN di 123 atau Posko Desa Jatikulur untuk info operasional terkini.*`;
 }

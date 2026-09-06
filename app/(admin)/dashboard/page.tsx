@@ -42,7 +42,7 @@ export default async function AdminDashboardPage() {
       <div>
         <GovernmentBadge className="mb-2" />
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Dashboard transparansi</h1>
-        <p className="text-sm text-slate-600 mt-1">Statistik agregat energi dan laporan warga Desa Bojong Kulur.</p>
+        <p className="text-sm text-slate-600 mt-1">Statistik agregat energi dan laporan warga Desa Jatikulur.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

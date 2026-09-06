@@ -198,11 +198,21 @@ export function OtpForm() {
               variant="outline"
               onClick={() => handleQuickDemoSelect(demo.phone)}
               disabled={loading}
-              className="h-auto flex-col gap-0 p-2.5"
+              // !h-auto / !p-2.5: cn() is plain clsx (no tailwind-merge, see lib/utils.ts), so
+              // without `!important` here these lose to SIZE_CLASSES.md's `h-10 px-4` depending
+              // on Tailwind's internal generation order — which is exactly what was clipping this
+              // 3-line tile down to a fixed 40px-tall box and making the lines look squished
+              // together instead of genuinely stacking.
+              className="!h-auto !p-2.5"
             >
-              {renderDemoIcon(demo.iconType)}
-              <span className="text-xs font-semibold text-slate-800 leading-tight">{demo.label}</span>
-              <span className="text-[10px] font-normal text-slate-500">{demo.role}</span>
+              {/* Button's own content wrapper is a row flexbox (icon next to label) — for this
+                  tile's icon-over-two-lines layout, nest a column flexbox as the single child
+                  instead of fighting that wrapper via className (it doesn't reach an inner span). */}
+              <span className="flex flex-col items-center gap-0.5">
+                {renderDemoIcon(demo.iconType)}
+                <span className="text-xs font-semibold text-slate-800 leading-tight">{demo.label}</span>
+                <span className="text-[10px] font-normal text-slate-500">{demo.role}</span>
+              </span>
             </Button>
           ))}
         </div>

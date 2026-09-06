@@ -49,7 +49,7 @@ export function GreenLeaderboard({ users = [] }: GreenLeaderboardProps) {
           </span>
           <div>
             <h3 className="text-base font-bold text-slate-900">Papan peringkat warga</h3>
-            <p className="text-xs text-slate-500">Warga paling aktif dalam efisiensi energi dan laporan lingkungan di Desa Bojong Kulur.</p>
+            <p className="text-xs text-slate-500">Warga paling aktif dalam efisiensi energi dan laporan lingkungan di Desa Jatikulur.</p>
           </div>
         </div>
       </div>
