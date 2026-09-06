@@ -28,6 +28,11 @@ interface ToastEntry {
   /** True once dismissal (manual or auto-timeout) has been triggered — renders the exit
    *  animation while the removal timeout below actually takes the entry out of the array. */
   leaving: boolean;
+  /** True once this entry's auto-dismiss timer has actually been scheduled — only ever true for
+   *  the front (currently shown) toast, see `ensureFrontTimer()`. Without this, a toast queued
+   *  behind another one would silently burn through its whole duration off-screen and vanish
+   *  the instant it became visible. */
+  timerStarted: boolean;
 }
 
 const DEFAULT_DURATION = 4500;
@@ -51,13 +56,28 @@ function dismiss(id: number) {
   window.setTimeout(() => {
     toasts = toasts.filter((t) => t.id !== id);
     notify();
+    ensureFrontTimer();
   }, EXIT_ANIMATION_MS);
+}
+
+// This centered toast reads visually as a modal (big card, mascot, its own "Lanjutkan" button) —
+// showing two at once (e.g. an action's own success toast landing right as the forced tutorial's
+// "Semua langkah selesai!" toast fires from that same action) looked like a rendering bug, not
+// two separate messages. So only ever one toast is actually live at a time: the rest sit queued
+// in `toasts` (still available for the de-dup check below) and only the front one (`toasts[0]`,
+// see CenterToaster) is rendered and ticking down — the next one starts its own duration timer
+// only once it becomes the front, right after the current one finishes leaving.
+function ensureFrontTimer() {
+  const front = toasts.find((t) => !t.leaving);
+  if (!front || front.timerStarted) return;
+  toasts = toasts.map((t) => (t.id === front.id ? { ...t, timerStarted: true } : t));
+  window.setTimeout(() => dismiss(front.id), front.duration);
 }
 
 function push(type: ToastType, message: string, options?: ToastOptions) {
   // De-duplicate: a rapid double-click on a submit button (or any other double-fire) shouldn't
-  // stack up several identical cards — if the exact same toast is already showing, leave it be
-  // instead of piling another one on top of it.
+  // stack up several identical cards — if the exact same toast is already showing (or queued),
+  // leave it be instead of piling another one on.
   const alreadyShowing = toasts.some(
     (t) => !t.leaving && t.type === type && t.message === message && t.description === options?.description,
   );
@@ -65,9 +85,9 @@ function push(type: ToastType, message: string, options?: ToastOptions) {
 
   const id = nextId++;
   const duration = options?.duration ?? DEFAULT_DURATION;
-  toasts = [...toasts, { id, type, message, description: options?.description, duration, leaving: false }];
+  toasts = [...toasts, { id, type, message, description: options?.description, duration, leaving: false, timerStarted: false }];
   notify();
-  window.setTimeout(() => dismiss(id), duration);
+  ensureFrontTimer();
   return id;
 }
 
@@ -103,11 +123,13 @@ const MOODS: Record<ToastType, MascotMood> = {
 
 /** Mount once, at the root layout — subscribes to the module-level toast queue above via
  *  useSyncExternalStore (the React-blessed way to read state that lives outside React) and
- *  renders every active toast centered on screen, stacked if more than one is showing. */
+ *  renders only the front toast centered on screen. The rest of the queue waits its turn (see
+ *  `ensureFrontTimer()`) instead of stacking up several of these modal-sized cards at once. */
 export function CenterToaster() {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const t = items[0];
 
-  if (items.length === 0) return null;
+  if (!t) return null;
 
   return (
     // data-tutorial-ui: exempts every toast from the tutorial's click-blocking guard (see
@@ -115,43 +137,39 @@ export function CenterToaster() {
     // in-app navigation, so its own buttons (Lanjutkan, X) must always work regardless of
     // whatever step the forced tour is currently on.
     <div data-tutorial-ui className="pointer-events-none fixed inset-0 z-[300] flex flex-col items-center justify-center gap-3 px-4">
-      {items.map((t) => {
-        return (
-          <div
-            key={t.id}
-            className={cn(
-              "pointer-events-auto relative w-full max-w-md overflow-hidden rounded-md border-2 border-emerald-300 bg-white p-7 shadow-2xl sm:max-w-lg",
-              t.leaving ? "animate-tutorial-pop-out" : "animate-tutorial-pop",
-            )}
-          >
-            <div className="flex items-start gap-4">
-              <TutorialMascot mood={MOODS[t.type]} className="h-24 w-20 shrink-0" />
-              <div className="min-w-0 flex-1 pt-1">
-                <div className="text-xl font-bold text-slate-900">{t.message}</div>
-                {t.description && <p className="mt-1.5 text-base leading-relaxed text-slate-600">{t.description}</p>}
-              </div>
-              <Button variant="ghost" size="icon" onClick={() => dismiss(t.id)} aria-label="Tutup" className="h-8 w-8">
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            <Button type="button" onClick={() => dismiss(t.id)} className="mt-5 w-full">
-              Lanjutkan
-            </Button>
-
-            {/* Progress bar counting down to auto-dismiss — paused visually once `leaving` (the
-                exit animation takes over instead of finishing the shrink). */}
-            {!t.leaving && (
-              <div className="absolute inset-x-0 bottom-0 h-1 bg-emerald-100" aria-hidden="true">
-                <div
-                  className="animate-toast-progress h-full bg-emerald-400"
-                  style={{ animationDuration: `${t.duration}ms` }}
-                />
-              </div>
-            )}
+      <div
+        key={t.id}
+        className={cn(
+          "pointer-events-auto relative w-full max-w-md overflow-hidden rounded-md border-2 border-emerald-300 bg-white p-7 shadow-2xl sm:max-w-lg",
+          t.leaving ? "animate-tutorial-pop-out" : "animate-tutorial-pop",
+        )}
+      >
+        <div className="flex items-start gap-4">
+          <TutorialMascot mood={MOODS[t.type]} className="h-24 w-20 shrink-0" />
+          <div className="min-w-0 flex-1 pt-1">
+            <div className="text-xl font-bold text-slate-900">{t.message}</div>
+            {t.description && <p className="mt-1.5 text-base leading-relaxed text-slate-600">{t.description}</p>}
           </div>
-        );
-      })}
+          <Button variant="ghost" size="icon" onClick={() => dismiss(t.id)} aria-label="Tutup" className="h-8 w-8">
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
+
+        <Button type="button" onClick={() => dismiss(t.id)} className="mt-5 w-full">
+          Lanjutkan
+        </Button>
+
+        {/* Progress bar counting down to auto-dismiss — paused visually once `leaving` (the
+            exit animation takes over instead of finishing the shrink). */}
+        {!t.leaving && (
+          <div className="absolute inset-x-0 bottom-0 h-1 bg-emerald-100" aria-hidden="true">
+            <div
+              className="animate-toast-progress h-full bg-emerald-400"
+              style={{ animationDuration: `${t.duration}ms` }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

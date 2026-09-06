@@ -101,6 +101,9 @@ export function TutorialProvider({ role, children }: { role: TutorialRole; child
   const [target, setTarget] = useState<TargetState | null>(null);
   const [blocked, setBlocked] = useState<{ text: string; nonce: number; leaving: boolean } | null>(null);
   const rafRef = useRef<number | null>(null);
+  // Which step id the page has already been auto-scrolled for — so the scroll-into-view below
+  // fires once per step (right as its real target first appears), not on every animation frame.
+  const scrolledForRef = useRef<string | null>(null);
   // Mirrors `stepIndex`/`mode`, but updated synchronously (refs don't batch) the instant a step
   // completes — see `complete()` below for why that's what actually prevents duplicate toasts.
   const stepIndexRef = useRef(0);
@@ -235,7 +238,22 @@ export function TutorialProvider({ role, children }: { role: TutorialRole; child
       // bottom below that breakpoint — shrink the usable height so the tooltip never gets
       // clamped underneath it.
       const viewportHeight = window.innerHeight - (viewportWidth < 768 ? 72 : 0);
-      setTarget(visible ? { rect: visible.getBoundingClientRect(), viewportWidth, viewportHeight } : null);
+
+      if (visible) {
+        const rect = visible.getBoundingClientRect();
+        // Auto-scroll the real target into view once per step, the moment it first appears —
+        // covers a report card further down a long list, or a section below the fold on the
+        // dashboard, that the spotlight would otherwise point at off-screen with nothing visible
+        // to actually click.
+        if (scrolledForRef.current !== currentStep.id) {
+          scrolledForRef.current = currentStep.id;
+          const outOfView = rect.top < 0 || rect.left < 0 || rect.bottom > viewportHeight || rect.right > viewportWidth;
+          if (outOfView) visible.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        setTarget({ rect, viewportWidth, viewportHeight });
+      } else {
+        setTarget(null);
+      }
       rafRef.current = requestAnimationFrame(tick);
     }
 
