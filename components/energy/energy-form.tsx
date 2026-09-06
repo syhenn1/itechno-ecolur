@@ -55,8 +55,14 @@ export function EnergyForm() {
       } else {
         toast.success(`Konsumsi periode ${period} tersimpan`);
         showGamificationToasts(data.gamification, origin);
-        tutorial?.complete("energy_log");
       }
+      // Outside the isUpdate branch on purpose: the tutorial step just confirms the citizen
+      // successfully used this form, it isn't gated on whether XP was earned. If this only fired
+      // for genuinely new entries, a citizen who already has a log for the current month (e.g.
+      // testing the tutorial a second time, or a demo account reset mid-month) could never clear
+      // step 1 — every submission would be an "update" forever, permanently stuck since the
+      // forced tour blocks every other action until this step completes.
+      tutorial?.complete("energy_log");
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Terjadi kesalahan");
